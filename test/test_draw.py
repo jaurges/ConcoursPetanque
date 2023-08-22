@@ -25,6 +25,7 @@ class Application:
                 team_name = "team" + str(i+1)
                 club_team = random.choice(list_club)
                 self.dict_club.setdefault(club_team, []).append(team_name)
+                print(team_name)
 
             self.draw()
 
@@ -94,6 +95,12 @@ class Application:
             print("fail")
 
         print("\n")
+
+        self.last_print()
+
+    def last_print(self):
+        print(self.dict_club)
+        print(self.match_list)
 
 
 x = Application()
