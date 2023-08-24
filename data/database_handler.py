@@ -100,7 +100,7 @@ class DatabaseHandler:
         cursor.close()
         self.con.commit()
 
-    def troutrou(self):
+    '''def troutrou(self):
 
         i = 0
         while True:
@@ -112,7 +112,17 @@ class DatabaseHandler:
             cursor.execute(query1)
             # except:
             print("ok")
+        self.con.commit()'''
+    
+    def return_all_team(self):
+        cursor = self.con.cursor()
+        query = f"SELECT * FROM team_example"
+        cursor.execute(query)
+        output = cursor.fetchall()
+        cursor.close()
         self.con.commit()
 
+        return output
 
-DatabaseHandler.troutrou("database.db")
+
+#DatabaseHandler.troutrou("database.db")
