@@ -32,11 +32,6 @@ class Application:
                 self.dict_club.setdefault(club_team, []).append(team_name)
 
             self.draw()
-            if len(self.last_players) == 1:
-                match_name = "alone : " + str(self.last_players)
-                self.match_list.append(match_name)
-                for value in self.last_players:
-                    self.last_players.remove(value)
             
             if not self.n//2 + 1 == len(self.match_list) and self.n != 1 and self.n!=0 and not self.n%2==0:
                 self.activated_print = True
@@ -46,7 +41,10 @@ class Application:
                 print(self.match_list)
                 print("last players : ")
                 print(self.last_players)
-                print("\n")    
+                print("\n")
+
+            if self.last_players:
+                print("prout")    
 
     def draw(self):  
         dict_club_var = self.dict_club
@@ -81,6 +79,12 @@ class Application:
                 self.last_players.remove(team2)
                 match_name = str(team1 + " vs " + team2)
                 self.match_list.append([match_name, team1, team2])
+
+        if len(self.last_players) == 1:
+                match_name = "alone : " + str(self.last_players)
+                self.match_list.append(match_name)
+                for value in self.last_players:
+                    self.last_players.remove(value)
             
         elif len(self.last_players) == 0:
             pass
