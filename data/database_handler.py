@@ -20,10 +20,11 @@ class DatabaseHandler:
 
         file_name = (f"{name.replace(' ', '')}_{date.replace(' ', '')}_"
                      f"{play_mod.replace(' ', '')}_{location.replace(' ', '')}")
-        data_directory = os.path.join(f"{os.path.dirname(os.path.abspath(__file__))}", '..', 'data')
+        data_directory = os.path.join(f"{os.path.dirname(os.path.abspath(__file__))}", '..', 'data/competition')
         data_directory = os.path.join(data_directory, file_name)
         os.makedirs(data_directory, exist_ok=True)
-        directory = f"{os.path.dirname(os.path.abspath(__file__))}" + "/".join(["", file_name, f"{file_name}.db"])
+        directory = f"{os.path.dirname(os.path.abspath(__file__))}" + "/".join(["/competition", file_name,
+                                                                                f"{file_name}.db"])
         directory = directory.replace("gui", "data")
         self.con = sqlite3.connect(directory)
         self.con.row_factory = sqlite3.Row
