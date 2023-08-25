@@ -4,7 +4,6 @@ jugé pour les stats si l'objet ne serait pas plus efficace et maintenable
 
 import sqlite3
 import os
-import subprocess
 
 
 class DatabaseHandler:
@@ -21,10 +20,11 @@ class DatabaseHandler:
 
         file_name = (f"{name.replace(' ', '')}_{date.replace(' ', '')}_"
                      f"{play_mod.replace(' ', '')}_{location.replace(' ', '')}")
-
-        subprocess.run(["mkdir", file_name])
+        data_directory = os.path.join(f"{os.path.dirname(os.path.abspath(__file__))}", '..', 'data')
+        data_directory = os.path.join(data_directory, file_name)
+        os.makedirs(data_directory, exist_ok=True)
         directory = f"{os.path.dirname(os.path.abspath(__file__))}" + "/".join(["", file_name, f"{file_name}.db"])
-        print(directory)
+        directory = directory.replace("gui", "data")
         self.con = sqlite3.connect(directory)
         self.con.row_factory = sqlite3.Row
         cursor = self.con.cursor()
@@ -138,3 +138,7 @@ class DatabaseHandler:
             # except:
             print("ok")
         self.con.commit()
+
+
+'''db_handler = DatabaseHandler('databasev2.db')
+db_handler.create_competition('Concours1', '2023-08-25', 'Doublette', 'Paris')'''
