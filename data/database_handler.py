@@ -11,9 +11,9 @@ class DatabaseHandler:
         self.con = sqlite3.connect(f"{os.path.dirname(os.path.abspath(__file__))}/{database_name}")
         self.con.row_factory = sqlite3.Row
 
-    def save_parameters(self, name: str, date: str, play_mod: str):
+    def create_competition(self, name: str, date: str, play_mod: str):
         cursor = self.con.cursor()
-        query = f"INSERT INTO parameters(name, date, play_mod) VALUES('{name}', '{date}', '{play_mod}');"
+        query = f"INSERT INTO general(name, date, play_mod) VALUES('{name}', '{date}', '{play_mod}');"
         cursor.execute(query)
         cursor.close()
         self.con.commit()
@@ -114,5 +114,3 @@ class DatabaseHandler:
             print("ok")
         self.con.commit()
 
-
-DatabaseHandler.troutrou("database.db")
