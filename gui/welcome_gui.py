@@ -17,11 +17,11 @@ class WelcomeGui(QtWidgets.QWidget):
         self.layout.addWidget(self.button)
 
 
-if __name__ == "__main__":
+'''if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
     widget = WelcomeGui()
     widget.resize(360, 480)
     widget.show()
 
-    sys.exit(app.exec())
+    sys.exit(app.exec())'''
