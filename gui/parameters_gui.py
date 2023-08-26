@@ -1,9 +1,9 @@
 import sys
 #from ErroGui import ErrorGui
 
-sys.path.append(".")
+sys.path.append("..")
 from PySide6 import QtCore, QtWidgets, QtGui
-from data.database_handler import DatabaseHandler
+from object.object import Competition
 
 
 class ParametersGui(QtWidgets.QWidget):
@@ -13,10 +13,8 @@ class ParametersGui(QtWidgets.QWidget):
         self.setWindowTitle("Parameters")
 
         self.label = QtWidgets.QLabel("Entrez le nom du concours :")
-        self.label_2 = QtWidgets.QLabel("Entrez la date du concours :")
-        self.label_3 = QtWidgets.QLabel("Entrez la localisation du concours :")
         self.lineEdit = QtWidgets.QLineEdit(self)
-        self.lineEdit2 = QtWidgets.QLineEdit(self)
+        self.label_2 = QtWidgets.QLabel("Entrez la date du concours :")
         self.radiobutton = QtWidgets.QRadioButton(self)
         self.radiobutton_2 = QtWidgets.QRadioButton(self)
         self.pushbutton = QtWidgets.QPushButton(self)
@@ -39,8 +37,6 @@ class ParametersGui(QtWidgets.QWidget):
         self.layout_pushbutton.addWidget(self.pushbutton_2)
         self.layout_general.addWidget(self.label)
         self.layout_general.addWidget(self.lineEdit)
-        self.layout_general.addWidget(self.label_3)
-        self.layout_general.addWidget(self.lineEdit2)
         self.layout_general.addLayout(self.layout_radiobutton)
         self.layout_general.addWidget(self.label_2)
         self.layout_general.addWidget(self.calendar)
@@ -53,13 +49,22 @@ class ParametersGui(QtWidgets.QWidget):
         app = Application()
         name = self.lineEdit.text()
         date = self.calendar.selectedDate()
+<<<<<<< HEAD
+        formatted_date = date.toString("yyyy-M-d")
+        play_mod = ""
         location = self.lineEdit2.text()
+=======
+>>>>>>> parent of 4cf90b7 (ajout location les conflits sont réglé a l'aide de ses con,naissances)
         if self.radiobutton.isChecked():
             play_mod = "Doublette"
         if self.radiobutton_2.isChecked():
             play_mod = "Triplette"
         try:
-            app.clicked_btn(name, date, play_mod, location)<
+<<<<<<< HEAD
+            app.clicked_btn(name, formatted_date, play_mod, location)
+=======
+            app.clicked_btn(name, date, play_mod)
+>>>>>>> parent of 4cf90b7 (ajout location les conflits sont réglé a l'aide de ses con,naissances)
         except UnboundLocalError:
             erroGui = ErrorGui()
             erroGui.resize(400, 100)
@@ -78,10 +83,15 @@ class ErrorGui(QtWidgets.QWidget):
 
 class Application:
     def __init__(self):
-        self.database_handler = DatabaseHandler("databasev2.db")
+        self.database_handler = Competition("database.db")
 
+<<<<<<< HEAD
+    def clicked_btn(self, name: str, date: str, play_mod: str, location: str):
+        self.database_handler.create_competition(name, date, play_mod, location)
+=======
     def clicked_btn(self, name: str, date: str, play_mod: str):
-        self.database_handler.create_competition(name, date, play_mod)
+        self.database_handler.save_parameters(name, date, play_mod)
+>>>>>>> parent of 4cf90b7 (ajout location les conflits sont réglé a l'aide de ses con,naissances)
         print(name, date, play_mod)
 
 
