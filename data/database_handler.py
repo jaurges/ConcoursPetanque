@@ -18,6 +18,31 @@ class DatabaseHandler:
         cursor.close()
         self.con.commit()
 
+        file_name = (f"{name.replace(' ', '')}_{date.replace(' ', '')}_"
+                     f"{play_mod.replace(' ', '')}_{location.replace(' ', '')}")
+        data_directory = os.path.join(f"{os.path.dirname(os.path.abspath(__file__))}", '..', 'data')
+        data_directory = os.path.join(data_directory, file_name)
+        os.makedirs(data_directory, exist_ok=True)
+        directory = f"{os.path.dirname(os.path.abspath(__file__))}" + "/".join(["", file_name, f"{file_name}.db"])
+        directory = directory.replace("gui", "data")
+        self.con = sqlite3.connect(directory)
+        self.con.row_factory = sqlite3.Row
+        cursor = self.con.cursor()
+
+        table = "CREATE TABLE IF NOT EXISTS parameters(id integer PRIMARY KEY, " \
+                "name text," \
+                "date text," \
+                "play_mod integer," \
+                "location integer)"
+        insertion = (f"INSERT INTO parameters(name, date, play_mod, location) VALUES('{name}', '{date}', '{play_mod}', "
+                     f"'{location}')")
+
+        cursor.execute(table)
+        cursor.execute(insertion)
+
+        cursor.close()
+        self.con.commit()
+
     def create_team(self, team: str, club: str):
         cursor = self.con.cursor()
         query = f"INSERT INTO team(team_name, club_name) VALUES('{team}', '{club}');"
@@ -122,10 +147,7 @@ class DatabaseHandler:
         cursor.close()
         self.con.commit()
 
-<<<<<<< HEAD
         return output
 
 
 #DatabaseHandler.troutrou("database.db")
-=======
->>>>>>> 116ac35 (ajout location)
