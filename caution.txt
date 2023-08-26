@@ -1,5 +1,5 @@
 problème : 
-- génération des équipe
+- génération des équipe -> fini
 - algo premier deuxième etc*
 - refaire une classe fonctionnel database_handler (objet inutile)
-- refaire les objets pour une vraie utilisation
+- refaire les objets pour une vraie utilisation -> non

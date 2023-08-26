@@ -7,9 +7,14 @@ class Application:
         self.match_list = []
         self.last_players = []
         self.dict_club = {}
+        self.activated_print = bool
 
     def test_draw(self):
-        for o in range(20):
+        for _ in range(200):
+            self.activated_print = False
+            self.match_list = []
+            self.last_players = []
+            self.dict_club = {}
             club_name = ["club1", "club2", "club3", "club4"]
             club_removable = club_name
             list_club = []
@@ -27,16 +32,25 @@ class Application:
                 self.dict_club.setdefault(club_team, []).append(team_name)
 
             self.draw()
+            
+            if not self.n//2 + 1 == len(self.match_list) and self.n != 1 and self.n!=0 and not self.n%2==0:
+                self.activated_print = True
+                print(self.dict_club)
+                print("the half of that: " + str(self.n))
+                print("is it equal ?" + str(len(self.match_list)))
+                print(self.match_list)
+                print("last players : ")
+                print(self.last_players)
+                print("\n")
 
-    def draw(self):
-        self.match_list = []
-        self.last_players = []
-        self.dict_club = {}
+            if self.last_players:
+                print("prout")    
+
+    def draw(self):  
         dict_club_var = self.dict_club
-        n = 0
+        self.n = 0
         for i in self.dict_club:
-            n = n + len(self.dict_club[i])
-        print("the half of that: " + str(n))
+            self.n = self.n + len(self.dict_club[i])
 
         for i in self.dict_club:
             if len(self.dict_club[i]) % 2 == 0:
@@ -65,36 +79,15 @@ class Application:
                 self.last_players.remove(team2)
                 match_name = str(team1 + " vs " + team2)
                 self.match_list.append([match_name, team1, team2])
-            if not self.last_players:
-                pass
-            else:
+
+        if len(self.last_players) == 1:
                 match_name = "alone : " + str(self.last_players)
                 self.match_list.append(match_name)
                 for value in self.last_players:
                     self.last_players.remove(value)
-        else:
-            match_name = "alone : " + str(self.last_players)
-            self.match_list.append(match_name)
-            for value in self.last_players:
-                self.last_players.remove(value)
-
-        print("is it equal ?" + str(len(self.match_list)))
-        ls = []
-        for x in range(len(self.match_list)):
-            for y in range(3):
-                for z in range(len(self.match_list)):
-                    if z != x:
-                        if self.match_list[x][y] == self.match_list[z][y]:
-                            ls.append("fail")
-                        else:
-                            pass
-        if all(x == "ok" for x in ls):
-            print("ok")
-        else:
-            print("fail")
-
-        print("\n")
-
+            
+        elif len(self.last_players) == 0:
+            pass
 
 x = Application()
 x.test_draw()

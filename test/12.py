@@ -1,9 +1,6 @@
-def rendre_pair(chiffre):
-    chiffre_arrondi = round(chiffre)
-    chiffre_pair = chiffre_arrondi + chiffre_arrondi % 2
-    return chiffre_pair
-
-# Exemple d'utilisation
-chiffre = 3.7
-chiffre_pair = rendre_pair(chiffre)
-print(chiffre_pair)
+n = 19
+i = 10
+if not n//2 + 1 == i and n != 1 and n!=0:
+    print("nice")
+else:
+    print("pas nice")
