@@ -1,8 +1,10 @@
 import sys
+
 from PySide6 import QtCore, QtWidgets, QtGui
 
 
 class WelcomeGui(QtWidgets.QWidget):
+    opened = QtCore.Signal()
     def __init__(self):
         super().__init__()
 
@@ -15,6 +17,12 @@ class WelcomeGui(QtWidgets.QWidget):
         self.layout = QtWidgets.QVBoxLayout(self)
         self.layout.addWidget(self.text)
         self.layout.addWidget(self.button)
+
+        self.button.clicked.connect(self.open_next)
+
+    def open_next(self):
+        self.opened.emit()
+        self.close()
 
 
 '''if __name__ == "__main__":
