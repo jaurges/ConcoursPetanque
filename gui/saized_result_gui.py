@@ -3,7 +3,7 @@ import re
 import sqlite3
 sys.path.append(".")
 from PySide6 import QtWidgets, QtGui, QtCore
-from object.object import Match, Team
+from data.database_handler import DatabaseHandler
 
 
 class Saized_Result(QtWidgets.QWidget):
@@ -167,8 +167,7 @@ class Saized_Result(QtWidgets.QWidget):
 
 class Application:
     def __init__(self):
-        self.database_handler1 = Match("database.db")
-        self.database_handler2 = Team("database.db")
+        self.database_handler = DatabaseHandler("database.db")
 
     def return_match_nb(self):
         n = self.database_handler1.match_nb_return()
