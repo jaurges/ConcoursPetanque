@@ -1,0 +1,101 @@
+[33mcommit cc1ae6534babbb109c42e854d8d018567915d7a8[m[33m ([m[1;36mHEAD[m[33m)[m
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Sat Aug 26 20:06:37 2023 +0200
+
+    Resolved merge conflict by incorporating both suggestions.
+
+[33mcommit d3a69e87d1f95e65bc70991fcdb60f6ddd434069[m
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Sat Aug 26 19:41:25 2023 +0200
+
+    ajout location les conflits sont réglé a l'aide de ses con,naissances(amendé)
+
+[33mcommit 295c29389b48d681c37f319dc83f69027de0a8b5[m
+Merge: c2be355 6951ab9
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Sat Aug 26 12:50:22 2023 +0200
+
+    Merge remote-tracking branch 'origin/master'
+    
+    # Conflicts:
+    #       .idea/vcs.xml
+
+[33mcommit c2be355952f3269e0d46fca37131a101a0f7f258[m
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Sat Aug 26 12:49:12 2023 +0200
+
+    prout commit pas utile
+
+[33mcommit 6951ab967bbd77eac7a61f93995546be66cec849[m
+Merge: dc42248 5cd7130
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Fri Aug 25 14:44:13 2023 +0200
+
+    commit avant le pull qui va tout casser
+
+[33mcommit dc4224842d5b0f77992cb6df24f114510edad1d1[m
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Thu Aug 24 17:59:43 2023 +0200
+
+    quasi finito draw_gui yeah
+
+[33mcommit 5cd7130c98deac786491e06d733d9a7257305291[m
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Wed Aug 23 22:20:11 2023 +0200
+
+    commit avant le drame
+
+[33mcommit da7d5ff8d00a2f202d50df52952c4f7ee2fffef1[m
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Thu Aug 24 17:58:51 2023 +0200
+
+    draw_gui presque finit
+
+[33mcommit 8cb62c2f0175185f3ecdcd7451ebbed3e1e43227[m
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Wed Aug 23 21:11:36 2023 +0200
+
+    fintion tirage 2
+
+[33mcommit 8008caf3a8d448fecb49c213de648932aa439890[m
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Wed Aug 23 21:10:05 2023 +0200
+
+    finition du système de tirage
+
+[33mcommit d80b0ca1261d8df0a3437b372ce714a2ec781c27[m
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Wed Aug 23 11:14:51 2023 +0200
+
+    dernier commit pour pycharm
+
+[33mcommit fb76ad0458561e517cffe4244cb0be48753ff6e8[m
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Tue Aug 22 23:07:45 2023 +0200
+
+    test commit prout
+
+[33mcommit 2b1308e713b7feff840b1b19c8eca02c550219d7[m
+Merge: af6e7d0 599b256
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Sat Aug 19 16:08:01 2023 +0200
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit af6e7d03669c6e6939cca5695683f115d9ed1e1d[m
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Sat Aug 19 13:24:14 2023 +0200
+
+    test commit prout
+
+[33mcommit 599b256448f296d50b7d6554ed2a9c19543aecdb[m
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Sat Aug 19 13:24:14 2023 +0200
+
+    test commit prout
+
+[33mcommit 2bbf3498f24af72a4afe2d1712406d89ca3de5f6[m
+Author: jaurges <antonin.david44@gmail.com>
+Date:   Fri Aug 18 14:47:29 2023 +0200
+
+    first commit
