@@ -126,7 +126,7 @@ class DatabaseHandler:
         cursor.close()
         self.con.commit()
 
-    def troutrou(self):
+    '''def troutrou(self):
 
         i = 0
         while True:
@@ -138,8 +138,22 @@ class DatabaseHandler:
             cursor.execute(query1)
             # except:
             print("ok")
+        self.con.commit()'''
+    
+    def return_all_team(self):
+        cursor = self.con.cursor()
+        query = f"SELECT * FROM team_example"
+        cursor.execute(query)
+        output = cursor.fetchall()
+        cursor.close()
         self.con.commit()
 
+        return output
 
+<<<<<<< HEAD
 '''db_handler = DatabaseHandler('databasev2.db')
 db_handler.create_competition('Concours1', '2023-08-25', 'Doublette', 'Paris')'''
+=======
+
+#DatabaseHandler.troutrou("database.db")
+>>>>>>> dc42248 (quasi finito draw_gui yeah)
