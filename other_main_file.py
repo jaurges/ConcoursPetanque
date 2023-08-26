@@ -1,8 +1,8 @@
-from PySide.QtCore import *
-from PySide.QtGui import *
+from PySide6.QtCore import *
+from PySide6.QtGui import *
 import sys
 
-class W1(QWidget):
+class W1(QtWidget.QWidget):
     def __init__(self, parent=None):
         super(W1, self).__init__(parent)
         self.btn = QPushButton('Click1')

@@ -6,7 +6,7 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from data.database_handler import DatabaseHandler
 
 
-class ParametersGui(QtWidgets.QWidget):
+'''class ParametersGui(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
@@ -94,4 +94,36 @@ if __name__ == "__main__":
     widget.resize(360, 480)
     widget.show()
 
-    sys.exit(app.exec())
+    sys.exit(app.exec())'''
+
+from PySide6 import QtWidgets, QtCore
+
+class ParametersGui(QtWidgets.QWidget):
+    opened = QtCore.Signal()
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Parameters")
+
+        self.back_button = QtWidgets.QPushButton("Retour")
+        self.button = QtWidgets.QPushButton("Aller")
+        self.text = QtWidgets.QLabel("Paramètres de configuration",
+                                     alignment=QtCore.Qt.AlignCenter)
+
+        self.layout = QtWidgets.QVBoxLayout(self)
+        self.layout.addWidget(self.text)
+        self.layout.addWidget(self.back_button)
+        self.layout.addWidget(self.button)
+
+        self.back_button.clicked.connect(self.open_previous)
+        self.button.clicked.connect(self.open_next)
+
+    def open_previous(self):
+        self.parent_widget.show()
+        self.close()
+
+    def open_next(self):
+        self.opened.emit()
+        #self.parent_widget.close()
+        self.close()
+
