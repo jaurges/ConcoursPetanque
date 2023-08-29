@@ -30,15 +30,25 @@ class DatabaseHandler:
         self.con.row_factory = sqlite3.Row
         cursor = self.con.cursor()
 
-        table = "CREATE TABLE IF NOT EXISTS parameters(id integer PRIMARY KEY, " \
+        table1 = "CREATE TABLE IF NOT EXISTS parameters(id integer PRIMARY KEY, " \
                 "name text," \
                 "date text," \
-                "play_mod integer," \
-                "location integer)"
+                "play_mod text," \
+                "location text)"
+        table2 = "CREATE TABLE IF NOT EXISTS overall(id integer PRIMARY KEY, " \
+                "team text," \
+                "output1 integer," \
+                "total integer)"
+        table3 = "CREATE TABLE IF NOT EXISTS time(id integer PRIMARY KEY, " \
+                "start_hour integer," \
+                "finish_hour integer," \
+                "match_hour integer)"
         insertion = (f"INSERT INTO parameters(name, date, play_mod, location) VALUES('{name}', '{date}', '{play_mod}', "
                      f"'{location}')")
 
-        cursor.execute(table)
+        cursor.execute(table1)
+        cursor.execute(table2)
+        cursor.execute(table3)
         cursor.execute(insertion)
 
         cursor.close()
@@ -150,10 +160,5 @@ class DatabaseHandler:
 
         return output
 
-<<<<<<< HEAD
 '''db_handler = DatabaseHandler('databasev2.db')
 db_handler.create_competition('Concours1', '2023-08-25', 'Doublette', 'Paris')'''
-=======
-
-#DatabaseHandler.troutrou("database.db")
->>>>>>> dc42248 (quasi finito draw_gui yeah)
