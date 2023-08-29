@@ -44,12 +44,17 @@ class DatabaseHandler:
                 "start_hour integer," \
                 "finish_hour integer," \
                 "match_hour integer)"
+        table4 = "CREATE TABLE IF NOT EXISTS nb_match(id integer PRIMARY KEY, " \
+                "start_hour integer," \
+                "finish_hour integer," \
+                "match_hour integer)"
         insertion = (f"INSERT INTO parameters(name, date, play_mod, location) VALUES('{name}', '{date}', '{play_mod}', "
                      f"'{location}')")
 
         cursor.execute(table1)
         cursor.execute(table2)
         cursor.execute(table3)
+        cursor.execute(table4)
         cursor.execute(insertion)
 
         cursor.close()
@@ -119,7 +124,7 @@ class DatabaseHandler:
         self.con = sqlite3.connect(self.directory)
         self.con.row_factory = sqlite3.Row
         cursor = self.con.cursor()
-        table_name = " match" + str(nb_match)
+        table_name = self.return_actual_dir()
         query = str(
             "INSERT INTO" + table_name + f"(match_name, team1, team2) VALUES('{match_name}','{team1}', '{team2}')")
         table = "CREATE TABLE IF NOT EXISTS " + table_name + "(id integer PRIMARY KEY, " \
@@ -133,20 +138,6 @@ class DatabaseHandler:
         cursor.close()
         self.con.commit()          
 
-    def return_nb_match(self):
-        cursor = self.con.cursor()
-        query = f"SELECT * FROM nb_match"
-        cursor.execute(query)
-        output = cursor.fetchall()
-        n = 0
-
-        for row in output:
-            n = n + 1
-
-        cursor.close()
-        self.con.commit()
-
-        return n
 
     def match_nb_register(self):
         cursor = self.con.cursor()
@@ -180,15 +171,25 @@ class DatabaseHandler:
         return output
     
     def return_actual_dir(self):
-        ls = []
         cursor = self.con.cursor()
-        query = "SELECT id FROM general"
+        query = "SELECT seq FROM sqlite_sequence WHERE name='general'"
         cursor.execute(query)
-        rows = cursor.fetchall()
+        num = cursor.fetchall()
+        for i in num:
+            num = i[0]
+        query = f"SELECT name, date, play_mod, location FROM general WHERE id={num}"
+        cursor.execute(query)
+        output = cursor.fetchall()
+        ls = []
+        for i in output:
+            ls.append(i[0])
+            ls.append(i[1])
+            ls.append(i[2])
+            ls.append(i[3])
+        file_name = f"competition/{ls[0]}_{ls[1]}_{ls[2]}_{ls[3]}.db"
         cursor.close()
         self.con.commit()
 
-        return rows
+        return file_name
 
-'''db_handler = DatabaseHandler('databasev2.db')
-db_handler.create_competition('Concours1', '2023-08-25', 'Doublette', 'Paris')'''
+
