@@ -1,5 +1,5 @@
 import sys
-sys.path.append("..")
+sys.path.append(".")
 from PySide6 import QtCore, QtWidgets, QtGui
 from object.object import Team
 
