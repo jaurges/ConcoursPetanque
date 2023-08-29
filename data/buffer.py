@@ -1,5 +1,9 @@
-class Buffer:
-    def __init__(self):
-        self.var1 = None
+import time
 
-    def
+def active():
+    while True:
+        print("buffer")
+        time.sleep(1)
+
+if __name__ == "__main__":
+    active()

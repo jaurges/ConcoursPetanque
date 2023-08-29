@@ -1,14 +1,9 @@
-def create_txt_file(file_path, content):
-    with open(file_path, "w") as file:
-        file.write(str(content))
+import sys
+sys.path.append(".")
+from data.database_handler import DatabaseHandler
 
-# Exemple d'utilisation
-file_path = "test.txt"
-
-
-content = []
-for i in range(50):
-    var = "équipe" + str(i)
-    content.append(var)
-
-create_txt_file(file_path, content)
+var = DatabaseHandler("databasev2.db").return_actual_dir()
+ls = []
+for row in var:
+    ls.append(row[0])
+print(ls)

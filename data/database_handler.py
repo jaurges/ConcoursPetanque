@@ -10,6 +10,7 @@ class DatabaseHandler:
     def __init__(self, database_name: str):
         self.con = sqlite3.connect(f"{os.path.dirname(os.path.abspath(__file__))}/{database_name}")
         self.con.row_factory = sqlite3.Row
+        self.directory = str
 
     def create_competition(self, name: str, date: str, play_mod: str, location: str):
         cursor = self.con.cursor()
@@ -23,10 +24,10 @@ class DatabaseHandler:
         data_directory = os.path.join(f"{os.path.dirname(os.path.abspath(__file__))}", '..', 'data/competition')
         data_directory = os.path.join(data_directory, file_name)
         os.makedirs(data_directory, exist_ok=True)
-        directory = f"{os.path.dirname(os.path.abspath(__file__))}" + "/".join(["/competition", file_name,
+        self.directory = f"{os.path.dirname(os.path.abspath(__file__))}" + "/".join(["/competition", file_name,
                                                                                 f"{file_name}.db"])
-        directory = directory.replace("gui", "data")
-        self.con = sqlite3.connect(directory)
+        self.directory = self.directory.replace("gui", "data")
+        self.con = sqlite3.connect(self.directory)
         self.con.row_factory = sqlite3.Row
         cursor = self.con.cursor()
 
@@ -98,7 +99,7 @@ class DatabaseHandler:
 
         return records
 
-    def register_match(self, nb_match: int, match_name: str, team1: str, team2: str):
+    '''def register_match(self, nb_match: int, match_name: str, team1: str, team2: str):
         cursor = self.con.cursor()
         table_name = " match" + str(nb_match)
         query = str(
@@ -112,7 +113,25 @@ class DatabaseHandler:
         cursor.execute(table)
         cursor.execute(query)
         cursor.close()
-        self.con.commit()
+        self.con.commit()'''
+
+    def register_match(self, nb_match: int, match_name: str, team1: str, team2: str):
+        self.con = sqlite3.connect(self.directory)
+        self.con.row_factory = sqlite3.Row
+        cursor = self.con.cursor()
+        table_name = " match" + str(nb_match)
+        query = str(
+            "INSERT INTO" + table_name + f"(match_name, team1, team2) VALUES('{match_name}','{team1}', '{team2}')")
+        table = "CREATE TABLE IF NOT EXISTS " + table_name + "(id integer PRIMARY KEY, " \
+                                                             "match_name text," \
+                                                             "team1 text," \
+                                                             "output1 integer," \
+                                                             "team2 text," \
+                                                             "output2 integer)"
+        cursor.execute(table)
+        cursor.execute(query)
+        cursor.close()
+        self.con.commit()          
 
     def return_nb_match(self):
         cursor = self.con.cursor()
@@ -159,6 +178,17 @@ class DatabaseHandler:
         self.con.commit()
 
         return output
+    
+    def return_actual_dir(self):
+        ls = []
+        cursor = self.con.cursor()
+        query = "SELECT id FROM general"
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        cursor.close()
+        self.con.commit()
+
+        return rows
 
 '''db_handler = DatabaseHandler('databasev2.db')
 db_handler.create_competition('Concours1', '2023-08-25', 'Doublette', 'Paris')'''
