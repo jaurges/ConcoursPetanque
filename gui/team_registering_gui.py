@@ -1,8 +1,9 @@
 import sys
-sys.path.append("..")
+sys.path.append(".")
 
 from PySide6 import QtCore, QtWidgets, QtGui
-from object.object import Team
+#from object.object import Team
+from data.database_handler import DatabaseHandler
 
 
 class Team_registering(QtWidgets.QWidget):
@@ -95,7 +96,7 @@ class Team_registering(QtWidgets.QWidget):
 
 class Application:
     def __init__(self):
-        self.database_handler = Team("database.db")
+        self.database_handler = DatabaseHandler("databasev2.db")
 
     def register_team(self, team: str, club: str):
         self.database_handler.create_team(team, club)
