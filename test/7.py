@@ -1,6 +1,5 @@
 import random
 
-
 class Club:
     def __init__(self, name, teams):
         self.name = name

@@ -7,18 +7,22 @@ from data.database_handler import DatabaseHandler
 from PySide6.QtCore import Signal, Slot
 
 
-class Team_registering(QtWidgets.QWidget):
+class TeamRegistering(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Team registering")
 
+        first_tab = FirstTab()
+        second_tab = SecondTab()
         tab_widget = QtWidgets.QTabWidget()
-        tab_widget.addTab(FirstTab(), "manual")
-        tab_widget.addTab(SecondTab(), "loading")
+        tab_widget.addTab(first_tab, "manual")
+        tab_widget.addTab(second_tab, "loading")
+
+        first_tab.value.connect(self.fill)
 
         pushbutton_3 = QtWidgets.QPushButton("Annuler")
         pushbutton_4 = QtWidgets.QPushButton("Suivant")
-        self.listWidget = QtWidgets.QListWidget(self)
+        self.listWidget = QtWidgets.QListWidget()
 
         layout_base = QtWidgets.QVBoxLayout(self)
         layout_button = QtWidgets.QHBoxLayout()
@@ -30,14 +34,10 @@ class Team_registering(QtWidgets.QWidget):
         layout_middle.addWidget(self.listWidget)
         layout_base.addLayout(layout_middle)
         layout_base.addLayout(layout_button)
-
-        self.listWidget.addItem("record")
-        self.first_tab = FirstTab()
-        
-
-    @Slot(str)
-    def print_list(self, text):
-        #self.listWidget.addItem(text)
+    
+    @QtCore.Slot(str)
+    def fill(self, message):
+        self.listWidget.addItem(message)
         print("atteint")
 
 
@@ -49,9 +49,9 @@ class Application:
         self.database_handler.create_team(name, club)
 
 class FirstTab(QtWidgets.QDialog):
-    #value_added = Signal(str)
+    value = QtCore.Signal(str)
     def __init__(self):
-        super().__init__()
+        super(FirstTab, self).__init__()
         
         self.lineEdit = QtWidgets.QLineEdit(self)
         self.lineEdit_2 = QtWidgets.QLineEdit(self)
@@ -90,11 +90,9 @@ class FirstTab(QtWidgets.QDialog):
         self.combobox.activated.connect(self.club_name)
 
         self.pushbutton_2.clicked.connect(self.register_team)
-        self.pushbutton_2.clicked.connect(self.add_value)
+        self.pushbutton_2.clicked.connect(self.value_added)
         self.pushbutton_2.clicked.connect(self.reset)
         self.pushbutton.clicked.connect(self.reset)
-
-        self.value_added = Signal(str)
 
     def register_team(self):
         team = self.lineEdit.text()
@@ -102,14 +100,14 @@ class FirstTab(QtWidgets.QDialog):
         app = Application()
 
         app.register_team(team, club)
-
-    def add_value(self):
+    @QtCore.Slot()
+    def value_added(self):
         print("launch")
         team_name = self.lineEdit.text()
         club_name = self.lineEdit_2.text()
         record = f"{team_name} {club_name}"
-        self.value_added.emit(record)
-        print("ed")
+        self.value.emit(record)
+        print(record)
 
     def reset(self):
         self.lineEdit.clear()
@@ -127,17 +125,17 @@ class FirstTab(QtWidgets.QDialog):
 
 class SecondTab(QtWidgets.QWidget):
     def __init__(self):
-        super().__init__()
+        super(SecondTab, self).__init__()
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
-    widget = Team_registering()
-    firsttab = FirstTab()
+    team_registering = TeamRegistering()
+    '''firsttab = FirstTab()
+    firsttab.value_added.connect(team_registering.value_added_func)'''
 
-    firsttab.value_added.connect(widget.print_list)
-    widget.resize(360, 480)
-    widget.show()
+    team_registering.resize(360, 480)
+    team_registering.show()
 
     sys.exit(app.exec())

@@ -1,13 +1,11 @@
 from PySide6 import QtWidgets
-from gui.welcome_gui import WelcomeGui
-from gui.parameters_gui import ParametersGui
+from gui.team_registering_gui import TeamRegistering, FirstTab, SecondTab
 
 app = QtWidgets.QApplication([])
 
-welcome_widget = WelcomeGui()
-parameters_widget = ParametersGui()
-welcome_widget.opened.connect(parameters_widget.show)
-parameters_widget.parent_widget = welcome_widget
+main_widget = TeamRegistering()
+tab1_widget = FirstTab()
+tab1_widget.value_added.connect(main_widget.value_added_func)
 
-welcome_widget.show()
+main_widget.show()
 app.exec()
