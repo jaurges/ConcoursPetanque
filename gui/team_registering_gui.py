@@ -4,6 +4,7 @@ sys.path.append(".")
 from PySide6 import QtCore, QtWidgets, QtGui
 #from object.object import Team
 from data.database_handler import DatabaseHandler
+from PySide6.QtCore import Signal, Slot
 
 
 class Team_registering(QtWidgets.QWidget):
@@ -30,9 +31,13 @@ class Team_registering(QtWidgets.QWidget):
         layout_base.addLayout(layout_middle)
         layout_base.addLayout(layout_button)
 
-    def print_list(self, team_name, club_name):
-        record = str(team_name + " " + club_name)
-        self.listWidget.addItem(record)
+        self.listWidget.addItem("record")
+        self.first_tab = FirstTab()
+        
+
+    @Slot(str)
+    def print_list(self, text):
+        #self.listWidget.addItem(text)
         print("atteint")
 
 
@@ -43,7 +48,8 @@ class Application:
     def register_team(self, name: str, club: str):
         self.database_handler.create_team(name, club)
 
-class FirstTab(QtWidgets.QWidget):
+class FirstTab(QtWidgets.QDialog):
+    #value_added = Signal(str)
     def __init__(self):
         super().__init__()
         
@@ -84,9 +90,11 @@ class FirstTab(QtWidgets.QWidget):
         self.combobox.activated.connect(self.club_name)
 
         self.pushbutton_2.clicked.connect(self.register_team)
-        self.pushbutton_2.clicked.connect(self.print_list)
+        self.pushbutton_2.clicked.connect(self.add_value)
         self.pushbutton_2.clicked.connect(self.reset)
         self.pushbutton.clicked.connect(self.reset)
+
+        self.value_added = Signal(str)
 
     def register_team(self):
         team = self.lineEdit.text()
@@ -94,6 +102,14 @@ class FirstTab(QtWidgets.QWidget):
         app = Application()
 
         app.register_team(team, club)
+
+    def add_value(self):
+        print("launch")
+        team_name = self.lineEdit.text()
+        club_name = self.lineEdit_2.text()
+        record = f"{team_name} {club_name}"
+        self.value_added.emit(record)
+        print("ed")
 
     def reset(self):
         self.lineEdit.clear()
@@ -103,10 +119,10 @@ class FirstTab(QtWidgets.QWidget):
         club_name = self.combobox.currentText()
         self.lineEdit_2.setText(club_name)
 
-    def print_list(self):
+    def return_clubteam(self):
         team = self.lineEdit.text()
         club = self.lineEdit_2.text()
-        Team_registering().print_list(team, club)
+        return [team, club]
 
 
 class SecondTab(QtWidgets.QWidget):
@@ -118,6 +134,9 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
     widget = Team_registering()
+    firsttab = FirstTab()
+
+    firsttab.value_added.connect(widget.print_list)
     widget.resize(360, 480)
     widget.show()
 
