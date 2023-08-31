@@ -57,7 +57,7 @@ class DatabaseHandler:
 
     def create_team(self, team: str, club: str):
         cursor = self.con.cursor()
-        query = f"INSERT INTO team(name, name) VALUES('{team}', '{club}');"
+        query = f"INSERT INTO team(name, club) VALUES('{team}', '{club}');"
         cursor.execute(query)
         cursor.close()
         self.con.commit()
