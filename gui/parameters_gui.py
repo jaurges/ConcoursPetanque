@@ -6,8 +6,8 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from data.database_handler import DatabaseHandler
 
 
-'''class ParametersGui(QtWidgets.QWidget):
-
+class ParametersGui(QtWidgets.QWidget):
+    opened = QtCore.Signal()
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Parameters")
@@ -46,7 +46,12 @@ from data.database_handler import DatabaseHandler
         self.layout_general.addWidget(self.calendar)
         self.layout_general.addLayout(self.layout_pushbutton)
 
+        self.pushbutton.clicked.connect(self.open_previous)
         self.pushbutton_2.clicked.connect(self.saving)
+
+    def open_previous(self):
+        self.parent_widget.show()
+        self.close()
 
     @QtCore.Slot()
     def saving(self):
@@ -54,21 +59,23 @@ from data.database_handler import DatabaseHandler
         name = self.lineEdit.text()
         date = self.calendar.selectedDate()
         formatted_date = date.toString("yyyy-M-d")
-        play_mod = ""
+        play_mod = None
         location = self.lineEdit2.text()
         if self.radiobutton.isChecked():
             play_mod = "Doublette"
         if self.radiobutton_2.isChecked():
             play_mod = "Triplette"
-        try:
-            app.clicked_btn(name, formatted_date, play_mod, location)
-        except UnboundLocalError:
+        if play_mod == None:
             erroGui = ErrorGui()
             erroGui.resize(400, 100)
-            erroGui.show()
+            erroGui.exec()
+        else:
+            app.clicked_btn(name, formatted_date, play_mod, location)
+            self.opened.emit()
+            self.close()
 
 
-class ErrorGui(QtWidgets.QWidget):
+class ErrorGui(QtWidgets.QDialog):
     def __init__(self):
         super().__init__()
 
@@ -94,9 +101,9 @@ if __name__ == "__main__":
     widget.resize(360, 480)
     widget.show()
 
-    sys.exit(app.exec())'''
+    sys.exit(app.exec())
 
-from PySide6 import QtWidgets, QtCore
+'''from PySide6 import QtWidgets, QtCore
 
 class ParametersGui(QtWidgets.QWidget):
     opened = QtCore.Signal()
@@ -125,5 +132,5 @@ class ParametersGui(QtWidgets.QWidget):
     def open_next(self):
         self.opened.emit()
         #self.parent_widget.close()
-        self.close()
+        self.close()'''
 

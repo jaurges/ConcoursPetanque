@@ -1,12 +1,29 @@
-from test_one import MiniBuffer
+import sys
 
-# Création d'une instance de "mini fichier tampon"
-buffer = MiniBuffer()
+from PySide6.QtWidgets import QApplication, QDialog, QMainWindow, QPushButton
 
-# Dans une partie du code
-data_to_share = 42
-buffer.write(data_to_share)
 
-# Dans une autre partie du code
-received_data = buffer.read()
-print("Received data:", received_data)  # Cela affichera "Received data: 42"
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("My App")
+
+        button = QPushButton("Press me for a dialog!")
+        button.clicked.connect(self.button_clicked)
+        self.setCentralWidget(button)
+
+    def button_clicked(self, s):
+        print("click", s)
+
+        dlg = QDialog(self)
+        dlg.setWindowTitle("HELLO!")
+        dlg.exec_()
+
+
+app = QApplication(sys.argv)
+
+window = MainWindow()
+window.show()
+
+app.exec_()

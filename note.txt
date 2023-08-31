@@ -49,3 +49,5 @@ quel match doit être scanner (on a déjà fait les 1er 2eme etc)
 match par match (peut-être une fonction plus développé où tout sera scanné d'un coup pour mettre à jour le tableau histoire d'éviter les erreurs)
 
 ajouter une base de donnée pour les team avec le nom des équipes pour chaque concours
+
+https://feathericons.com/ banger de site pour les icônes dans le futur
