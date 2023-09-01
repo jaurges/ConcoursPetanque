@@ -7,6 +7,7 @@ from data.database_handler import DatabaseHandler
 
 
 class TeamRegistering(QtWidgets.QWidget):
+    header_finder = QtCore.Signal(int)
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Team registering")
@@ -15,13 +16,19 @@ class TeamRegistering(QtWidgets.QWidget):
         self.n = 0
 
         self.first_tab = FirstTab()
-        second_tab = SecondTab()
+        self.second_tab = SecondTab()
         tab_widget = QtWidgets.QTabWidget()
         tab_widget.addTab(self.first_tab, "manuel")
-        tab_widget.addTab(second_tab, "générer")
+        tab_widget.addTab(self.second_tab, "générer")
 
         self.first_tab.value.connect(self.fill)
         self.first_tab.setting.connect(self.show_setcombo)
+        self.second_tab.column.connect(self.set_col_count)
+        self.second_tab.row.connect(self.set_row_count)
+        self.second_tab.header.connect(self.fill_header_automat)
+        self.second_tab.header_find_first.connect(self.get_column_index_by_name)
+        self.second_tab.value_automat.connect(self.fill_automat)
+        self.header_finder.connect(self.second_tab.set_team_forreal)
 
         pushbutton_3 = QtWidgets.QPushButton("Annuler")
         pushbutton_4 = QtWidgets.QPushButton("Suivant")
@@ -37,8 +44,6 @@ class TeamRegistering(QtWidgets.QWidget):
         layout_middle.addWidget(self.table)
         layout_base.addLayout(layout_middle)
         layout_base.addLayout(layout_button)
-        self.table.setColumnCount(1)
-        self.table.setHorizontalHeaderItem(0, QtWidgets.QTableWidgetItem("prout ahah"))
     
     @QtCore.Slot(list)
     def fill(self, list):
@@ -74,7 +79,37 @@ class TeamRegistering(QtWidgets.QWidget):
         win = SettingCombo()
         win.club.connect(self.first_tab.addItemtocombo)
         win.exec()
+    
+    @QtCore.Slot(int)
+    def set_col_count(self, num):
+        self.table.setColumnCount(num)
 
+    @QtCore.Slot(int)
+    def set_row_count(self, num):
+        self.table.setRowCount(num)
+
+    @QtCore.Slot(list)
+    def fill_automat(self, ls):
+        for i in ls:
+            self.table.setItem(i[0], i[1], QtWidgets.QTableWidgetItem(i[2]))
+
+    @QtCore.Slot(list)
+    def fill_header_automat(self, ls):
+        print(ls)
+        self.table.setHorizontalHeaderItem(ls[0]-1, QtWidgets.QTableWidgetItem(ls[1]))
+
+    @QtCore.Slot(str)
+    def get_column_index_by_name(self, nom_colonne):
+        header = self.table.horizontalHeaderItem(0)
+        for colonne in range(self.table.columnCount()):
+            try:
+                if header.text() == nom_colonne:
+                    column = int(colonne)
+                    break
+            except AttributeError:
+                pass
+            header = self.table.horizontalHeaderItem(colonne + 1)
+        self.header_finder.emit(column)
 
 class Application:
     def __init__(self):
@@ -161,14 +196,116 @@ class FirstTab(QtWidgets.QDialog):
         self.combobox.addItem(text)
         print("prout")
 
-
     @QtCore.Slot()
     def setting_combo(self):
         self.setting.emit()
 
 class SecondTab(QtWidgets.QWidget):
+    column = QtCore.Signal(int)
+    row = QtCore.Signal(int)
+    header = QtCore.Signal(list)
+    header_find_first = QtCore.Signal(str)
+    value_automat = QtCore.Signal(list)
     def __init__(self):
         super().__init__()
+        label1 = QtWidgets.QLabel("Entrez le nombre de club : ")
+        label2 = QtWidgets.QLabel("Nombre : ")
+        label3 = QtWidgets.QLabel("Nom : ")
+        self.spinbox1 = QtWidgets.QSpinBox()
+        self.spinbox2 = QtWidgets.QSpinBox()
+        spacer1 = QtWidgets.QSpacerItem(50, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        spacer3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        spacer4 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        button1 = QtWidgets.QPushButton("Annuler")
+        button2 = QtWidgets.QPushButton("Valider")
+        self.lineEdit = QtWidgets.QLineEdit()
+        self.combobox = QtWidgets.QComboBox()
+
+        layout_base = QtWidgets.QVBoxLayout(self)
+        layout1 = QtWidgets.QHBoxLayout()
+        layout2 = QtWidgets.QHBoxLayout()
+        layout3 = QtWidgets.QHBoxLayout()
+        layout4 = QtWidgets.QHBoxLayout()
+        layout_top = QtWidgets.QVBoxLayout()
+        layout_bottom = QtWidgets.QVBoxLayout()
+        layout_button = QtWidgets.QHBoxLayout()
+
+        layout1.addWidget(label1)
+        layout1.addSpacerItem(spacer1)
+        layout1.addWidget(self.spinbox1)
+
+        layout_top.addLayout(layout1)
+        layout_top.addLayout(layout2)
+
+        layout_button.addWidget(button1)
+        layout_button.addWidget(button2)
+
+        layout3.addWidget(label3)
+        layout3.addWidget(self.lineEdit)
+
+        layout4.addWidget(label2)
+        layout4.addWidget(self.spinbox2)
+
+        layout_bottom.addWidget(self.combobox)
+        layout_bottom.addLayout(layout3)
+        layout_bottom.addLayout(layout4)
+        layout_bottom.addSpacerItem(spacer4)
+        layout_bottom.addLayout(layout_button)
+
+        layout_base.addLayout(layout_top)
+        layout_base.addSpacerItem(spacer3)
+        layout_base.addLayout(layout_bottom)
+
+        self.spinbox1.valueChanged.connect(self.col_count)
+        self.spinbox1.valueChanged.connect(self.set_club)
+        self.spinbox2.valueChanged.connect(self.row_count)
+        self.spinbox2.valueChanged.connect(self.set_team)
+        self.combobox.currentIndexChanged.connect(self.print_in_edit)
+        self.lineEdit.editingFinished.connect(self.print_header)
+
+    @QtCore.Slot()
+    def col_count(self):
+        value = self.spinbox1.value()
+        self.column.emit(value)
+    
+    @QtCore.Slot()
+    def row_count(self):
+        ls = []
+        value = self.spinbox2.value()
+        ls.append(value)
+        self.row.emit(max(ls))
+
+    def set_club(self):
+        value = self.spinbox1.value()
+        club_name = f"club{value}"
+        self.combobox.addItem(club_name)
+    
+    def print_in_edit(self):
+        value = self.combobox.currentText()
+        self.lineEdit.setText(value)
+
+    @QtCore.Slot()
+    def print_header(self):
+        ls = []
+        num = str
+        txt = self.combobox.currentText()
+        for c in txt:
+            if c.isdigit():
+                num = c
+        ls.append(int(num))
+        ls.append(self.lineEdit.text())
+        self.header.emit(ls)
+    
+    @QtCore.Slot()
+    def set_team(self):
+        self.header_find_first.emit(self.lineEdit.text())
+
+    @QtCore.Slot(int)
+    def set_team_forreal(self, col):
+        ls = []
+        for i in range(self.spinbox2.value()):
+            ls.append([i, col, f"team{i+1}"])
+        self.value_automat.emit(ls)
 
 
 class SettingCombo(QtWidgets.QDialog):
