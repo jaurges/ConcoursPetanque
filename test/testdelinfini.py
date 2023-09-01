@@ -1,53 +1,37 @@
-from PySide6 import QtWidgets, QtCore
+import sys
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem
 
-
-class MainWindow(QtWidgets.QWidget):
+class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.tabWidget = QtWidgets.QTabWidget()
-        self.listWidget = QtWidgets.QListWidget()
+        self.initUI()
 
-        self.first_tab = FirstTab()
-        self.second_tab = SecondTab()
+    def initUI(self):
+        self.setGeometry(100, 100, 400, 300)
+        self.setWindowTitle("QTableWidget avec en-têtes personnalisés")
 
-        self.first_tab.value.connect(self.fill)
+        self.tableWidget = QTableWidget(self)
+        self.tableWidget.setGeometry(50, 50, 300, 200)
 
-        self.tabWidget.addTab(self.first_tab, "first tab")
-        self.tabWidget.addTab(self.second_tab, "second tab")
+        # Créer des en-têtes personnalisés pour chaque colonne
+        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setHorizontalHeaderItem(0, QTableWidgetItem("Colonne 1"))
+        self.tableWidget.setHorizontalHeaderItem(1, QTableWidgetItem("Colonne 2"))
+        self.tableWidget.setHorizontalHeaderItem(2, QTableWidgetItem("Colonne 3"))
 
-        self.layout = QtWidgets.QHBoxLayout(self)
+        # Remplir le tableau avec des données (à titre d'exemple)
+        self.tableWidget.setRowCount(4)
+        for row in range(4):
+            for col in range(3):
+                item = QTableWidgetItem(f"Donnée {row}, {col}")
+                self.tableWidget.setItem(row, col, item)
 
-        self.layout.addWidget(self.tabWidget)
-        self.layout.addWidget(self.listWidget)
+def main():
+    app = QApplication(sys.argv)
+    window = MyWindow()
+    window.show()
+    sys.exit(app.exec_())
 
-    @QtCore.Slot(str)
-    def fill(self, message):
-        self.listWidget.addItem(message)
-
-class FirstTab(QtWidgets.QWidget):
-    value = QtCore.Signal(str)
-    def __init__(self):
-        super().__init__()
-        self.lineEdit = QtWidgets.QLineEdit()
-        self.button = QtWidgets.QPushButton("add")
-        self.layout = QtWidgets.QVBoxLayout(self)
-        self.layout.addWidget(self.lineEdit)
-        self.layout.addWidget(self.button)
-
-        self.button.clicked.connect(self.clicked)
-
-    @QtCore.Slot()
-    def clicked(self):
-        self.value.emit(self.lineEdit.text())
-
-class SecondTab(QtWidgets.QWidget):
-    def __init__(self):
-        super().__init__()
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication([])
-    main = MainWindow()
-    main.show()
-    sys.exit(app.exec())
+if __name__ == '__main__':
+    main()

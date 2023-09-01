@@ -1,41 +1,70 @@
 import sys
-from PyQt5.uic import loadUi
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication, QTabWidget, QWidget
+from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QLineEdit, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QHBoxLayout
 
-class MainWindow(QDialog):
+class MainWindow(QMainWindow):
     def __init__(self):
-        super(MainWindow, self).__init__()
-        loadUi("tabtutorial.ui",self)
-        self.tabWidget.currentChanged.connect(self.tabChanged)
-        self.change.clicked.connect(self.changeTabText)
-        self.insert.clicked.connect(self.insertTab)
-        self.remove.clicked.connect(self.removeTab)
+        super().__init__()
 
-    def tabChanged(self):
-        print("Tab was changed to ", self.tabWidget.currentIndex())
+        self.initUI()
 
-    def changeTabText(self):
-        self.tabWidget.setTabText(0, "First tab")
-        self.tabWidget.setTabText(1, "Second tab")
+    def initUI(self):
+        self.setGeometry(100, 100, 600, 400)
+        self.setWindowTitle("Ajouter des équipes et des clubs")
 
-    def insertTab(self):
-        self.tabWidget.addTab(QWidget(), "New Tab")
+        # Créer des widgets
+        self.team_input = QLineEdit()
+        self.club_input = QLineEdit()
+        self.add_button = QPushButton("Ajouter")
+        self.table_widget = QTableWidget()
 
-    def removeTab(self):
-        self.tabWidget.removeTab(0)
+        # Créer des layouts
+        input_layout = QVBoxLayout()
+        input_layout.addWidget(self.team_input)
+        input_layout.addWidget(self.club_input)
+        input_layout.addWidget(self.add_button)
 
+        main_layout = QHBoxLayout()
+        main_layout.addLayout(input_layout)
+        main_layout.addWidget(self.table_widget)
 
+        central_widget = QWidget()
+        central_widget.setLayout(main_layout)
 
-# main
-app = QApplication(sys.argv)
-mainwindow = MainWindow()
-widget = QtWidgets.QStackedWidget()
-widget.addWidget(mainwindow)
-widget.setFixedHeight(850)
-widget.setFixedWidth(1120)
-widget.show()
-try:
+        self.setCentralWidget(central_widget)
+
+        # Associer le signal du bouton à la fonction d'ajout
+        self.add_button.clicked.connect(self.add_data)
+
+        # Dictionnaire pour stocker les données par club
+        self.club_data = {}
+
+    def add_data(self):
+        team = self.team_input.text()
+        club = self.club_input.text()
+
+        if team and club:
+            if club not in self.club_data:
+                # Si le club n'existe pas dans le dictionnaire, créez une nouvelle colonne
+                column_count = self.table_widget.columnCount()
+                self.table_widget.setColumnCount(column_count + 1)
+                self.table_widget.setHorizontalHeaderItem(column_count, QTableWidgetItem(club))
+                self.club_data[club] = []
+
+            # Ajouter l'équipe au club correspondant
+            self.club_data[club].append(team)
+            row_position = len(self.club_data[club]) - 1
+            self.table_widget.insertRow(row_position)
+            self.table_widget.setItem(row_position, self.table_widget.columnCount() - 1, QTableWidgetItem(team))
+
+            # Effacer les champs de saisie
+            self.team_input.clear()
+            self.club_input.clear()
+
+def main():
+    app = QApplication(sys.argv)
+    mainWindow = MainWindow()
+    mainWindow.show()
     sys.exit(app.exec_())
-except:
-    print("Exiting")
+
+if __name__ == '__main__':
+    main()
