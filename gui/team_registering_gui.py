@@ -10,19 +10,22 @@ class TeamRegistering(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Team registering")
+        self.team_data = {}
+        self.index_club = {}
+        self.n = 0
 
         self.first_tab = FirstTab()
         second_tab = SecondTab()
         tab_widget = QtWidgets.QTabWidget()
-        tab_widget.addTab(self.first_tab, "manual")
-        tab_widget.addTab(second_tab, "loading")
+        tab_widget.addTab(self.first_tab, "manuel")
+        tab_widget.addTab(second_tab, "générer")
 
         self.first_tab.value.connect(self.fill)
         self.first_tab.setting.connect(self.show_setcombo)
 
         pushbutton_3 = QtWidgets.QPushButton("Annuler")
         pushbutton_4 = QtWidgets.QPushButton("Suivant")
-        self.listWidget = QtWidgets.QListWidget()
+        self.table = QtWidgets.QTableWidget()
 
         layout_base = QtWidgets.QVBoxLayout(self)
         layout_button = QtWidgets.QHBoxLayout()
@@ -31,14 +34,41 @@ class TeamRegistering(QtWidgets.QWidget):
         layout_button.addWidget(pushbutton_3)
         layout_button.addWidget(pushbutton_4)
         layout_middle.addWidget(tab_widget)
-        layout_middle.addWidget(self.listWidget)
+        layout_middle.addWidget(self.table)
         layout_base.addLayout(layout_middle)
         layout_base.addLayout(layout_button)
+        self.table.setColumnCount(1)
+        self.table.setHorizontalHeaderItem(0, QtWidgets.QTableWidgetItem("prout ahah"))
     
-    @QtCore.Slot(str)
-    def fill(self, message):
-        self.listWidget.addItem(message)
-    
+    @QtCore.Slot(list)
+    def fill(self, list):
+        team_name = list[0]
+        club_name = list[1]
+        if club_name in self.team_data:
+            pass
+        else:
+            #print("\nprout\n")
+            self.index_club[club_name] = self.n
+            self.n = self.n + 1
+        self.team_data.setdefault(club_name, []).append(team_name)
+        row = len(self.team_data[club_name]) -1
+        column = self.index_club[club_name]
+        item = QtWidgets.QTableWidgetItem(team_name)
+        x = 0
+        for _ in self.team_data[club_name]:
+            x = x + 1
+        self.table.setColumnCount(self.n)
+        self.table.setRowCount(x)
+        self.table.setHorizontalHeaderItem(column, QtWidgets.QTableWidgetItem(club_name))
+        self.table.setItem(row, column, item)
+        '''print(row)
+        print(column)
+        print(team_name)
+        print(club_name)
+        print(self.team_data)
+        print(self.index_club)
+        print("\n")'''
+                
     @QtCore.Slot()
     def show_setcombo(self):
         win = SettingCombo()
@@ -54,10 +84,10 @@ class Application:
         self.database_handler.create_team(name, club)
 
 class FirstTab(QtWidgets.QDialog):
-    value = QtCore.Signal(str)
+    value = QtCore.Signal(list)
     setting = QtCore.Signal()
     def __init__(self):
-        super(FirstTab, self).__init__()  
+        super().__init__()  
         self.lineEdit = QtWidgets.QLineEdit(self)
         self.lineEdit_2 = QtWidgets.QLineEdit(self)
         label = QtWidgets.QLabel("Entrez le nom de l'équipe :")
@@ -89,6 +119,8 @@ class FirstTab(QtWidgets.QDialog):
         layout_2.addWidget(self.lineEdit_2)
         layout_2.addLayout(layout_combobox)
         layout_button_1.addWidget(self.pushbutton)
+        layout_button_1.addWidget(self.pushbutton_2)
+        layout_base.addLayout(layout_1)
         layout_base.addSpacerItem(spacer_1)
         layout_base.addLayout(layout_2)
         layout_base.addSpacerItem(spacer_2)
@@ -113,7 +145,7 @@ class FirstTab(QtWidgets.QDialog):
     def value_added(self):
         team_name = self.lineEdit.text()
         club_name = self.lineEdit_2.text()
-        record = f"{team_name} {club_name}"
+        record = [team_name, club_name]
         self.value.emit(record)
 
     def reset(self):
