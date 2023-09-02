@@ -270,6 +270,7 @@ class SecondTab(QtWidgets.QWidget):
 
         self.ls_row = []
         self.dicto_team_real = {}
+        self.j = 0
         
 
 
@@ -317,50 +318,21 @@ class SecondTab(QtWidgets.QWidget):
     def set_team_forreal(self, col):
         x = self.spinbox2.value()
         y = self.lineEdit.text()
-        ls_max = []
-        ls_max_1 = []
-        max_num = 0
-        max_num_y = 0
-        if not self.dicto_team_real:
-            pass
-        else:
-            for key in self.dicto_team_real:
-                for team in self.dicto_team_real[key]:
-                    pattern = r'\d+\.\d+|\d+'
-                    team = str(team)
-                    correspondences = re.findall(pattern, team)
-                    for correspondence in correspondences:
-                        num = correspondence
-                        ls_max.append(num)
-                        #print(ls_max)
-            max_num = max(ls_max)
-            max_num = int(max_num)
-            try:
-                if not self.dicto_team_real[y]:
-                    pass
-                else:
-                    for team in self.dicto_team_real[y]:
-                        pattern = r'\d+\.\d+|\d+'
-                        team = str(team)
-                        correspondences = re.findall(pattern, team)
-                        for correspondence in correspondences:
-                            num = correspondence
-                            ls_max_1.append(num)
-                max_num_y = max(ls_max_1)
-                print(max_num_y)
-                max_num_y = int(max_num_y)
-                print(max_num_y)
-            except KeyError:
+        max_num_club = 0
+        print(self.dicto_team_real)
+        try:
+            if not self.dicto_team_real[y]:
                 pass
-            
+            else:
+                max_num_club = len(self.dicto_team_real[y])
+        except KeyError:
+            pass
         
-        
-        #print(max_num_y)
-        x = x + max_num_y +1
-        #print(x)
-        
-        for i in range(max_num_y, x):
-            self.dicto_team_real.setdefault(y, []).append([i, col, f"team{i+1}"])
+        n = 0
+        for i in range(x):
+            self.dicto_team_real.setdefault(y, []).append([n+max_num_club, col, f"team{self.j+1}"])
+            self.j = self.j +1
+            n = n+1
         self.value_automat.emit(self.dicto_team_real)
 
 
