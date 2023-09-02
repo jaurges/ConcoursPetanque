@@ -54,3 +54,5 @@ def set_team_forreal(self, col):
             #print(self.dicto_team_real)
         print(self.dicto_team_real)
         self.value_automat.emit(self.dicto_team_real)
+
+    
