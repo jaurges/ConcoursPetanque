@@ -1,6 +1,6 @@
 import sys
 sys.path.append(".")
-
+import re
 from PySide6 import QtCore, QtWidgets, QtGui
 #from object.object import Team
 from data.database_handler import DatabaseHandler
@@ -88,19 +88,24 @@ class TeamRegistering(QtWidgets.QWidget):
     def set_row_count(self, num):
         self.table.setRowCount(num)
 
-    @QtCore.Slot(list)
-    def fill_automat(self, ls):
-        for i in ls:
-            self.table.setItem(i[0], i[1], QtWidgets.QTableWidgetItem(i[2]))
+    @QtCore.Slot(dict)
+    def fill_automat(self, dicto):
+        for i in dicto:
+            #print(i)
+            for j in dicto[i]:
+                #print(j)
+                self.table.setItem(j[0], j[1], QtWidgets.QTableWidgetItem(j[2]))
+            
 
     @QtCore.Slot(list)
     def fill_header_automat(self, ls):
-        print(ls)
+        #print(ls)
         self.table.setHorizontalHeaderItem(ls[0]-1, QtWidgets.QTableWidgetItem(ls[1]))
 
     @QtCore.Slot(str)
     def get_column_index_by_name(self, nom_colonne):
         header = self.table.horizontalHeaderItem(0)
+        colonne = ""
         for colonne in range(self.table.columnCount()):
             try:
                 if header.text() == nom_colonne:
@@ -205,7 +210,7 @@ class SecondTab(QtWidgets.QWidget):
     row = QtCore.Signal(int)
     header = QtCore.Signal(list)
     header_find_first = QtCore.Signal(str)
-    value_automat = QtCore.Signal(list)
+    value_automat = QtCore.Signal(dict)
     def __init__(self):
         super().__init__()
         label1 = QtWidgets.QLabel("Entrez le nombre de club : ")
@@ -263,6 +268,11 @@ class SecondTab(QtWidgets.QWidget):
         self.combobox.currentIndexChanged.connect(self.print_in_edit)
         self.lineEdit.editingFinished.connect(self.print_header)
 
+        self.ls_row = []
+        self.dicto_team_real = {}
+        
+
+
     @QtCore.Slot()
     def col_count(self):
         value = self.spinbox1.value()
@@ -270,10 +280,13 @@ class SecondTab(QtWidgets.QWidget):
     
     @QtCore.Slot()
     def row_count(self):
-        ls = []
         value = self.spinbox2.value()
-        ls.append(value)
-        self.row.emit(max(ls))
+        self.ls_row.append(value)
+        num = max(self.ls_row)
+        num1  = int(num)
+        #self.j = self.j - 1
+        self.row.emit(num1)
+        #print(f"\n{num1}\n")
 
     def set_club(self):
         value = self.spinbox1.value()
@@ -299,13 +312,56 @@ class SecondTab(QtWidgets.QWidget):
     @QtCore.Slot()
     def set_team(self):
         self.header_find_first.emit(self.lineEdit.text())
-
+        
     @QtCore.Slot(int)
     def set_team_forreal(self, col):
-        ls = []
-        for i in range(self.spinbox2.value()):
-            ls.append([i, col, f"team{i+1}"])
-        self.value_automat.emit(ls)
+        x = self.spinbox2.value()
+        y = self.lineEdit.text()
+        ls_max = []
+        ls_max_1 = []
+        max_num = 0
+        max_num_y = 0
+        if not self.dicto_team_real:
+            pass
+        else:
+            for key in self.dicto_team_real:
+                for team in self.dicto_team_real[key]:
+                    pattern = r'\d+\.\d+|\d+'
+                    team = str(team)
+                    correspondences = re.findall(pattern, team)
+                    for correspondence in correspondences:
+                        num = correspondence
+                        ls_max.append(num)
+                        #print(ls_max)
+            max_num = max(ls_max)
+            max_num = int(max_num)
+            try:
+                if not self.dicto_team_real[y]:
+                    pass
+                else:
+                    for team in self.dicto_team_real[y]:
+                        pattern = r'\d+\.\d+|\d+'
+                        team = str(team)
+                        correspondences = re.findall(pattern, team)
+                        for correspondence in correspondences:
+                            num = correspondence
+                            ls_max_1.append(num)
+                max_num_y = max(ls_max_1)
+                print(max_num_y)
+                max_num_y = int(max_num_y)
+                print(max_num_y)
+            except KeyError:
+                pass
+            
+        
+        
+        #print(max_num_y)
+        x = x + max_num_y +1
+        #print(x)
+        
+        for i in range(max_num_y, x):
+            self.dicto_team_real.setdefault(y, []).append([i, col, f"team{i+1}"])
+        self.value_automat.emit(self.dicto_team_real)
 
 
 class SettingCombo(QtWidgets.QDialog):
