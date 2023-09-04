@@ -272,7 +272,7 @@ class SecondTab(QtWidgets.QWidget):
         self.dicto_team_real = {}
         self.dicto_team_num = {}
         self.j = 0
-        
+        self.is_deleted = 0
 
 
     @QtCore.Slot()
@@ -321,44 +321,65 @@ class SecondTab(QtWidgets.QWidget):
         y = self.lineEdit.text()
         z = 0
         max_num_club = 0
+        self.dicto_team_num.setdefault(y, []).append(x)
         try:
-            if not self.dicto_team_real[y]:
-                pass
-            else:
-                try:
-                    self.dicto_team_num.setdefault(y, []).append(x)
-                    print(self.dicto_team_num[y][-1])
-                    print(f"{self.dicto_team_num[y][-2]}\n")
+            if y in self.dicto_team_real:
+                #print("1")
+                if len(self.dicto_team_real[y])>= 2:
+                    #print("2")
                     diff = self.dicto_team_num[y][-1] - self.dicto_team_num[y][-2]
-                    #print(diff)
-                    max_num_club = len(self.dicto_team_real[y])
-                    n = 0
-                    z = max_num_club
                     if diff<0:
-                        print("feur")
-                        for i in range(abs(diff)):
-                            #self.dicto_team_real[y][-i] = [int, int, ""]
-                            del self.dicto_team_real[y].popitem()
-                            self.j = self.j -1
-                            n = n+1
+                        #print("3")
+                        for _ in range(abs(diff)):
+                            print("ahaha")
+                            last_team = self.dicto_team_real[y][-(1+self.is_deleted)]
+                            last_team[2] = ""
+                            print(last_team)
+                            self.is_deleted = self.is_deleted + 1
                         self.value_automat.emit(self.dicto_team_real)
                     else: 
                         max_num_club = len(self.dicto_team_real[y])
-                        #print(max_num_club)
-                except Exception as e: 
-                    max_num_club = len(self.dicto_team_real[y])
-                    #print(e)
-        except KeyError:
-            pass
-        n = 0
-        z = max_num_club
-        for _ in range(z, x):
-            self.dicto_team_real.setdefault(y, []).append([n+max_num_club, col, f"team{self.j+1}"])
-            self.j = self.j +1
-            n = n+1
-        self.value_automat.emit(self.dicto_team_real)
-        print(self.dicto_team_real)
-        
+                        #print(len(self.dicto_team_real[y]))
+                        n = 0
+                        z = max_num_club - self.is_deleted
+                        for _ in range(z, x):
+                            print([n+max_num_club-self.is_deleted, col, f"team{self.j+1}"])
+                            self.dicto_team_real.setdefault(y, []).append([n+max_num_club-self.is_deleted, col, f"team{self.j+1}"])
+                            if self.is_deleted > 1:
+                                self.is_deleted = self.is_deleted - 1
+                            else:
+                                pass
+                            self.j = self.j +1
+                            n = n+1
+                        self.value_automat.emit(self.dicto_team_real)
+                else:
+                    #print("nul 3")
+                    n = 0
+                    for _ in range(1, x):
+                        self.dicto_team_real.setdefault(y, []).append([n+1, col, f"team{self.j+1}"])
+                        self.j = self.j +1
+                        n = n+1
+                    self.value_automat.emit(self.dicto_team_real)
+            else:
+                #print("nul 1")
+                n = 0
+                for _ in range(x):
+                    self.dicto_team_real.setdefault(y, []).append([n, col, f"team{self.j+1}"])
+                    self.j = self.j +1
+                    n = n+1
+                self.value_automat.emit(self.dicto_team_real)
+        except Exception as e:
+            max_num_club = len(self.dicto_team_real[y])
+            #print(e)
+            n = 0
+            z = max_num_club
+            for _ in range(z, x):
+                self.dicto_team_real.setdefault(y, []).append([n+max_num_club, col, f"team{self.j+1}"])
+                self.j = self.j +1
+                n = n+1
+            self.value_automat.emit(self.dicto_team_real)
+
+        #print(self.dicto_team_real)
         
 
 
