@@ -337,31 +337,36 @@ class SecondTab(QtWidgets.QWidget):
                             print(last_team)
                             self.is_deleted = self.is_deleted + 1
                         self.value_automat.emit(self.dicto_team_real)
+                        ls = self.dicto_team_real[y]
+                        last_team = ls[-1]
+                        ls.remove(last_team)
                     else: 
                         max_num_club = len(self.dicto_team_real[y])
-                        #print(len(self.dicto_team_real[y]))
                         n = 0
                         z = max_num_club - self.is_deleted
                         for _ in range(z, x):
-                            print([n+max_num_club-self.is_deleted, col, f"team{self.j+1}"])
-                            self.dicto_team_real.setdefault(y, []).append([n+max_num_club-self.is_deleted, col, f"team{self.j+1}"])
-                            if self.is_deleted > 1:
-                                self.is_deleted = self.is_deleted - 1
+                            print([n+z, col, f"team{self.j+1}"])
+                            
+                            if self.is_deleted >= 1:
+                                for i in range(self.is_deleted):
+                                    last_list = self.dicto_team_real[y][-1]
+                                    last_list[2] = f"team{self.j+1}"
+                                    self.is_deleted = self.is_deleted - 1
                             else:
-                                pass
+                                self.dicto_team_real[y].append([n+z, col, f"team{self.j+1}"])
                             self.j = self.j +1
                             n = n+1
                         self.value_automat.emit(self.dicto_team_real)
                 else:
-                    #print("nul 3")
+                    print("nul 3")
                     n = 0
                     for _ in range(1, x):
-                        self.dicto_team_real.setdefault(y, []).append([n+1, col, f"team{self.j+1}"])
+                        self.dicto_team_real[y].append([n+1, col, f"team{self.j+1}"])
                         self.j = self.j +1
                         n = n+1
                     self.value_automat.emit(self.dicto_team_real)
             else:
-                #print("nul 1")
+                print("nul 1")
                 n = 0
                 for _ in range(x):
                     self.dicto_team_real.setdefault(y, []).append([n, col, f"team{self.j+1}"])
@@ -370,7 +375,7 @@ class SecondTab(QtWidgets.QWidget):
                 self.value_automat.emit(self.dicto_team_real)
         except Exception as e:
             max_num_club = len(self.dicto_team_real[y])
-            #print(e)
+            print(e)
             n = 0
             z = max_num_club
             for _ in range(z, x):
@@ -379,7 +384,7 @@ class SecondTab(QtWidgets.QWidget):
                 n = n+1
             self.value_automat.emit(self.dicto_team_real)
 
-        #print(self.dicto_team_real)
+        print(self.dicto_team_real)
         
 
 
