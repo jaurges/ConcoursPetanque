@@ -1,5 +1,5 @@
 from PySide6 import QtWidgets
-from gui.team_registering_gui import TeamRegistering, FirstTab, SecondTab
+from Python.ConcoursPetanque.team_registering_gui import TeamRegistering, FirstTab, SecondTab
 
 app = QtWidgets.QApplication([])
 
