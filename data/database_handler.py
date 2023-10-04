@@ -12,15 +12,9 @@ class DatabaseHandler:
         self.con = sqlite3.connect(f"{os.path.dirname(os.path.abspath(__file__))}/{database_name}")
         self.con.row_factory = sqlite3.Row
 
-<<<<<<< HEAD
     def create_competition(self, name: str, date: str, play_mod: str, location: str):
         cursor = self.con.cursor()
         query = f"INSERT INTO general(name, date, play_mod, location) VALUES('{name}', '{date}', '{play_mod}', '{location}');"
-=======
-    def save_parameters(self, name: str, date: str, play_mod: str):
-        cursor = self.con.cursor()
-        query = f"INSERT INTO parameters(name, date, play_mod) VALUES('{name}', '{date}', '{play_mod}');"
->>>>>>> parent of 4cf90b7 (ajout location les conflits sont réglé a l'aide de ses con,naissances)
         cursor.execute(query)
         cursor.close()
         self.con.commit()
@@ -152,23 +146,8 @@ class DatabaseHandler:
         output = cursor.fetchall()
         cursor.close()
         self.con.commit()
-<<<<<<< HEAD
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> parent of 4cf90b7 (ajout location les conflits sont réglé a l'aide de ses con,naissances)
         return output
 
 
 #DatabaseHandler.troutrou("database.db")
-<<<<<<< HEAD
-=======
->>>>>>> 116ac35 (ajout location)
-=======
->>>>>>> 116ac35 (ajout location)
-=======
->>>>>>> aa24cb2 (nouvelle méthiode de la baase de donnée)
-=======
->>>>>>> parent of 4cf90b7 (ajout location les conflits sont réglé a l'aide de ses con,naissances)

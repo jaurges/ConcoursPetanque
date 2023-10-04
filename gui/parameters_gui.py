@@ -49,22 +49,15 @@ class ParametersGui(QtWidgets.QWidget):
         app = Application()
         name = self.lineEdit.text()
         date = self.calendar.selectedDate()
-<<<<<<< HEAD
         formatted_date = date.toString("yyyy-M-d")
         play_mod = ""
         location = self.lineEdit2.text()
-=======
->>>>>>> parent of 4cf90b7 (ajout location les conflits sont réglé a l'aide de ses con,naissances)
         if self.radiobutton.isChecked():
             play_mod = "Doublette"
         if self.radiobutton_2.isChecked():
             play_mod = "Triplette"
         try:
-<<<<<<< HEAD
             app.clicked_btn(name, formatted_date, play_mod, location)
-=======
-            app.clicked_btn(name, date, play_mod)
->>>>>>> parent of 4cf90b7 (ajout location les conflits sont réglé a l'aide de ses con,naissances)
         except UnboundLocalError:
             erroGui = ErrorGui()
             erroGui.resize(400, 100)
@@ -85,13 +78,8 @@ class Application:
     def __init__(self):
         self.database_handler = Competition("database.db")
 
-<<<<<<< HEAD
     def clicked_btn(self, name: str, date: str, play_mod: str, location: str):
         self.database_handler.create_competition(name, date, play_mod, location)
-=======
-    def clicked_btn(self, name: str, date: str, play_mod: str):
-        self.database_handler.save_parameters(name, date, play_mod)
->>>>>>> parent of 4cf90b7 (ajout location les conflits sont réglé a l'aide de ses con,naissances)
         print(name, date, play_mod)
 
 
