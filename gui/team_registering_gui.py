@@ -1,16 +1,7 @@
 import sys
-import os
-'''current_dir = os.path.dirname(os.path.abspath(__file__))
-data_dir = os.path.join(current_dir, '..', 'data')
-sys.path.append(data_dir)'''
-sys.path.append("..")
-import re
+sys.path.append(".")
 from PySide6 import QtCore, QtWidgets, QtGui
-#from object.object import Team
-#from data.database_handler import DatabaseHandlert
-#from data.database_handler import DatabaseHandler
 from data.database_handler import DatabaseHandler
-import traceback
 
 
 class TeamRegistering(QtWidgets.QWidget):
@@ -144,7 +135,7 @@ class FirstTab(QtWidgets.QDialog):
         self.pushbutton = QtWidgets.QPushButton("Annuler")
         self.pushbutton_2 = QtWidgets.QPushButton("Ajouter")
         self.tool_button = QtWidgets.QToolButton()
-        self.tool_button.setIcon(QtGui.QIcon("/icon/settings.svg"))
+        self.tool_button.setIcon(QtGui.QIcon("icon/settings.svg"))
         spacer_1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         spacer_2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
 
@@ -345,7 +336,7 @@ class SecondTab(QtWidgets.QWidget):
         else: 
             pass
         for n in range(self.new_dicto[y]):
-            self.temp_dict.setdefault(y, []).append([n, col, f"{y}_{n}"])
+            self.temp_dict.setdefault(y, []).append([n, col, f"{y}_{n+1}"])
         print(self.temp_dict)
         self.row.emit(0)
         self.row_count()
