@@ -8,7 +8,13 @@ import os
 
 class DatabaseHandler:
     def __init__(self, database_name: str):
-        self.con = sqlite3.connect(f"{os.path.dirname(os.path.abspath(__file__))}/{database_name}")
+        #self.con = sqlite3.connect(f"{os.path.dirname(os.path.abspath(__file__))}/{database_name}")
+        chemin = os.path.abspath(__file__)
+        try:
+            self.con = sqlite3.connect(f"{os.path.abspath(os.path.join(chemin, '..', '..'))}/data/{database_name}")
+            print(f"{os.path.abspath(os.path.join(chemin, '..', '..'))}/data/{database_name}")
+        except:
+            print("\n##################prout#############\n")
         self.con.row_factory = sqlite3.Row
         self.directory = str
 
@@ -69,10 +75,11 @@ class DatabaseHandler:
         output = cursor.fetchall()
         cursor.close()
         self.con.commit()
+        print(output)
 
         return output
 
-    def return_team_example(self):
+    '''def return_team_example(self):
         cursor = self.con.cursor()
         query = "SELECT * FROM team_example"
         cursor.execute(query)
@@ -80,7 +87,7 @@ class DatabaseHandler:
         cursor.close()
         self.con.commit()
 
-        return output
+        return output'''
 
     def create_team2(self, team: str, club: str):
         cursor = self.con.cursor()
@@ -146,4 +153,3 @@ class DatabaseHandler:
         cursor.close()
         self.con.commit()
         return n
-

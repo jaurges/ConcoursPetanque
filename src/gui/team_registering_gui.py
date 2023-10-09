@@ -1,7 +1,7 @@
 import sys
 sys.path.append(".")
 from PySide6 import QtCore, QtWidgets, QtGui
-from data.database_handler import DatabaseHandler
+from src.database_handler import DatabaseHandler
 
 
 class TeamRegistering(QtWidgets.QWidget):
@@ -64,13 +64,6 @@ class TeamRegistering(QtWidgets.QWidget):
         self.table.setRowCount(x)
         self.table.setHorizontalHeaderItem(column, QtWidgets.QTableWidgetItem(club_name))
         self.table.setItem(row, column, item)
-        '''print(row)
-        print(column)
-        print(team_name)
-        print(club_name)
-        print(self.team_data)
-        print(self.index_club)
-        print("\n")'''
                 
     @QtCore.Slot()
     def show_setcombo(self):
@@ -90,9 +83,7 @@ class TeamRegistering(QtWidgets.QWidget):
     def fill_automat(self, dicto):
         self.table.setRowCount
         for i in dicto:
-            #print(i)
             for j in dicto[i]:
-                #print(j)
                 self.table.setItem(j[0], j[1], QtWidgets.QTableWidgetItem(j[2]))
             
 

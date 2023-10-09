@@ -3,7 +3,7 @@ import re
 import sqlite3
 sys.path.append(".")
 from PySide6 import QtWidgets, QtGui, QtCore
-from data.database_handler import DatabaseHandler
+from database_handler import DatabaseHandler
 
 
 class Saized_Result(QtWidgets.QWidget):

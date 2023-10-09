@@ -1,7 +1,7 @@
 import sys
 sys.path.append(".")
 from PySide6 import QtCore, QtWidgets, QtGui
-from data.database_handler import DatabaseHandler
+from src.database_handler import DatabaseHandler
 import numpy
 
 
