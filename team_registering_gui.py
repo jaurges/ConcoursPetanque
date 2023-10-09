@@ -279,6 +279,7 @@ class SecondTab(QtWidgets.QWidget):
         self.index_club = {}
 
         self.new_dicto = {}
+        self.temp_dict = {}
 
 
     @QtCore.Slot()
@@ -330,10 +331,21 @@ class SecondTab(QtWidgets.QWidget):
         x = self.spinbox2.value()
         y = self.lineEdit.text()
         z = 0
-        
-        diff = self.ls_row_club[-2] - self.ls_row_club[-1]
-        if not self.new_dicto[y]
-        self.new_dicto[y] = 
+        self.new_dicto[y] = x
+        #diff = self.ls_row_club[-2] - self.ls_row_club[-1]
+
+        try:
+            if not y in self.new_dicto:
+                pass
+            else:
+                pass
+        except Exception as e:
+            traceback.print_exc()
+        ### remettre à zero les parties du dictionnaire à y###
+        for n in range(self.new_dicto[y]):
+            self.temp_dict.setdefault(y, []).append([n, col, f"{y}{n}"])
+        self.value_automat.emit(self.temp_dict)
+
         
         '''try:
             self.dicto_team_num.setdefault(y, []).append(x)
