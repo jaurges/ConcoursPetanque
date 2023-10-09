@@ -1,7 +1,7 @@
 from PySide6 import QtWidgets
-from gui.welcome_gui import WelcomeGui
-from gui.parameters_gui import ParametersGui
-from gui.team_gui import Team_gui
+from src.gui.welcome_gui import WelcomeGui
+from src.gui.parameters_gui import ParametersGui
+from src.gui.team_gui import Team_gui
 
 app = QtWidgets.QApplication([])
 
