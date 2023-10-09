@@ -1,11 +1,6 @@
-###backup###
-
 import sys
 sys.path.append(".")
-import re
 from PySide6 import QtCore, QtWidgets, QtGui
-#from object.object import Team
-#from data.database_handler import DatabaseHandler
 from data.database_handler import DatabaseHandler
 
 
@@ -93,6 +88,7 @@ class TeamRegistering(QtWidgets.QWidget):
 
     @QtCore.Slot(dict)
     def fill_automat(self, dicto):
+        self.table.setRowCount
         for i in dicto:
             #print(i)
             for j in dicto[i]:
@@ -139,7 +135,7 @@ class FirstTab(QtWidgets.QDialog):
         self.pushbutton = QtWidgets.QPushButton("Annuler")
         self.pushbutton_2 = QtWidgets.QPushButton("Ajouter")
         self.tool_button = QtWidgets.QToolButton()
-        self.tool_button.setIcon(QtGui.QIcon("icon/settings.svg"))
+        self.tool_button.setIcon(QtGui.QIcon("icon/settings.g"))
         spacer_1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         spacer_2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
 
@@ -272,10 +268,15 @@ class SecondTab(QtWidgets.QWidget):
         self.lineEdit.editingFinished.connect(self.print_header)
 
         self.ls_row = []
+        self.ls_row_club = {}
         self.dicto_team_real = {}
         self.dicto_team_num = {}
         self.j = 0
         self.is_deleted = 0
+        self.index_club = {}
+
+        self.new_dicto = {}
+        self.temp_dict = {}
 
 
     @QtCore.Slot()
@@ -287,6 +288,10 @@ class SecondTab(QtWidgets.QWidget):
     def row_count(self):
         value = self.spinbox2.value()
         self.ls_row.append(value)
+        x = self.lineEdit.text()
+        if self.ls_row_club == {}:
+            self.ls_row_club.setdefault(x, []).append(0)
+        self.ls_row_club.setdefault(x, []).append(value)
         num = max(self.ls_row)
         num1  = int(num)
         #self.j = self.j - 1
@@ -323,72 +328,19 @@ class SecondTab(QtWidgets.QWidget):
         x = self.spinbox2.value()
         y = self.lineEdit.text()
         z = 0
-        max_num_club = 0
-        self.dicto_team_num.setdefault(y, []).append(x)
-        try:
-            if y in self.dicto_team_real:
-                #print("1")
-                if len(self.dicto_team_real[y])>= 2:
-                    #print("2")
-                    diff = self.dicto_team_num[y][-1] - self.dicto_team_num[y][-2]
-                    if diff<0:
-                        #print("3")
-                        for _ in range(abs(diff)):
-                            print("ahaha")
-                            last_team = self.dicto_team_real[y][-(1+self.is_deleted)]
-                            last_team[2] = ""
-                            print(last_team)
-                            self.is_deleted = self.is_deleted + 1
-                        self.value_automat.emit(self.dicto_team_real)
-                        ls = self.dicto_team_real[y]
-                        last_team = ls[-1]
-                        ls.remove(last_team)
-                    else: 
-                        max_num_club = len(self.dicto_team_real[y])
-                        n = 0
-                        z = max_num_club - self.is_deleted
-                        for _ in range(z, x):
-                            print([n+z, col, f"team{self.j+1}"])
-                            
-                            if self.is_deleted >= 1:
-                                for i in range(self.is_deleted):
-                                    last_list = self.dicto_team_real[y][-1]
-                                    last_list[2] = f"team{self.j+1}"
-                                    self.is_deleted = self.is_deleted - 1
-                            else:
-                                self.dicto_team_real[y].append([n+z, col, f"team{self.j+1}"])
-                            self.j = self.j +1
-                            n = n+1
-                        self.value_automat.emit(self.dicto_team_real)
-                else:
-                    print("nul 3")
-                    n = 0
-                    for _ in range(1, x):
-                        self.dicto_team_real[y].append([n+1, col, f"team{self.j+1}"])
-                        self.j = self.j +1
-                        n = n+1
-                    self.value_automat.emit(self.dicto_team_real)
-            else:
-                print("nul 1")
-                n = 0
-                for _ in range(x):
-                    self.dicto_team_real.setdefault(y, []).append([n, col, f"team{self.j+1}"])
-                    self.j = self.j +1
-                    n = n+1
-                self.value_automat.emit(self.dicto_team_real)
-        except Exception as e:
-            max_num_club = len(self.dicto_team_real[y])
-            print(e)
-            n = 0
-            z = max_num_club
-            for _ in range(z, x):
-                self.dicto_team_real.setdefault(y, []).append([n+max_num_club, col, f"team{self.j+1}"])
-                self.j = self.j +1
-                n = n+1
-            self.value_automat.emit(self.dicto_team_real)
+        self.new_dicto[y] = x
 
-        print(self.dicto_team_real)
-        
+        print(self.new_dicto[y])
+        if y in self.temp_dict:
+            del self.temp_dict[y]
+        else: 
+            pass
+        for n in range(self.new_dicto[y]):
+            self.temp_dict.setdefault(y, []).append([n, col, f"{y}_{n+1}"])
+        print(self.temp_dict)
+        self.row.emit(0)
+        self.row_count()
+        self.value_automat.emit(self.temp_dict)
 
 
 class SettingCombo(QtWidgets.QDialog):
