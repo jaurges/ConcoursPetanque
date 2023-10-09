@@ -271,11 +271,14 @@ class SecondTab(QtWidgets.QWidget):
         self.lineEdit.editingFinished.connect(self.print_header)
 
         self.ls_row = []
+        self.ls_row_club = {}
         self.dicto_team_real = {}
         self.dicto_team_num = {}
         self.j = 0
         self.is_deleted = 0
         self.index_club = {}
+
+        self.new_dicto = {}
 
 
     @QtCore.Slot()
@@ -287,6 +290,10 @@ class SecondTab(QtWidgets.QWidget):
     def row_count(self):
         value = self.spinbox2.value()
         self.ls_row.append(value)
+        x = self.lineEdit.text()
+        if self.ls_row_club == {}:
+            self.ls_row_club.setdefault(x, []).append(0)
+        self.ls_row_club.setdefault(x, []).append(value)
         num = max(self.ls_row)
         num1  = int(num)
         #self.j = self.j - 1
@@ -323,9 +330,12 @@ class SecondTab(QtWidgets.QWidget):
         x = self.spinbox2.value()
         y = self.lineEdit.text()
         z = 0
-        max_num_club = 0
         
-        try:
+        diff = self.ls_row_club[-2] - self.ls_row_club[-1]
+        if not self.new_dicto[y]
+        self.new_dicto[y] = 
+        
+        '''try:
             self.dicto_team_num.setdefault(y, []).append(x)
         except:
             self.dicto_team_num[y].append(0)
@@ -402,7 +412,7 @@ class SecondTab(QtWidgets.QWidget):
                 n = n+1
             self.value_automat.emit(self.dicto_team_real)
 
-        #print(self.dicto_team_real)
+        #print(self.dicto_team_real)'''
         
 
 

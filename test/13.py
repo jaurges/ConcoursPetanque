@@ -1,8 +1,11 @@
+###backup###
+
 import sys
 sys.path.append(".")
 import re
 from PySide6 import QtCore, QtWidgets, QtGui
 #from object.object import Team
+#from data.database_handler import DatabaseHandler
 from data.database_handler import DatabaseHandler
 
 
