@@ -18,32 +18,39 @@ class Team_gui(QtWidgets.QWidget):
 
         self.print_list()
 
-    @QtCore.Slot()
     def print_list(self):
         dict_club = {}
-        index_club = {}
         app = Application()
         output = app.grab_all()
-        
-        #print(output)
         for row in output:
             dict_club.setdefault(row[2], []).append(row[1])
         m = 0
-        print(dict_club)
+        n_row = 0
+        for i in dict_club:
+            n = 0
+            m = m +1
+            self.tab.setColumnCount(m)
+            self.tab.setHorizontalHeaderItem(m-1, QtWidgets.QTableWidgetItem(i))
+            for j in dict_club[i]:
+                if n>n_row:
+                    n_row = n
+                n = n+1
+                self.tab.setRowCount(n_row)
+        m = 0
         for i in dict_club:
             n = 0
             for j in dict_club[i]:
                 self.tab.setItem(n, m, QtWidgets.QTableWidgetItem(j))
                 n = n +1
+            m = m +1
             
-
 
 class Application:
     def __init__(self):
         self.database_handler = DatabaseHandler("databasev2.db")
 
     def grab_all(self):
-        output = self.database_handler.return_team()
+        output = self.database_handler.return_team_example()
         return output
 
 

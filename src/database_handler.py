@@ -79,7 +79,7 @@ class DatabaseHandler:
 
         return output
 
-    '''def return_team_example(self):
+    def return_team_example(self):
         cursor = self.con.cursor()
         query = "SELECT * FROM team_example"
         cursor.execute(query)
@@ -87,11 +87,11 @@ class DatabaseHandler:
         cursor.close()
         self.con.commit()
 
-        return output'''
+        return output
 
     def create_team2(self, team: str, club: str):
         cursor = self.con.cursor()
-        query = f"INSERT INTO team_example(team_name, club_name) VALUES('{team}', '{club}');"
+        query = f"INSERT INTO team_example(name, club) VALUES('{team}', '{club}');"
         cursor.execute(query)
         cursor.close()
         self.con.commit()
