@@ -3,7 +3,7 @@ import re
 import sqlite3
 sys.path.append(".")
 from PySide6 import QtWidgets, QtGui, QtCore
-from database_handler import DatabaseHandler
+from src.database_handler import DatabaseHandler
 
 
 class Saized_Result(QtWidgets.QWidget):
@@ -167,18 +167,18 @@ class Saized_Result(QtWidgets.QWidget):
 
 class Application:
     def __init__(self):
-        self.database_handler = DatabaseHandler("database.db")
+        self.database_handler = DatabaseHandler("databasev2.db")
 
     def return_match_nb(self):
-        n = self.database_handler1.match_nb_return()
+        n = self.database_handler.match_nb_return()
         return n
 
     def team_print(self, n):
-        output = self.database_handler1.return_match(n)
+        output = self.database_handler.return_match(n)
         return output
 
     def team_print_in_line(self, current_row, n):
-        output = self.database_handler2.return_team_per_row(current_row, n)
+        output = self.database_handler.return_team_per_row(current_row, n)
         return output
 
     def register_result(self, row, n, output1, output2):
