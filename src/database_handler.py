@@ -75,7 +75,7 @@ class DatabaseHandler:
         output = cursor.fetchall()
         cursor.close()
         self.con.commit()
-        print(output)
+        #print(output)
 
         return output
 

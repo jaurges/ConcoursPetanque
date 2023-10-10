@@ -21,19 +21,21 @@ class Team_gui(QtWidgets.QWidget):
     @QtCore.Slot()
     def print_list(self):
         dict_club = {}
+        index_club = {}
         app = Application()
         output = app.grab_all()
-        n = 0
-        i = 0
-        print(output)
+        
+        #print(output)
         for row in output:
-            if not row[2] in dict_club:
-                self.tab.setColumnCount(i)
-                dict_club[row[2]] = i
-                i += 1
-            self.tab.setRowCount(n)
-            n=+1
-            self.tab.setItem(row[0], dict_club[row[2]], QtWidgets.QTableWidgetItem(row[1]))
+            dict_club.setdefault(row[2], []).append(row[1])
+        m = 0
+        print(dict_club)
+        for i in dict_club:
+            n = 0
+            for j in dict_club[i]:
+                self.tab.setItem(n, m, QtWidgets.QTableWidgetItem(j))
+                n = n +1
+            
 
 
 class Application:
