@@ -5,18 +5,27 @@ from src.database_handler import DatabaseHandler
 
 
 class Team_gui(QtWidgets.QWidget):
+    opened = QtCore.Signal()
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Team")
 
         self.tab = QtWidgets.QTableWidget(self)
         self.label = QtWidgets.QLabel("Affichage des équipes :")
+        self.button = QtWidgets.QPushButton("Ajouter des équipes")
+        self.button1 = QtWidgets.QPushButton("rafraichîr")
+
+        #self.button1.setFixedSize(10, 10)
 
         self.layout = QtWidgets.QVBoxLayout(self)
         self.layout.addWidget(self.label)
+        self.layout.addWidget(self.button1)
         self.layout.addWidget(self.tab)
+        self.layout.addWidget(self.button1)
+        self.layout.addWidget(self.button)
 
         self.print_list()
+        self.button.clicked.connect(self.next)
 
     def print_list(self):
         dict_club = {}
@@ -43,6 +52,10 @@ class Team_gui(QtWidgets.QWidget):
                 self.tab.setItem(n, m, QtWidgets.QTableWidgetItem(j))
                 n = n +1
             m = m +1
+        
+    def next(self):
+        self.opened.emit()
+        self.close()
             
 
 class Application:

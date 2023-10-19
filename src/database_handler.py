@@ -23,12 +23,12 @@ class DatabaseHandler:
 
         file_name = (f"{name.replace(' ', '')}_{date.replace(' ', '')}_"
                      f"{play_mod.replace(' ', '')}_{location.replace(' ', '')}")
-        data_directory = os.path.join(f"{os.path.dirname(os.path.abspath(__file__))}", '..', 'data/competition')
+        data_directory = f"{os.path.abspath(os.path.join(os.path.abspath(__file__), '..', '..'))}/data/competition"
         data_directory = os.path.join(data_directory, file_name)
         os.makedirs(data_directory, exist_ok=True)
         self.directory = f"{os.path.dirname(os.path.abspath(__file__))}" + "/".join(["/competition", file_name,
                                                                                 f"{file_name}.db"])
-        self.directory = self.directory.replace("gui", "data")
+        self.directory = self.directory.replace("src", "data")
         self.con = sqlite3.connect(self.directory)
         self.con.row_factory = sqlite3.Row
         cursor = self.con.cursor()
@@ -152,3 +152,21 @@ class DatabaseHandler:
     
     def return_team_per_row(self):
         pass
+
+    def test(self):
+        name = 'prout'
+        date = 'zizi'
+        play_mod = 'triplandouille'
+        location = 'boulogone sur mer'
+        file_name = (f"{name.replace(' ', '')}_{date.replace(' ', '')}_"
+                     f"{play_mod.replace(' ', '')}_{location.replace(' ', '')}")
+        data_directory = f"{os.path.abspath(os.path.join(os.path.abspath(__file__), '..', '..'))}/data/competition"
+        data_directory = os.path.join(data_directory, file_name)
+        os.makedirs(data_directory, exist_ok=True)
+        self.directory = f"{os.path.dirname(os.path.abspath(__file__))}" + "/".join(["/competition", file_name,
+                                                                                f"{file_name}.db"])
+        self.directory = self.directory.replace("src", "data")
+        print(self.directory)
+
+test = DatabaseHandler("databasev2.db")
+test.test()
