@@ -13,10 +13,13 @@ team_registering_widget = TeamRegistering()
 
 welcome_widget.resize(360, 480)
 parameters_widget.resize(360, 480)
+team_widget.resize(360, 480)
+team_registering_widget.resize(480, 480)
 
 welcome_widget.opened.connect(parameters_widget.show)
 parameters_widget.opened.connect(team_widget.show)
 team_widget.opened.connect(team_registering_widget.show)
+team_registering_widget.opened.connect(team_widget.show)
 
 parameters_widget.parent_widget = welcome_widget
 team_widget.parent_widget = parameters_widget

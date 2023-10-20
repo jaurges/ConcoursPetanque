@@ -57,7 +57,6 @@ class Team_gui(QtWidgets.QWidget):
         self.opened.emit()
         self.close()
             
-
 class Application:
     def __init__(self):
         self.database_handler = DatabaseHandler("databasev2.db")

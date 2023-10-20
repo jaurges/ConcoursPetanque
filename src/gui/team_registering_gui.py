@@ -6,6 +6,7 @@ from src.database_handler import DatabaseHandler
 
 class TeamRegistering(QtWidgets.QWidget):
     header_finder = QtCore.Signal(int)
+    opened = QtCore.Signal()
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Team registering")
@@ -30,18 +31,28 @@ class TeamRegistering(QtWidgets.QWidget):
 
         pushbutton_3 = QtWidgets.QPushButton("Annuler")
         pushbutton_4 = QtWidgets.QPushButton("Suivant")
+        #tool_button = QtWidgets.QToolButton()
         self.table = QtWidgets.QTableWidget()
+
+        #tool_button.setIcon(QtGui.QIcon("images/corner-down-left.svg"))
 
         layout_base = QtWidgets.QVBoxLayout(self)
         layout_button = QtWidgets.QHBoxLayout()
         layout_middle = QtWidgets.QHBoxLayout()
 
+        #layout_button.addWidget(tool_button)
         layout_button.addWidget(pushbutton_3)
         layout_button.addWidget(pushbutton_4)
         layout_middle.addWidget(tab_widget)
         layout_middle.addWidget(self.table)
         layout_base.addLayout(layout_middle)
         layout_base.addLayout(layout_button)
+
+        pushbutton_3.clicked.connect(self.open_back)
+    
+    def open_back(self):
+        self.opened.emit()
+        self.close()
     
     @QtCore.Slot(list)
     def fill(self, list):
@@ -126,7 +137,7 @@ class FirstTab(QtWidgets.QDialog):
         self.pushbutton = QtWidgets.QPushButton("Annuler")
         self.pushbutton_2 = QtWidgets.QPushButton("Ajouter")
         self.tool_button = QtWidgets.QToolButton()
-        self.tool_button.setIcon(QtGui.QIcon("icon/settings.g"))
+        self.tool_button.setIcon(QtGui.QIcon("images/settings.svg"))
         spacer_1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         spacer_2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
 
