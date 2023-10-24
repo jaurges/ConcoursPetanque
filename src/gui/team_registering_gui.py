@@ -1,4 +1,6 @@
 import sys
+import random
+import csv
 sys.path.append(".")
 from PySide6 import QtCore, QtWidgets, QtGui
 from src.database_handler import DatabaseHandler
@@ -136,9 +138,10 @@ class Application:
     def register_team(self, name: str, club: str):
         self.database_handler.create_team(name, club)
 
-class SaveTeams(QtWidgets.QWidget):
+class SaveTeams(QtWidgets.QDialog):
     def __init__(self):
         super().__init__()
+        self.setGeometry(200, 200, 400, 200)
 
         label1 = QtWidgets.QLabel("Enregister dans un tableur :")
         label2 = QtWidgets.QLabel("Enregister dans un fichier texte brut :")
@@ -165,6 +168,46 @@ class SaveTeams(QtWidgets.QWidget):
         layout_base.addLayout(layout1)
         layout_base.addLayout(layout2)
         layout_base.addLayout(layout3)
+
+        button1.clicked.connect(self.save_csv)
+        button2.clicked.connect(self.save_txt)
+    
+    def save_txt(self):
+        options = QtWidgets.QFileDialog.Options()
+        options = QtWidgets.QFileDialog.ReadOnly
+        file_dialog = QtWidgets.QFileDialog()
+        file_dialog.setOptions(options)
+
+        file_name = file_dialog.getSaveFileName(self, "Enregistrer un fichier", "", "Fichiers texte (*.txt)")
+
+        if file_name:
+            with open(file_name, 'w') as file:
+                file.write("le tout des équipes")
+    
+    def save_csv(self):
+        options = QtWidgets.QFileDialog.Options()
+        options = QtWidgets.QFileDialog.ReadOnly
+        file_dialog = QtWidgets.QFileDialog()
+        file_dialog.setOptions(options)
+
+        file_name, _ = file_dialog.getSaveFileName(self, "Enregistrer un fichier", "", "Tableur (*.csv)")
+
+        if file_name:
+            with open(f"{file_name}.csv", mode='w', newline='') as fichier:
+                writer = csv.writer(fichier)
+
+                for row in range(5):
+                    if row == 4: 
+                        ligne_a_inserer = [""] * 5
+                        ligne_a_inserer[2] = str(random.randint(1, 100))
+                        writer.writerow(ligne_a_inserer)
+                    else:
+                        writer.writerow([""] * 5)
+
+class SvDatabase(QtWidgets.QDialog):
+    def __init__(self):
+        super().__init__()
+        
         
 
 class FirstTab(QtWidgets.QDialog):

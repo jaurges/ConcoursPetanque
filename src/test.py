@@ -1,5 +1,7 @@
 import sys
+import csv
 from PySide6 import QtCore, QtGui, QtWidgets
+import random
 
 class SaveTeams(QtWidgets.QWidget):
     def __init__(self):
@@ -49,6 +51,9 @@ class SaveTeams(QtWidgets.QWidget):
         layout_base.addLayout(layout1)
         layout_base.addLayout(layout2)
         layout_base.addLayout(layout3)
+
+        button1.clicked.connect(self.save_csv)
+        button2.clicked.connect(self.save_txt)
     
     def save_txt(self):
         options = QtWidgets.QFileDialog.Options()
@@ -68,18 +73,27 @@ class SaveTeams(QtWidgets.QWidget):
         file_dialog = QtWidgets.QFileDialog()
         file_dialog.setOptions(options)
 
-        file_name = file_dialog.getSaveFileName(self, "Enregistrer un fichier", "", "Fichiers texte (*.csv)")
+        file_name, _ = file_dialog.getSaveFileName(self, "Enregistrer un fichier", "", "Tableur (*.csv)")
 
         if file_name:
-            with open(file_name, 'w') as file:
-                file.write("le tout des équipes")
+            with open(f"{file_name}.csv", mode='w', newline='') as fichier:
+                writer = csv.writer(fichier)
+
+                for row in range(5):
+                    if row == 4: 
+                        ligne_a_inserer = [""] * 5
+                        ligne_a_inserer[2] = str(random.randint(1, 100))
+                        writer.writerow(ligne_a_inserer)
+                    else:
+                        writer.writerow([""] * 5)
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
     widget = SaveTeams()
 
-    widget.resize(500, 500)
+    widget.resize(500, 100)
     widget.show()
 
     sys.exit(app.exec())

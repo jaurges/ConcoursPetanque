@@ -5,3 +5,4 @@ des îcones dans le mainwindow
 #####======>saized of result now + creation of match in draw.py
 ajout manuel synchro avec l'ajout auto
 corriger arborescence pour team_registering notamment
+ajouter des QGroupBox un peu partout car c plus classe 
