@@ -49,6 +49,30 @@ class SaveTeams(QtWidgets.QWidget):
         layout_base.addLayout(layout1)
         layout_base.addLayout(layout2)
         layout_base.addLayout(layout3)
+    
+    def save_txt(self):
+        options = QtWidgets.QFileDialog.Options()
+        options = QtWidgets.QFileDialog.ReadOnly
+        file_dialog = QtWidgets.QFileDialog()
+        file_dialog.setOptions(options)
+
+        file_name = file_dialog.getSaveFileName(self, "Enregistrer un fichier", "", "Fichiers texte (*.txt)")
+
+        if file_name:
+            with open(file_name, 'w') as file:
+                file.write("le tout des équipes")
+    
+    def save_csv(self):
+        options = QtWidgets.QFileDialog.Options()
+        options = QtWidgets.QFileDialog.ReadOnly
+        file_dialog = QtWidgets.QFileDialog()
+        file_dialog.setOptions(options)
+
+        file_name = file_dialog.getSaveFileName(self, "Enregistrer un fichier", "", "Fichiers texte (*.csv)")
+
+        if file_name:
+            with open(file_name, 'w') as file:
+                file.write("le tout des équipes")
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
