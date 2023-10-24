@@ -16,9 +16,11 @@ class TeamRegistering(QtWidgets.QWidget):
 
         self.first_tab = FirstTab()
         self.second_tab = SecondTab()
+        self.third_tab = ThirdTab()
         tab_widget = QtWidgets.QTabWidget()
         tab_widget.addTab(self.first_tab, "manuel")
         tab_widget.addTab(self.second_tab, "générer")
+        tab_widget.addTab(self.third_tab, "importer")
 
         self.first_tab.value.connect(self.fill)
         self.first_tab.setting.connect(self.show_setcombo)
@@ -31,6 +33,7 @@ class TeamRegistering(QtWidgets.QWidget):
 
         pushbutton_3 = QtWidgets.QPushButton("Annuler")
         pushbutton_4 = QtWidgets.QPushButton("Suivant")
+        pushbutton_5 = QtWidgets.QPushButton("Enregister")
         #tool_button = QtWidgets.QToolButton()
         self.table = QtWidgets.QTableWidget()
 
@@ -39,16 +42,20 @@ class TeamRegistering(QtWidgets.QWidget):
         layout_base = QtWidgets.QVBoxLayout(self)
         layout_button = QtWidgets.QHBoxLayout()
         layout_middle = QtWidgets.QHBoxLayout()
+        layout_table = QtWidgets.QVBoxLayout()
 
         #layout_button.addWidget(tool_button)
         layout_button.addWidget(pushbutton_3)
         layout_button.addWidget(pushbutton_4)
+        layout_table.addWidget(pushbutton_5)
+        layout_table.addWidget(self.table)
         layout_middle.addWidget(tab_widget)
-        layout_middle.addWidget(self.table)
+        layout_middle.addLayout(layout_table)
         layout_base.addLayout(layout_middle)
         layout_base.addLayout(layout_button)
 
         pushbutton_3.clicked.connect(self.open_back)
+        pushbutton_5.clicked.connect(self.open_savings)
     
     def open_back(self):
         self.opened.emit()
@@ -116,6 +123,11 @@ class TeamRegistering(QtWidgets.QWidget):
                 pass
             header = self.table.horizontalHeaderItem(colonne + 1)
         self.header_finder.emit(column)
+    
+    def open_savings(self):
+        widget = SaveTeams()
+        #widget.resize(360, 100)
+        widget.exec()
 
 class Application:
     def __init__(self):
@@ -123,6 +135,37 @@ class Application:
 
     def register_team(self, name: str, club: str):
         self.database_handler.create_team(name, club)
+
+class SaveTeams(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+
+        label1 = QtWidgets.QLabel("Enregister dans un tableur :")
+        label2 = QtWidgets.QLabel("Enregister dans un fichier texte brut :")
+        label3 = QtWidgets.QLabel("Enregistrer dans la base de donnée : (recommandée)")
+
+        button1 = QtWidgets.QToolButton()
+        button2 = QtWidgets.QToolButton()
+        button3 = QtWidgets.QToolButton()
+        button1.setIcon(QtGui.QIcon("images/table.svg"))
+        button2.setIcon(QtGui.QIcon("images/align-left.svg"))
+        button3.setIcon(QtGui.QIcon("images/database.svg"))
+
+        layout1 = QtWidgets.QHBoxLayout()
+        layout2 = QtWidgets.QHBoxLayout()
+        layout3 = QtWidgets.QHBoxLayout()
+        layout_base = QtWidgets.QVBoxLayout(self)
+
+        layout1.addWidget(label1)
+        layout1.addWidget(button1)
+        layout2.addWidget(label2)
+        layout2.addWidget(button2)
+        layout3.addWidget(label3)
+        layout3.addWidget(button3)
+        layout_base.addLayout(layout1)
+        layout_base.addLayout(layout2)
+        layout_base.addLayout(layout3)
+        
 
 class FirstTab(QtWidgets.QDialog):
     value = QtCore.Signal(list)
@@ -200,7 +243,7 @@ class FirstTab(QtWidgets.QDialog):
     @QtCore.Slot(str)
     def addItemtocombo(self, text):
         self.combobox.addItem(text)
-        print("prout")
+        #print("prout")
 
     @QtCore.Slot()
     def setting_combo(self):
@@ -365,6 +408,32 @@ class SettingCombo(QtWidgets.QDialog):
         layout.addLayout(layout_button)
 
         button_1.clicked.connect(self.btn)
+
+class ThirdTab(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+        self.label1 = QtWidgets.QLabel("Depuis la base de donnée :")
+        self.label2 = QtWidgets.QLabel("Depuis un fichier .csv ou .txt :")
+        self.button1 = QtWidgets.QPushButton("ouvrir")
+        self.button2 = QtWidgets.QPushButton("ouvrir")
+
+        spacer1 = QtWidgets.QSpacerItem(50, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        spacer2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        spacer3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+
+        self.layout_base = QtWidgets.QVBoxLayout(self)
+        self.layout1 = QtWidgets.QVBoxLayout()
+        self.layout2 = QtWidgets.QVBoxLayout()
+
+        self.layout1.addWidget(self.label1)
+        self.layout1.addWidget(self.button1)
+        self.layout2.addWidget(self.label2)
+        self.layout2.addWidget(self.button2)
+        self.layout_base.addSpacerItem(spacer1)
+        self.layout_base.addLayout(self.layout1)
+        self.layout_base.addSpacerItem(spacer2)
+        self.layout_base.addLayout(self.layout2)
+        self.layout_base.addSpacerItem(spacer3)
 
     @QtCore.Slot()
     def btn(self):
