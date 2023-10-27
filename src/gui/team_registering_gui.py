@@ -451,6 +451,16 @@ class SettingCombo(QtWidgets.QDialog):
         layout.addLayout(layout_button)
 
         button_1.clicked.connect(self.btn)
+        button_2.clicked.connect(self.close)
+
+    @QtCore.Slot()
+    def btn(self):
+        self.club.emit(self.lineEdit.text())
+        self.lineEdit.clear()
+        print("prout")
+    
+    def close(self):    
+        self.hide()
 
 class ThirdTab(QtWidgets.QWidget):
     def __init__(self):
