@@ -23,19 +23,20 @@ class Draw_gui(QtWidgets.QWidget):
         self.layout_button.addWidget(self.button_3)
         self.layout_button.addWidget(self.button_2)
         self.layout.addWidget(self.button)
-        self.layout.addWidget(self.table)
+        self.table.setColumnCount(3)
+        self.layout.addWidget(self.table, 1)
         self.layout.addLayout(self.layout_button)
 
         self.button.clicked.connect(self.draw)
         self.button_3.clicked.connect(self.clear_content)
         #self.button_2.clicked.connect(self.register_match)
+        self.resizeEvent = self.adjust_columns
 
     @QtCore.Slot()
     def draw(self):
         app = Application()
         output = app.draw()
         self.table.setRowCount(len(output))
-        self.table.setColumnCount(3)
         self.table.setHorizontalHeaderLabels(('match_name', 'team1', 'team2'))
 
         row_index = 0
@@ -55,17 +56,23 @@ class Draw_gui(QtWidgets.QWidget):
     def register_match():
         app = Application()
         app.register_match()'''
+    
+    def adjust_columns(self, event):
+        window_width = event.size().width()
+        column_width = window_width / 3
+        for col in range(self.table.columnCount()):
+            self.table.setColumnWidth(col, column_width)
 
 
 class Application:
     def __init__(self):
-        self.database_handler = DatabaseHandler("database.db") # nom de base de donnée à chancger/répertorie
+        self.database_handler = DatabaseHandler("databasev2.db") # nom de base de donnée à chancger/répertorie
         self.match_list = []
         self.last_players = []
         self.dict_club = {}
 
     def data_into_dict(self):
-        all_team = self.database_handler.return_all_team()
+        all_team = self.database_handler.return_team_example()
 
         for row in all_team:
             key = row[2]
