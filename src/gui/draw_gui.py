@@ -127,7 +127,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
     widget = Draw_gui()
-    widget.resize(360, 480)
+    widget.resize(480, 480)
     widget.show()
 
     sys.exit(app.exec())
