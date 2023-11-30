@@ -170,11 +170,11 @@ class Application:
         self.database_handler = DatabaseHandler("databasev2.db")
 
     def return_match_nb(self):
-        n = self.database_handler.match_nb_return()
+        n = self.database_handler.return_nb_match()
         return n
 
     def team_print(self, n):
-        output = self.database_handler.return_match(n)
+        output = self.database_handler.return_n_match(n)
         return output
 
     def team_print_in_line(self, current_row, n):

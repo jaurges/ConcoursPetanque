@@ -29,9 +29,9 @@ class DatabaseHandler:
         self.directory = f"{os.path.dirname(os.path.abspath(__file__))}" + "/".join(["/competition", file_name,
                                                                                 f"{file_name}.db"])
         self.directory = self.directory.replace("src", "data")
-        self.con = sqlite3.connect(self.directory)
-        self.con.row_factory = sqlite3.Row
-        cursor = self.con.cursor()
+        con = sqlite3.connect(self.directory)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
 
         table1 = "CREATE TABLE IF NOT EXISTS parameters(id integer PRIMARY KEY, " \
                 "name text," \
@@ -56,6 +56,7 @@ class DatabaseHandler:
 
         cursor.close()
         self.con.commit()
+        con.commit()
 
     def create_team(self, team: str, club: str):
         cursor = self.con.cursor()
@@ -128,7 +129,9 @@ class DatabaseHandler:
             ls.append(i[1])
             ls.append(i[2])
             ls.append(i[3])
-        file_name = f"competition/{ls[0]}_{ls[1]}_{ls[2]}_{ls[3]}.db"
+        database_name = f"competition/{ls[0]}_{ls[1]}_{ls[2]}_{ls[3]}/{ls[0]}_{ls[1]}_{ls[2]}_{ls[3]}.db"
+        chemin = os.path.abspath(__file__)
+        file_name = f"{os.path.abspath(os.path.join(chemin, '..', '..'))}/data/{database_name}"
         cursor.close()
         self.con.commit()
 
@@ -137,9 +140,9 @@ class DatabaseHandler:
     def return_nb_match(self):
         n = 0
         dir = self.return_actual_dir()
-        self.con = sqlite3.connect(dir)
-        self.con.row_factory = sqlite3.Row
-        cursor = self.con.cursor()
+        con = sqlite3.connect(dir)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
         query = "SELECT name FROM sqlite_master WHERE type='table'"
         cursor.execute(query)
         output = cursor.fetchall()
@@ -147,11 +150,25 @@ class DatabaseHandler:
             n = n + 1
         n = n - 3
         cursor.close()
-        self.con.commit()
+        con.commit()
         return n
     
     def return_team_per_row(self):
         pass
+
+    def return_n_match(self, n):
+        dir = self.return_actual_dir()
+        con = sqlite3.connect(dir)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+        match = "match" + str(n)
+        query = f"SELECT * FROM {match}"
+        cursor.execute(query)
+        output = cursor.fetchall()
+        cursor.close()
+        con.commit()
+
+        return output
 
     def test(self):
         name = 'prout'
@@ -169,4 +186,5 @@ class DatabaseHandler:
         print(self.directory)
 
 test = DatabaseHandler("databasev2.db")
-test.test()
+output = test.return_actual_dir()
+print(output)

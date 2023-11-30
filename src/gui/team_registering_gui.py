@@ -180,9 +180,13 @@ class SaveTeams(QtWidgets.QDialog):
 
         file_name = file_dialog.getSaveFileName(self, "Enregistrer un fichier", "", "Fichiers texte (*.txt)")
 
-        if file_name:
-            with open(file_name, 'w') as file:
-                file.write("le tout des équipes")
+
+        try: 
+            if file_name:
+                with open(file_name, 'w') as file:
+                    file.write("le tout des équipes")
+        except TypeError:
+            pass
     
     def save_csv(self):
         options = QtWidgets.QFileDialog.Options()
