@@ -80,16 +80,16 @@ class Saized_Result(QtWidgets.QWidget):
 
         self.combobox_setting()
         self.set_combobox()
-        self.team_print_in_table()
+        #self.team_print_in_table()
         self.score_print()
 
 
-        self.combobox.currentIndexChanged.connect(self.team_print_in_table)
+        '''self.combobox.currentIndexChanged.connect(self.team_print_in_table)
         self.combobox.currentIndexChanged.connect(self.score_print)
         self.table_1.currentItemChanged.connect(self.team_print_in_line)
         self.pushbutton1.clicked.connect(self.clear_line)
         self.pushbutton2.clicked.connect(self.register_result)
-        self.pushbutton2.clicked.connect(self.score_print)
+        self.pushbutton2.clicked.connect(self.score_print)'''
 
     def combobox_setting(self):
         app = Application()
@@ -182,10 +182,10 @@ class Application:
         return output
 
     def register_result(self, row, n, output1, output2):
-        self.database_handler1.register_result(row, n, output1, output2)
+        self.database_handler.register_result(row, n, output1, output2)
 
     def score_print(self, n):
-        output = self.database_handler1.return_match(n)
+        output = self.database_handler.return_n_match(n)
         return output
 
 

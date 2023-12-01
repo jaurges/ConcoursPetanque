@@ -43,9 +43,9 @@ class DatabaseHandler:
                 "output1 integer," \
                 "total integer)"
         table3 = "CREATE TABLE IF NOT EXISTS time(id integer PRIMARY KEY, " \
-                "start_hour integer," \
-                "finish_hour integer," \
-                "match_hour integer)"
+                "start_hour text," \
+                "finish_hour text," \
+                "match_hour text)"
         insertion = (f"INSERT INTO parameters(name, date, play_mod, location) VALUES('{name}', '{date}', '{play_mod}', "
                      f"'{location}')")
 
@@ -139,7 +139,10 @@ class DatabaseHandler:
     
     def return_nb_match(self):
         n = 0
-        dir = self.return_actual_dir()
+        # dir = self.return_actual_dir()
+        database_name = f"competition/competition_example.db"
+        chemin = os.path.abspath(__file__)
+        dir = f"{os.path.abspath(os.path.join(chemin, '..', '..'))}/data/{database_name}"
         con = sqlite3.connect(dir)
         con.row_factory = sqlite3.Row
         cursor = con.cursor()
@@ -151,7 +154,7 @@ class DatabaseHandler:
         n = n - 3
         cursor.close()
         con.commit()
-        return n
+        return output
     
     def return_team_per_row(self):
         pass
@@ -186,5 +189,5 @@ class DatabaseHandler:
         print(self.directory)
 
 test = DatabaseHandler("databasev2.db")
-output = test.return_actual_dir()
+output = test.return_nb_match()
 print(output)
