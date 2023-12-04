@@ -151,10 +151,10 @@ class DatabaseHandler:
         output = cursor.fetchall()
         for _ in output:
             n = n + 1
-        n = n - 3
+        n = n - 4
         cursor.close()
         con.commit()
-        return output
+        return n
     
     def return_team_per_row(self):
         pass
