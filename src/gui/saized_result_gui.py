@@ -80,16 +80,18 @@ class Saized_Result(QtWidgets.QWidget):
 
         self.combobox_setting()
         self.set_combobox()
-        #self.team_print_in_table()
+        self.team_print_in_table()
         self.score_print()
 
 
-        '''self.combobox.currentIndexChanged.connect(self.team_print_in_table)
+        self.combobox.currentIndexChanged.connect(self.team_print_in_table)
         self.combobox.currentIndexChanged.connect(self.score_print)
         self.table_1.currentItemChanged.connect(self.team_print_in_line)
         self.pushbutton1.clicked.connect(self.clear_line)
         self.pushbutton2.clicked.connect(self.register_result)
-        self.pushbutton2.clicked.connect(self.score_print)'''
+        self.pushbutton2.clicked.connect(self.score_print)
+
+        self.resizeEvent = self.adjust_columns
 
     def combobox_setting(self):
         app = Application()
@@ -99,7 +101,8 @@ class Saized_Result(QtWidgets.QWidget):
 
     def team_print_in_table(self):
         app = Application()
-        n = int(re.search(r'\d+', self.combobox.currentText()).group())
+        #n = int(re.search(r'\d+', self.combobox.currentText()).group())
+        n = 3
         output = app.team_print(n)
         self.table_1.setRowCount(len(output))
         self.table_1.setColumnCount(3)
@@ -121,10 +124,11 @@ class Saized_Result(QtWidgets.QWidget):
     def team_print_in_line(self):
         app = Application()
         current_row = int(self.table_1.currentRow()) + 1
-        n = self.combobox.currentIndex()
+        #n = self.combobox.currentIndex()
+        n = 3
         output = app.team_print_in_line(current_row, n)
-        self.lineEdit_1.setText(str(output[0]))
-        self.lineEdit_2.setText(str(output[1]))
+        self.lineEdit_1.setText(str(output[0][0]))
+        self.lineEdit_2.setText(str(output[0][1]))
 
     def register_result(self):
         app = Application()
@@ -132,6 +136,7 @@ class Saized_Result(QtWidgets.QWidget):
         output2 = self.lineEdit_4.text()
         current_row = int(self.table_1.currentRow()) + 1
         n = self.combobox.currentIndex()
+        n = 3
         try:
             app.register_result(current_row, n, output1, output2)
             self.lineEdit_3.clear()
@@ -165,6 +170,15 @@ class Saized_Result(QtWidgets.QWidget):
             self.table_2.setItem(row_index, 4, QtWidgets.QTableWidgetItem(str(row["output2"])))
 
             row_index += 1
+
+    def adjust_columns(self, event):
+        window_width = event.size().width()
+        column_width_1 = window_width / 3
+        column_width_2 = window_width / 5
+        for col in range(self.table_1.columnCount()):
+            self.table_1.setColumnWidth(col, column_width_1)
+        for col in range(self.table_2.columnCount()):
+            self.table_2.setColumnWidth(col, column_width_2)
 
 
 class Application:
@@ -204,7 +218,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
     widget = Saized_Result()
-    widget.resize(400, 600)
+    widget.resize(600, 600)
     widget.show()
 
     sys.exit(app.exec())

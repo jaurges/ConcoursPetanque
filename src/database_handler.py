@@ -157,8 +157,20 @@ class DatabaseHandler:
         con.commit()
         return n
     
-    def return_team_per_row(self):
-        pass
+    def return_team_per_row(self, current_row, n):
+        dir = self.return_actual_dir()
+        con = sqlite3.connect(dir)
+        #con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+        match_id = f"match{n}"
+        ls = []
+        query = f"SELECT team1, team2 FROM {match_id} WHERE id={current_row}"
+        cursor.execute(query)
+        output = cursor.fetchall()
+        cursor.close()
+        con.commit()
+
+        return output
 
     def return_n_match(self, n):
         dir = self.return_actual_dir()
@@ -205,5 +217,17 @@ class DatabaseHandler:
             print(query)
         cursor.close()
         con.commit()
+
+    def register_result(self, current_row, n, output1, output2):
+        dir = self.return_actual_dir()
+        print(dir)
+        con = sqlite3.connect(dir)
+        cursor = con.cursor()
+        query = f"UPDATE match{n} SET output1={output1}, output2={output2} WHERE id={current_row}"
+        print(query)
+        cursor.execute(query)
+        cursor.close()
+        con.commit()
+
 test = DatabaseHandler("databasev2.db")
-output = test.insert_team_into_match(10, 3)
+test.register_result(2, 3, 6, 26)
