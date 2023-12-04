@@ -149,7 +149,9 @@ class Saized_Result(QtWidgets.QWidget):
 
     def score_print(self):
         app = Application()
-        n = int(re.search(r'\d+', self.combobox.currentText()).group())
+        #n = int(re.search(r'\d+', self.combobox.currentText()).group())+1
+        n = 3
+        print(n)
         output = app.score_print(n)
         self.table_2.setRowCount(len(output))
         self.table_2.setColumnCount(5)

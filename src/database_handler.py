@@ -129,7 +129,8 @@ class DatabaseHandler:
             ls.append(i[1])
             ls.append(i[2])
             ls.append(i[3])
-        database_name = f"competition/{ls[0]}_{ls[1]}_{ls[2]}_{ls[3]}/{ls[0]}_{ls[1]}_{ls[2]}_{ls[3]}.db"
+        #database_name = f"competition/{ls[0]}_{ls[1]}_{ls[2]}_{ls[3]}/{ls[0]}_{ls[1]}_{ls[2]}_{ls[3]}.db"
+        database_name = "competition/competition_example.db"
         chemin = os.path.abspath(__file__)
         file_name = f"{os.path.abspath(os.path.join(chemin, '..', '..'))}/data/{database_name}"
         cursor.close()
@@ -187,7 +188,22 @@ class DatabaseHandler:
                                                                                 f"{file_name}.db"])
         self.directory = self.directory.replace("src", "data")
         print(self.directory)
-
+    
+    def insert_team_into_match(self, n, q):
+        dir = self.return_actual_dir()
+        print(dir)
+        con = sqlite3.connect(dir)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+        match_name = f"match{q}"
+        for i in range(n):
+            team1 = f"team{i}"
+            team2 = f"team{i}{i}"
+            opponent = f"{team1} vs {team2}"
+            query = f"INSERT INTO {match_name}(match_name, team1, team2) VALUES('{opponent}', '{team1}', '{team2}');"
+            cursor.execute(query)
+            print(query)
+        cursor.close()
+        con.commit()
 test = DatabaseHandler("databasev2.db")
-output = test.return_nb_match()
-print(output)
+output = test.insert_team_into_match(10, 3)
