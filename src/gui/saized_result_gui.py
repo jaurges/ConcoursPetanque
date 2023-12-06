@@ -101,8 +101,7 @@ class Saized_Result(QtWidgets.QWidget):
 
     def team_print_in_table(self):
         app = Application()
-        #n = int(re.search(r'\d+', self.combobox.currentText()).group())
-        n = 3
+        n = int(re.search(r'\d+', self.combobox.currentText()).group())
         output = app.team_print(n)
         self.table_1.setRowCount(len(output))
         self.table_1.setColumnCount(3)
@@ -124,8 +123,7 @@ class Saized_Result(QtWidgets.QWidget):
     def team_print_in_line(self):
         app = Application()
         current_row = int(self.table_1.currentRow()) + 1
-        #n = self.combobox.currentIndex()
-        n = 3
+        n = self.combobox.currentIndex()
         output = app.team_print_in_line(current_row, n)
         self.lineEdit_1.setText(str(output[0][0]))
         self.lineEdit_2.setText(str(output[0][1]))
@@ -136,7 +134,6 @@ class Saized_Result(QtWidgets.QWidget):
         output2 = self.lineEdit_4.text()
         current_row = int(self.table_1.currentRow()) + 1
         n = self.combobox.currentIndex()
-        n = 3
         try:
             app.register_result(current_row, n, output1, output2)
             self.lineEdit_3.clear()
@@ -154,8 +151,7 @@ class Saized_Result(QtWidgets.QWidget):
 
     def score_print(self):
         app = Application()
-        #n = int(re.search(r'\d+', self.combobox.currentText()).group())+1
-        n = 3
+        n = int(re.search(r'\d+', self.combobox.currentText()).group())
         print(n)
         output = app.score_print(n)
         self.table_2.setRowCount(len(output))

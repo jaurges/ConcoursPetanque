@@ -217,6 +217,24 @@ class DatabaseHandler:
             print(query)
         cursor.close()
         con.commit()
+    
+    def insert_match_into_competition(self, n):
+        dir = self.return_actual_dir()
+        print(dir)
+        con = sqlite3.connect(dir)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+        for i in range(n):
+            table_name = f"match{i}"
+            table = "CREATE TABLE IF NOT EXISTS " + table_name + "(id integer PRIMARY KEY, " \
+                                                             "match_name text," \
+                                                             "team1 text," \
+                                                             "output1 integer," \
+                                                             "team2 text," \
+                                                             "output2 integer)"
+            cursor.execute(table)
+        cursor.close()
+        con.commit()
 
     def register_result(self, current_row, n, output1, output2):
         dir = self.return_actual_dir()
@@ -229,5 +247,5 @@ class DatabaseHandler:
         cursor.close()
         con.commit()
 
-test = DatabaseHandler("databasev2.db")
-test.register_result(2, 3, 6, 26)
+'''test = DatabaseHandler("databasev2.db")
+test.insert_team_into_match(17, 5)'''
