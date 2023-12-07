@@ -61,17 +61,17 @@ class Draw_gui(QtWidgets.QWidget):
 
     def register_match(self):
         app = Application()
-        table_data = {}
+        table_data = []
         for row in range(self.table.rowCount()):
-            row_data = {}
-            for col in range(self.table.columnCount()):
+            row_data = []
+            for col in range(3):
                 item = self.table.item(row, col)
                 if item is not None:
-                    row_data[self.table.horizontalHeaderItem(col).text()] = item.text()
+                    row_data.append(item.text())
                 else:
-                    row_data[self.table.horizontalHeaderItem(col).text()] = None
+                    row_data.append(None)
 
-            table_data[f'{row + 1}'] = row_data
+            table_data.append(row_data)
         print(table_data)
         app.register_match(table_data)
     
@@ -141,7 +141,7 @@ class Application:
         return self.match_list
     
     def register_match(self, table_data):
-        self.database_handler.register_match(table_dataS)
+        self.database_handler.register_match(table_data)
 
 
 if __name__ == "__main__":

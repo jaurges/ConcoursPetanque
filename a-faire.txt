@@ -1,0 +1,24 @@
+finir les classements
+tirages par classements
+finir le main avec les signaux
+des îcones dans le mainwindow
+#####======>creation of match in draw.py
+ajout manuel synchro avec l'ajout auto
+faire en sorte que les taleau prennent toutes la places dans les fenêtres
+corriger arborescence pour team_registering notamment
+ajouter des QGroupBox un peu partout car c plus classe 
+essayer de faire un décorateur pour le tirage
+finir register match dans le database_handler avec le dictionnaire
+
+optimisation  :
+- tirage : 
+    - algo : fonction avec les bons paramètres
+- database_handler :
+    - pour tous les SELECT faire des arguments pour faire en sorte que une seule fonction pour toutes
+    - pareil pour les autres enregistrements
+    - optimiser les connections sqlite
+- erroGui : 
+    - faire une classe qui prend pour arguments un message et qui s'adapte en conséquence 
+- enregistrement des résultats :
+    - enregistrer le tableau des scores à la place des lineEdit
+    - ajouter un peu plus d'espace

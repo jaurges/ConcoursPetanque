@@ -13,6 +13,9 @@ class Saized_Result(QtWidgets.QWidget):
         self.table_1 = QtWidgets.QTableWidget()
         self.table_2 = QtWidgets.QTableWidget()
 
+        self.table_1.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
+        self.table_2.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
+
         self.lineEdit_1 = QtWidgets.QLineEdit()
         self.lineEdit_2 = QtWidgets.QLineEdit()
         self.lineEdit_3 = QtWidgets.QLineEdit()
@@ -29,6 +32,12 @@ class Saized_Result(QtWidgets.QWidget):
         self.pushbutton2 = QtWidgets.QPushButton("Valider")
 
         self.combobox = QtWidgets.QComboBox()
+
+        spacer1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacer2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacer3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacer4 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacer5 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
 
         self.base_layout = QtWidgets.QVBoxLayout(self)
         self.first_side = QtWidgets.QVBoxLayout()
@@ -70,11 +79,16 @@ class Saized_Result(QtWidgets.QWidget):
         self.second_side.addLayout(self.layout_3)
         self.second_side.addLayout(self.layout_6)
 
+        self.middle.addSpacerItem(spacer3)
         self.middle.addLayout(self.first_side)
+        self.middle.addSpacerItem(spacer5)
         self.middle.addLayout(self.second_side)
+        self.middle.addSpacerItem(spacer4)
 
         self.base_layout.addLayout(self.layout_1)
+        self.base_layout.addSpacerItem(spacer1)
         self.base_layout.addLayout(self.middle)
+        self.base_layout.addSpacerItem(spacer2)
         self.base_layout.addLayout(self.layout_7)
         self.base_layout.addLayout(self.layout_4)
 
@@ -96,7 +110,7 @@ class Saized_Result(QtWidgets.QWidget):
     def combobox_setting(self):
         app = Application()
         n = app.return_match_nb()
-        for i in range(n):
+        for i in range(n+1):
             self.combobox.addItem("match" + str(i))
 
     def team_print_in_table(self):
@@ -117,8 +131,7 @@ class Saized_Result(QtWidgets.QWidget):
     def set_combobox(self):
         app = Application()
         n = app.return_match_nb()
-        #print(n)
-        self.combobox.setCurrentIndex(n-1)
+        self.combobox.setCurrentIndex(n)
 
     def team_print_in_line(self):
         app = Application()
@@ -152,7 +165,6 @@ class Saized_Result(QtWidgets.QWidget):
     def score_print(self):
         app = Application()
         n = int(re.search(r'\d+', self.combobox.currentText()).group())
-        print(n)
         output = app.score_print(n)
         self.table_2.setRowCount(len(output))
         self.table_2.setColumnCount(5)

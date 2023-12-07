@@ -99,20 +99,23 @@ class DatabaseHandler:
         dir = self.return_actual_dir()
         con = sqlite3.connect(dir)
         cursor = con.cursor()
-        cursor = self.con.cursor()
-        n = self.return_nb_match() + 1
-        table_name = str("match" + n)
-        table = "CREATE TABLE IF NOT EXISTS " + table_name + "(id integer PRIMARY KEY, " \
+        n = self.return_nb_match()+1
+        table_name = f"match{n}"
+        table = "CREATE TABLE " + table_name + "(id integer PRIMARY KEY, " \
                                                              "match_name text," \
                                                              "team1 text," \
                                                              "output1 integer," \
                                                              "team2 text," \
                                                              "output2 integer)"
-        insertion = str("INSERT INTO" + table_name + f"(match_name, team1, team2) VALUES('{match_name}','{team1}', '{team2}')")
         cursor.execute(table)
-        cursor.execute(insertion)
+        for row in table_data: 
+            match_name = row[0]
+            team1 = row[1]
+            team2 = row[2]
+            insertion = str("INSERT INTO " + table_name + f"(match_name, team1, team2) VALUES('{match_name}','{team1}', '{team2}')")
+            cursor.execute(insertion)
         cursor.close()
-        self.con.commit()          
+        con.commit()          
 
     
     def return_actual_dir(self):
