@@ -4,6 +4,7 @@ a jugé pour les stats si l'objet ne serait pas plus efficace et maintenable
 
 import sqlite3
 import os
+import random
 
 
 class DatabaseHandler:
@@ -252,5 +253,9 @@ class DatabaseHandler:
         cursor.close()
         con.commit()
 
-'''test = DatabaseHandler("databasev2.db")
-test.insert_team_into_match(17, 5)'''
+test = DatabaseHandler("databasev2.db")
+for i in range(5):
+    for j in range(11):
+        n = random.randint(0,13)
+        m = random.randint(0,13)
+        test.register_result(j, i, n, m)
