@@ -94,9 +94,11 @@ class DatabaseHandler:
         self.con.commit()
 
 
-    def register_match(self, match_name: str, team1: str, team2: str):
-        self.con = sqlite3.connect(self.directory)
-        self.con.row_factory = sqlite3.Row
+    # à refaire
+    def register_match(self, table_data):
+        dir = self.return_actual_dir()
+        con = sqlite3.connect(dir)
+        cursor = con.cursor()
         cursor = self.con.cursor()
         n = self.return_nb_match() + 1
         table_name = str("match" + n)

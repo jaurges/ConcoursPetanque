@@ -15,21 +15,28 @@ class Draw_gui(QtWidgets.QWidget):
         self.button_2 = QtWidgets.QPushButton("Valider")
         self.button_3 = QtWidgets.QPushButton("Annuler")
         self.table = QtWidgets.QTableWidget(self)
+        self.combobox = QtWidgets.QComboBox()
+
+        self.combobox.addItem("Aléatoire")
+        self.combobox.addItem("Classement")
 
         self.table.setHorizontalHeaderLabels(('match_name', 'team1', 'team2'))
 
         self.layout = QtWidgets.QVBoxLayout(self)
-        self.layout_button = QtWidgets.QHBoxLayout()
-        self.layout_button.addWidget(self.button_3)
-        self.layout_button.addWidget(self.button_2)
-        self.layout.addWidget(self.button)
+        self.layout_button_1 = QtWidgets.QHBoxLayout()
+        self.layout_button_2 = QtWidgets.QHBoxLayout()
+        self.layout_button_1.addWidget(self.combobox)
+        self.layout_button_1.addWidget(self.button)
+        self.layout_button_2.addWidget(self.button_3)
+        self.layout_button_2.addWidget(self.button_2)
+        self.layout.addLayout(self.layout_button_1)
         self.table.setColumnCount(3)
         self.layout.addWidget(self.table, 1)
-        self.layout.addLayout(self.layout_button)
+        self.layout.addLayout(self.layout_button_2)
 
         self.button.clicked.connect(self.draw)
         self.button_3.clicked.connect(self.clear_content)
-        #self.button_2.clicked.connect(self.register_match)
+        self.button_2.clicked.connect(self.register_match)
         self.resizeEvent = self.adjust_columns
 
     @QtCore.Slot()
@@ -52,10 +59,21 @@ class Draw_gui(QtWidgets.QWidget):
         self.table.setRowCount(0)
         self.table.setHorizontalHeaderLabels(('match_name', 'team1', 'team2'))
 
-    '''@staticmethod
-    def register_match():
+    def register_match(self):
         app = Application()
-        app.register_match()'''
+        table_data = {}
+        for row in range(self.table.rowCount()):
+            row_data = {}
+            for col in range(self.table.columnCount()):
+                item = self.table.item(row, col)
+                if item is not None:
+                    row_data[self.table.horizontalHeaderItem(col).text()] = item.text()
+                else:
+                    row_data[self.table.horizontalHeaderItem(col).text()] = None
+
+            table_data[f'{row + 1}'] = row_data
+        print(table_data)
+        app.register_match(table_data)
     
     def adjust_columns(self, event):
         window_width = event.size().width()
@@ -121,6 +139,9 @@ class Application:
             pass
 
         return self.match_list
+    
+    def register_match(self, table_data):
+        self.database_handler.register_match(table_dataS)
 
 
 if __name__ == "__main__":
