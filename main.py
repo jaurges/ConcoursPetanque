@@ -13,7 +13,7 @@ team_registering_widget = TeamRegistering()
 
 welcome_widget.resize(360, 480)
 parameters_widget.resize(360, 480)
-team_widget.resize(360, 480)
+team_widget.resize(480, 480)
 team_registering_widget.resize(480, 480)
 
 welcome_widget.opened.connect(parameters_widget.show)
