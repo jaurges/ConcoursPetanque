@@ -60,8 +60,13 @@ class DatabaseHandler:
         con.commit()
 
     def create_team(self, team: str, club: str):
-        cursor = self.con.cursor()
-        query = f"INSERT INTO team(name, club) VALUES('{team}', '{club}');"
+        dir = self.return_actual_dir()
+        con = sqlite3.connect(dir)
+        cursor = con.cursor()
+        #query = f"INSERT INTO team(name, club) VALUES('{team}', '{club}');"
+        #cursor.execute(query)
+        query = f"INSERT INTO overall(team) VALUES('{team}')"
+        print(query)
         cursor.execute(query)
         cursor.close()
         self.con.commit()
@@ -141,6 +146,7 @@ class DatabaseHandler:
         file_name = f"{os.path.abspath(os.path.join(chemin, '..', '..'))}/data/{database_name}"
         cursor.close()
         self.con.commit()
+        print(file_name)
 
         return file_name
     
@@ -252,10 +258,30 @@ class DatabaseHandler:
         cursor.execute(query)
         cursor.close()
         con.commit()
+    
+    def register_result_into_overall(self, current_row, n, output1, output2):
+        teams = self.return_team_per_row(current_row, n)
+        team1 = teams[0][0]
+        team2 = teams[0][1]
+        dir = self.return_actual_dir()
+        con = sqlite3.connect(dir)
+        cursor = con.cursor()
+        query = f"ALTER TABLE overall ADD COLUMN output{n} INTEGER"
+        print(query)
+        cursor.execute(query)
+        query = f"UPDATE overall SET output{n}={output1} WHERE team = {team1}"
+        print(query)
+        cursor.execute(query)
+        query = f"UPDATE overall SET output{n}={output2} WHERE team = {team2}"
+        print(query)
+        cursor.execute(query)
+        cursor.close()
+        con.commit()
 
+test = DatabaseHandler("databasev2.db")
+club = ['club1', 'club2']
+for j in range(11):
+    test.create_team(f"team{j}", random.choice(club))
+    print(f"team{j}", random.choice(club))
 '''test = DatabaseHandler("databasev2.db")
-for i in range(5):
-    for j in range(11):
-        n = random.randint(0,13)
-        m = random.randint(0,13)
-        test.register_result(j, i, n, m)'''
+test.register_result_into_overall(3, 0, 12, 13)'''
