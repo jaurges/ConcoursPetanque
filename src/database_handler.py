@@ -85,6 +85,7 @@ class DatabaseHandler:
         self.con.commit()
         con.commit()
 
+    # à revoir
     def create_team(self, team: str, club: str):
         dir = self.return_actual_dir()
         con = sqlite3.connect(dir)
@@ -287,6 +288,7 @@ class DatabaseHandler:
         cursor.execute(query)
         output = cursor.fetchall()
         cursor.close()
+        con.commit()
 
         return output
         pass
@@ -297,6 +299,17 @@ class DatabaseHandler:
     def update(self, **kwargs):
         pass
 
+    def insert_team_into_overall(self, n):
+        dir = self.return_actual_dir()
+        con = sqlite3.connect(dir)
+        cursor = con.cursor()
+        for i in range(n):
+            team = f"team{i}"
+            query = f"INSERT INTO overall(team) VALUES('{team}');"
+            print(query)
+            cursor.execute(query)
+        cursor.close()
+        con.commit()
+
 test = DatabaseHandler("databasev2.db")
-output = test.return_nb_match()
-print(output)
+test.insert_team_into_overall(10)

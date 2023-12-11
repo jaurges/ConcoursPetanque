@@ -1,6 +1,6 @@
 finir les classements
 tirages par classements
-réparer la création d'équipes
+réparer la création d'équipes + ajouter les équipes au classement quand elle sont enregistré
 finir le main avec les signaux
 des îcones dans le mainwindow
 implémenter les nouvelles méthodes dans le database_handler 
@@ -28,3 +28,5 @@ optimisation  :
     - pour tous les SELECT faire des arguments pour faire en sorte que une seule fonction pour toutes
     - pareil pour les autres enregistrements
     - optimiser les connections sqlite
+
+ATTENTION AUX con.commit()
