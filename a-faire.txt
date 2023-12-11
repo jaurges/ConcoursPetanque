@@ -3,6 +3,7 @@ tirages par classements
 réparer la création d'équipes
 finir le main avec les signaux
 des îcones dans le mainwindow
+implémenter les nouvelles méthodes dans le database_handler 
 
 faire en sorte que les taleau prennent toutes la places dans les fenêtres
 corriger arborescence pour team_registering notamment

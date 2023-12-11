@@ -14,6 +14,32 @@ class DatabaseHandler:
         self.con = sqlite3.connect(f"{os.path.abspath(os.path.join(chemin, '..', '..'))}/data/{database_name}")
         self.con.row_factory = sqlite3.Row
         self.directory = str
+    
+    def return_actual_dir(self):
+        cursor = self.con.cursor()
+        query = "SELECT seq FROM sqlite_sequence WHERE name='general'"
+        cursor.execute(query)
+        num = cursor.fetchall()
+        for i in num:
+            num = i[0]
+        query = f"SELECT name, date, play_mod, location FROM general WHERE id={num}"
+        cursor.execute(query)
+        output = cursor.fetchall()
+        ls = []
+        for i in output:
+            ls.append(i[0])
+            ls.append(i[1])
+            ls.append(i[2])
+            ls.append(i[3])
+        #database_name = f"competition/{ls[0]}_{ls[1]}_{ls[2]}_{ls[3]}/{ls[0]}_{ls[1]}_{ls[2]}_{ls[3]}.db"
+        database_name = "competition/competition_example.db"
+        chemin = os.path.abspath(__file__)
+        file_name = f"{os.path.abspath(os.path.join(chemin, '..', '..'))}/data/{database_name}"
+        cursor.close()
+        self.con.commit()
+        print(file_name)
+
+        return file_name
 
     def create_competition(self, name: str, date: str, play_mod: str, location: str):
         cursor = self.con.cursor()
@@ -71,26 +97,6 @@ class DatabaseHandler:
         cursor.close()
         self.con.commit()
 
-    def return_team(self):
-        cursor = self.con.cursor()
-        query = "SELECT * FROM team"
-        cursor.execute(query)
-        output = cursor.fetchall()
-        cursor.close()
-        self.con.commit()
-        #print(output)
-
-        return output
-
-    def return_team_example(self):
-        cursor = self.con.cursor()
-        query = "SELECT * FROM team_example"
-        cursor.execute(query)
-        output = cursor.fetchall()
-        cursor.close()
-        self.con.commit()
-
-        return output
 
     def create_team2(self, team: str, club: str):
         cursor = self.con.cursor()
@@ -123,80 +129,6 @@ class DatabaseHandler:
         cursor.close()
         con.commit()          
 
-    
-    def return_actual_dir(self):
-        cursor = self.con.cursor()
-        query = "SELECT seq FROM sqlite_sequence WHERE name='general'"
-        cursor.execute(query)
-        num = cursor.fetchall()
-        for i in num:
-            num = i[0]
-        query = f"SELECT name, date, play_mod, location FROM general WHERE id={num}"
-        cursor.execute(query)
-        output = cursor.fetchall()
-        ls = []
-        for i in output:
-            ls.append(i[0])
-            ls.append(i[1])
-            ls.append(i[2])
-            ls.append(i[3])
-        #database_name = f"competition/{ls[0]}_{ls[1]}_{ls[2]}_{ls[3]}/{ls[0]}_{ls[1]}_{ls[2]}_{ls[3]}.db"
-        database_name = "competition/competition_example.db"
-        chemin = os.path.abspath(__file__)
-        file_name = f"{os.path.abspath(os.path.join(chemin, '..', '..'))}/data/{database_name}"
-        cursor.close()
-        self.con.commit()
-        print(file_name)
-
-        return file_name
-    
-    def return_nb_match(self):
-        n = 0
-        # dir = self.return_actual_dir()
-        database_name = f"competition/competition_example.db"
-        chemin = os.path.abspath(__file__)
-        dir = f"{os.path.abspath(os.path.join(chemin, '..', '..'))}/data/{database_name}"
-        con = sqlite3.connect(dir)
-        con.row_factory = sqlite3.Row
-        cursor = con.cursor()
-        query = "SELECT name FROM sqlite_master WHERE type='table'"
-        cursor.execute(query)
-        output = cursor.fetchall()
-        for _ in output:
-            n = n + 1
-        n = n - 4
-        cursor.close()
-        con.commit()
-        return n
-    
-    def return_team_per_row(self, current_row, n):
-        dir = self.return_actual_dir()
-        con = sqlite3.connect(dir)
-        #con.row_factory = sqlite3.Row
-        cursor = con.cursor()
-        match_id = f"match{n}"
-        ls = []
-        query = f"SELECT team1, team2 FROM {match_id} WHERE id={current_row}"
-        cursor.execute(query)
-        output = cursor.fetchall()
-        cursor.close()
-        con.commit()
-
-        return output
-
-    def return_n_match(self, n):
-        dir = self.return_actual_dir()
-        con = sqlite3.connect(dir)
-        con.row_factory = sqlite3.Row
-        cursor = con.cursor()
-        match = "match" + str(n)
-        query = f"SELECT * FROM {match}"
-        cursor.execute(query)
-        output = cursor.fetchall()
-        cursor.close()
-        con.commit()
-
-        return output
 
     def test(self):
         name = 'prout'
@@ -278,10 +210,93 @@ class DatabaseHandler:
         cursor.close()
         con.commit()
 
+    def return_n_match(self, n):
+        dir = self.return_actual_dir()
+        con = sqlite3.connect(dir)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+        match = "match" + str(n)
+        query = f"SELECT * FROM {match}"
+        cursor.execute(query)
+        output = cursor.fetchall()
+        cursor.close()
+        con.commit()
+
+        return output
+
+    def return_team(self):
+        cursor = self.con.cursor()
+        query = "SELECT * FROM team"
+        cursor.execute(query)
+        output = cursor.fetchall()
+        cursor.close()
+        self.con.commit()
+        #print(output)
+
+        return output
+
+    def return_team_example(self):
+        cursor = self.con.cursor()
+        query = "SELECT * FROM team_example"
+        cursor.execute(query)
+        output = cursor.fetchall()
+        cursor.close()
+        self.con.commit()
+
+        return output
+    
+    
+    def return_nb_match(self):
+        n = 0
+        # dir = self.return_actual_dir()
+        database_name = f"competition/competition_example.db"
+        chemin = os.path.abspath(__file__)
+        dir = f"{os.path.abspath(os.path.join(chemin, '..', '..'))}/data/{database_name}"
+        con = sqlite3.connect(dir)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+        query = "SELECT name FROM sqlite_master WHERE type='table'"
+        cursor.execute(query)
+        output = cursor.fetchall()
+        n = len(output)-4
+        cursor.close()
+        con.commit()
+        return n
+    
+    def return_team_per_row(self, current_row, n):
+        dir = self.return_actual_dir()
+        con = sqlite3.connect(dir)
+        #con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+        match_id = f"match{n}"
+        query = f"SELECT team1, team2 FROM {match_id} WHERE id={current_row}"
+        cursor.execute(query)
+        output = cursor.fetchall()
+        cursor.close()
+        con.commit()
+
+        return output
+    
+    def select_return(self,*args, **kwargs):
+
+
+        dir = self.return_actual_dir()
+        con = sqlite3.connect(dir)
+        cursor = con.cursor()
+        query = f""
+        cursor.execute(query)
+        output = cursor.fetchall()
+        cursor.close()
+
+        return output
+        pass
+
+    def insert(self, **kwargs):
+        pass
+
+    def update(self, **kwargs):
+        pass
+
 test = DatabaseHandler("databasev2.db")
-club = ['club1', 'club2']
-for j in range(11):
-    test.create_team(f"team{j}", random.choice(club))
-    print(f"team{j}", random.choice(club))
-'''test = DatabaseHandler("databasev2.db")
-test.register_result_into_overall(3, 0, 12, 13)'''
+output = test.return_nb_match()
+print(output)
