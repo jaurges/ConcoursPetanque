@@ -145,6 +145,24 @@ class DatabaseHandler:
                                                                                 f"{file_name}.db"])
         self.directory = self.directory.replace("src", "data")
         print(self.directory)
+
+    def verify_col(self, col_name):
+        dir = self.return_actual_dir()
+        con = sqlite3.connect(dir)
+        cursor = con.cursor()
+        query = "PRAGMA table_info(overall)"
+        cursor.execute(query)
+        output = cursor.fetchall()
+        for i in output:
+            if i[1] == col_name:
+                cursor.close()
+                con.commit()
+                return True
+            else:
+                pass
+        cursor.close()
+        con.commit()
+        
     
     def insert_team_into_match(self, n, q):
         dir = self.return_actual_dir()
@@ -199,15 +217,25 @@ class DatabaseHandler:
         dir = self.return_actual_dir()
         con = sqlite3.connect(dir)
         cursor = con.cursor()
-        query = f"ALTER TABLE overall ADD COLUMN output{n} INTEGER"
-        print(query)
-        cursor.execute(query)
-        query = f"UPDATE overall SET output{n}={output1} WHERE team = {team1}"
-        print(query)
-        cursor.execute(query)
-        query = f"UPDATE overall SET output{n}={output2} WHERE team = {team2}"
-        print(query)
-        cursor.execute(query)
+        boolean = self.verify_col(f"output{n}")
+        if boolean:
+            query = f"UPDATE overall SET output{n}={output1} WHERE team = {team1}"
+            print(query)
+            cursor.execute(query)
+            query = f"UPDATE overall SET output{n}={output2} WHERE team = {team2}"
+            print(query)
+            cursor.execute(query)
+
+        else:
+            query = f"ALTER TABLE overall ADD COLUMN output{n} INTEGER"
+            print(query)
+            cursor.execute(query)
+            query = f"UPDATE overall SET output{n}={output1} WHERE team = {team1}"
+            print(query)
+            cursor.execute(query)
+            query = f"UPDATE overall SET output{n}={output2} WHERE team = {team2}"
+            print(query)
+            cursor.execute(query)
         cursor.close()
         con.commit()
 
@@ -278,20 +306,24 @@ class DatabaseHandler:
 
         return output
     
-    def select_return(self,*args, **kwargs):
-
-
+    def select_return(self, **kwargs):
+        columns : list = kwargs.get('columns', True)
+        table : str = kwargs.get('table', True)
+        condition : str = kwargs.get('condition', True)
+        condition_value : str = kwargs.get('condition_value', True)
+        if columns or table: 
+            return NameError
+        
         dir = self.return_actual_dir()
         con = sqlite3.connect(dir)
         cursor = con.cursor()
-        query = f""
+        query = f"SELECT {columns} FROM {table} {condition}"
         cursor.execute(query)
         output = cursor.fetchall()
         cursor.close()
         con.commit()
 
         return output
-        pass
 
     def insert(self, **kwargs):
         pass
@@ -312,4 +344,4 @@ class DatabaseHandler:
         con.commit()
 
 test = DatabaseHandler("databasev2.db")
-test.insert_team_into_overall(10)
+test.register_result_into_overall(5, 1, 8, 13)
