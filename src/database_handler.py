@@ -4,7 +4,9 @@ a jugé pour les stats si l'objet ne serait pas plus efficace et maintenable
 
 import sqlite3
 import os
-import random
+import sys
+sys.path.append('.')
+from utils.utils import concatenate, create_condition
 
 
 class DatabaseHandler:
@@ -14,30 +16,39 @@ class DatabaseHandler:
         self.con.row_factory = sqlite3.Row
     
     def select_return(self, **kwargs):
-        columns : list = kwargs.get('columns', True)
-        table : str = kwargs.get('table', True)
-        condition : str = kwargs.get('condition', True)
-        condition_value : str = kwargs.get('condition_value', True)
+        columns : list = kwargs.get('columns', False)
+        table : str = kwargs.get('table', False)
+        condition : str = kwargs.get('condition', False)
+        condition_value : str = kwargs.get('condition_value', False)
 
-        if columns or table: 
-            return NameError
-        
-        cursor = self.con.cursor()
+        if not columns or not table: 
+            raise NameError
+        elif condition:
+            pass
+        else:
+            condition = create_condition(condition, condition_value)
+
+        columns = concatenate(columns)
+
+        #cursor = self.con.cursor()
         query = f"SELECT {columns} FROM {table} {condition}"
-        cursor.execute(query)
-        output = cursor.fetchall()
-        cursor.close()
-        self.con.commit()
+        print(query)
+        #cursor.execute(query)
+        #output = cursor.fetchall()
+        #cursor.close()
+        #self.con.commit()
 
-        return output
+        #return output
 
     def insert(self, **kwargs):
-        columns : list = kwargs.get('columns', True)
-        table : str = kwargs.get('table', True)
-        values : list = kwargs.get('values', True)
+        columns : list = kwargs.get('columns', False)
+        table : str = kwargs.get('table', False)
+        values : list = kwargs.get('values', False)
 
-        if columns or table or values: 
+        if not columns or not table or not values: 
             return NameError
+        
+        columns = concatenate(columns)
         
         cursor = self.con.cursor()
         query = f"INSERT INTO {table}({columns}) VALUES({values})"
@@ -48,13 +59,13 @@ class DatabaseHandler:
 
 
     def update(self, **kwargs):
-        columns : list = kwargs.get('columns', True)
-        table : str = kwargs.get('table', True)
-        condition : str = kwargs.get('condition', True)
-        condition_value : str = kwargs.get('condition_value', True)
-        values : list = kwargs.get('values', True)
+        columns : list = kwargs.get('columns', False)
+        table : str = kwargs.get('table', False)
+        condition : str = kwargs.get('condition', False)
+        condition_value : str = kwargs.get('condition_value', False)
+        values : list = kwargs.get('values', False)
         
-        if columns or table or condition or condition_value or values: 
+        if not columns or not table or not condition or not condition_value or not values: 
             return NameError
         elif not len(columns) == len(values):
             return NameError
@@ -69,5 +80,5 @@ class DatabaseHandler:
 
 
 
-test = DatabaseHandler("databasev2.db")
-test.register_result_into_overall(5, 1, 8, 13)
+test = DatabaseHandler("database.db")
+test.select_return(columns = ['zouzou', 'zaza'], condition = "id", table = 'team', condition_value = "prout")
