@@ -1,5 +1,5 @@
 
-from src.database_handler_old import DatabaseHandler
+from src.database_handler import DatabaseHandler
 
 class Application:
     def __init__(self):
