@@ -3,7 +3,7 @@ import re
 import sqlite3
 sys.path.append(".")
 from PySide6 import QtWidgets, QtGui, QtCore
-from src.database_handler import DatabaseHandler
+from src.application import Application
 
 
 class Saized_Result(QtWidgets.QWidget):
@@ -187,30 +187,6 @@ class Saized_Result(QtWidgets.QWidget):
             self.table_1.setColumnWidth(col, column_width_1)
         for col in range(self.table_2.columnCount()):
             self.table_2.setColumnWidth(col, column_width_2)
-
-
-class Application:
-    def __init__(self):
-        self.database_handler = DatabaseHandler("databasev2.db")
-
-    def return_match_nb(self):
-        n = self.database_handler.return_nb_match()
-        return n
-
-    def team_print(self, n):
-        output = self.database_handler.return_n_match(n)
-        return output
-
-    def team_print_in_line(self, current_row, n):
-        output = self.database_handler.return_team_per_row(current_row, n)
-        return output
-
-    def register_result(self, row, n, output1, output2):
-        self.database_handler.register_result(row, n, output1, output2)
-
-    def score_print(self, n):
-        output = self.database_handler.return_n_match(n)
-        return output
 
 
 class ErrorGui(QtWidgets.QWidget):

@@ -1,5 +1,9 @@
+import sys
+import random
+import csv
+sys.path.append(".")
 from PySide6 import QtCore, QtWidgets, QtGui
-
+from src.application import Application
 
 class SettingCombo(QtWidgets.QDialog):
     club = QtCore.Signal(str)
@@ -21,3 +25,13 @@ class SettingCombo(QtWidgets.QDialog):
         layout.addLayout(layout_button)
 
         button_1.clicked.connect(self.btn)
+        button_2.clicked.connect(self.close)
+
+    @QtCore.Slot()
+    def btn(self):
+        self.club.emit(self.lineEdit.text())
+        self.lineEdit.clear()
+        print("prout")
+    
+    def close(self):    
+        self.hide()

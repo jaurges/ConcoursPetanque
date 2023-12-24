@@ -1,7 +1,7 @@
 import random
 import sys
 sys.path.append('.')
-from src.database_handler import DatabaseHandler
+from src.database_handler_old import DatabaseHandler
 import csv
 import pandas as pd
 

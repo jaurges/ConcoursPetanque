@@ -1,4 +1,10 @@
-from PySide6 import QtWidgets, QtGui, QtCore
+import sys
+import random
+import csv
+sys.path.append(".")
+from PySide6 import QtCore, QtWidgets, QtGui
+from src.application import Application
+
 
 class SecondTab(QtWidgets.QWidget):
     column = QtCore.Signal(int)

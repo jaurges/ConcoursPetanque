@@ -1,7 +1,7 @@
 import sys
 sys.path.append(".")
 from PySide6 import QtCore, QtWidgets, QtGui
-from src.database_handler import DatabaseHandler
+from src.application import Application
 
 
 class Team_gui(QtWidgets.QWidget):
@@ -56,14 +56,6 @@ class Team_gui(QtWidgets.QWidget):
     def next(self):
         self.opened.emit()
         self.close()
-            
-class Application:
-    def __init__(self):
-        self.database_handler = DatabaseHandler("databasev2.db")
-
-    def grab_all(self):
-        output = self.database_handler.return_team_example()
-        return output
 
 
 if __name__ == "__main__":

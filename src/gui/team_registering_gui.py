@@ -3,7 +3,7 @@ import random
 import csv
 sys.path.append(".")
 from PySide6 import QtCore, QtWidgets, QtGui
-from src.database_handler import DatabaseHandler
+from src.application import Application
 
 
 class TeamRegistering(QtWidgets.QWidget):
@@ -131,12 +131,6 @@ class TeamRegistering(QtWidgets.QWidget):
         #widget.resize(360, 100)
         widget.exec()
 
-class Application:
-    def __init__(self):
-        self.database_handler = DatabaseHandler("databasev2.db")
-
-    def register_team(self, name: str, club: str):
-        self.database_handler.create_team(name, club)
 
 class SaveTeams(QtWidgets.QDialog):
     def __init__(self):

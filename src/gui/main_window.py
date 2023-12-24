@@ -2,7 +2,7 @@ import sys
 import random
 from PySide6 import QtCore, QtWidgets, QtGui
 sys.path.append(".")
-from src.database_handler import DatabaseHandler
+from src.application import Application
 
 
 class MainWindow(QtWidgets.QWidget):
@@ -94,11 +94,6 @@ class MainWindow(QtWidgets.QWidget):
         self.vlayout.addWidget(self.button4)
         self.layout_base.addWidget(self.tab)
         self.layout_base.addLayout(self.vlayout)
-
-
-class Application:
-    def __init__(self):
-        self.database_handler = DatabaseHandler("databasev2.db")
 
 
 if __name__ == "__main__":

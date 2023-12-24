@@ -1,7 +1,9 @@
 import sys
-sys.path.append('.')
+import random
+import csv
+sys.path.append(".")
 from PySide6 import QtCore, QtWidgets, QtGui
-import Application
+from src.application import Application
 
 
 class FirstTab(QtWidgets.QDialog):

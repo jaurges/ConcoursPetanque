@@ -1,9 +1,11 @@
-import sys
-sys.path.append(".")
 from PySide6 import QtCore, QtWidgets, QtGui
-from Tab import FirstTab, SecondTab, ThirdTab
-from SecondWindows import SettingCombo, SaveTeams
+import sys
 
+from tab.first_tab import FirstTab
+from tab.second_tab import SecondTab
+from tab.third_tab import ThirdTab
+from dialog.save_teams import SaveTeams
+from dialog.settings_combo import SettingCombo
 
 class TeamRegistering(QtWidgets.QWidget):
     header_finder = QtCore.Signal(int)
@@ -129,6 +131,7 @@ class TeamRegistering(QtWidgets.QWidget):
         widget = SaveTeams()
         #widget.resize(360, 100)
         widget.exec()
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])

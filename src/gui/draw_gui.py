@@ -1,7 +1,7 @@
 import sys
 sys.path.append(".")
 from PySide6 import QtCore, QtWidgets, QtGui
-from src.database_handler import DatabaseHandler
+from src.application import Application
 import numpy
 
 
@@ -80,68 +80,6 @@ class Draw_gui(QtWidgets.QWidget):
         column_width = window_width / 3
         for col in range(self.table.columnCount()):
             self.table.setColumnWidth(col, column_width)
-
-
-class Application:
-    def __init__(self):
-        self.database_handler = DatabaseHandler("databasev2.db") # nom de base de donnée à chancger/répertorie
-        self.match_list = []
-        self.last_players = []
-        self.dict_club = {}
-
-    def data_into_dict(self):
-        all_team = self.database_handler.return_team_example()
-
-        for row in all_team:
-            key = row[2]
-            value = row[1]
-            self.dict_club.setdefault(key, []).append(value)
-    
-    def draw(self):
-        self.data_into_dict()  
-        dict_club_var = self.dict_club
-
-        for i in self.dict_club:
-            if len(self.dict_club[i]) % 2 == 0:
-                for _ in range(len(self.dict_club[i])//2):
-                    team1 = numpy.random.choice(dict_club_var[i])
-                    dict_club_var[i].remove(team1)
-                    team2 = numpy.random.choice(dict_club_var[i])
-                    dict_club_var[i].remove(team2)
-                    match_name = str(team1 + " vs " + team2)
-                    self.match_list.append([match_name, team1, team2])
-            else:
-                for _ in range(len(self.dict_club[i])//2):
-                    team1 = numpy.random.choice(dict_club_var[i])
-                    dict_club_var[i].remove(team1)
-                    team2 = numpy.random.choice(dict_club_var[i])
-                    dict_club_var[i].remove(team2)
-                    match_name = str(team1 + " vs " + team2)
-                    self.match_list.append([match_name, team1, team2])
-                for value in dict_club_var[i]:
-                    self.last_players.append(value)
-        if len(self.last_players) >= 2:
-            for _ in range(len(self.last_players) // 2):
-                team1 = numpy.random.choice(self.last_players)
-                self.last_players.remove(team1)
-                team2 = numpy.random.choice(self.last_players)
-                self.last_players.remove(team2)
-                match_name = str(team1 + " vs " + team2)
-                self.match_list.append([match_name, team1, team2])
-
-        if len(self.last_players) == 1:
-                match_name = "alone : " + str(self.last_players)
-                self.match_list.append(match_name)
-                for value in self.last_players:
-                    self.last_players.remove(value)
-            
-        elif len(self.last_players) == 0:
-            pass
-
-        return self.match_list
-    
-    def register_match(self, table_data):
-        self.database_handler.register_match(table_data)
 
 
 if __name__ == "__main__":

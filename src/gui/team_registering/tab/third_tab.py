@@ -1,5 +1,9 @@
-from PySide6 import QtWidgets, QtGui, QtCore
-
+import sys
+import random
+import csv
+sys.path.append(".")
+from PySide6 import QtCore, QtWidgets, QtGui
+from src.application import Application
 
 class ThirdTab(QtWidgets.QWidget):
     def __init__(self):
