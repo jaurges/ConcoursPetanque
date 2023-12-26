@@ -3,9 +3,9 @@ tirages par classements
 réparer la création d'équipes + ajouter les équipes au classement quand elle sont enregistré
 finir le main avec les signaux
 des îcones dans le mainwindow
-implémenter les nouvelles méthodes dans le database_handler
 erreur personnalisé
 error gui aussi 
++++++ faire l'index courant de competition
 
 faire en sorte que les taleau prennent toutes la places dans les fenêtres
 corriger arborescence pour team_registering notamment

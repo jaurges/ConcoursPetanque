@@ -103,5 +103,5 @@ class DatabaseHandler:
         ##cursor.close()
         #self.con.commit()
 
-test = DatabaseHandler()
-test.update(columns = 'output1', values = 2, table = 'overall', condition_value = "team4", condition = 'rowid')
+'''test = DatabaseHandler()
+test.update(columns = 'output1', values = 2, table = 'overall', condition_value = "team4", condition = 'rowid')'''

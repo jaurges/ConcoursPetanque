@@ -1,9 +1,12 @@
-
 from src.database_handler import DatabaseHandler
+import json
 
 class Application:
     def __init__(self):
         self.database_handler = DatabaseHandler("database.db")
+    
+    def set_competition_index(self):
+        pass
 
     def return_team(self):
         pass
