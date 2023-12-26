@@ -1,4 +1,2 @@
-ls=["prout", "zizi"]
-var = ", ".join(ls)
-string = f"{var} oh lalala"
-print(string)
+for i in range(3):
+    print(i)
