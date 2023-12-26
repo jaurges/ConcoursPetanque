@@ -1,12 +1,8 @@
-'''
-a jugé pour les stats si l'objet ne serait pas plus efficace et maintenable
-'''
-
 import sqlite3
 import os
 import sys
 sys.path.append('.')
-from utils.utils import concatenate, create_condition, plus_grand
+from utils.utils import concatenate, create_condition, plus_grand, type_elements_liste
 
 
 class DatabaseHandler:
@@ -15,7 +11,7 @@ class DatabaseHandler:
         self.con = sqlite3.connect(f"{os.path.abspath(os.path.join(chemin, '..', '..'))}/data/database.db")
         self.con.row_factory = sqlite3.Row
     
-    def select_return(self, **kwargs):
+    def select(self, **kwargs):
         columns : list = kwargs.get('columns', False)
         table : str = kwargs.get('table', False)
         condition : str = kwargs.get('condition', False)
@@ -59,7 +55,7 @@ class DatabaseHandler:
         ##cursor.close()
         #self.con.commit()
 
-# pour les listes suivantes elles doivent être équilibrés ou alors ce sont des string
+    # pour les listes suivantes elles doivent être équilibrés ou alors ce sont des string
     def update(self, **kwargs):
         columns : list = kwargs.get('columns', False)
         table : str = kwargs.get('table', False)
@@ -70,36 +66,42 @@ class DatabaseHandler:
         if not columns or not table or not condition or not condition_value or not values: 
             raise NameError
 
-        
-        '''#cursor = self.con.cursor()
-        for i in range(len(values)):
-            if type(columns) is str:
-                query = f"UPDATE {table} SET {columns}={values[i]} WHERE {condition}"
-            else:
-                query = f"UPDATE {table} SET {columns[i]}={values[i]} WHERE {condition}"
-            print(query)
+        list_1 = [columns, values, condition, condition_value]
+        list_2 = type_elements_liste(list_1)
+
+        #cursor = self.con.cursor()
+    
+        for i in range(plus_grand(list_1)):
+            list_list = [columns, values, condition, condition_value]
+            query = []
+            n = 0
+            for j in list_list:
+                if list_2[n]:
+                    var = j[i]
+                else:
+                    var = j
+                n = n+1
+                query.append(str(var))
+            query = f"UPDATE {table} SET {query[0]}={query[1]} WHERE {query[2]}={query[3]}"
             #cursor.execute(query)
-'''
-        list_list = [columns, values, condition, condition_value]
-        #print(list_list)
-        list_2 = []
-        n = 0
-        for args in list_list:
-            if type(args) is str:
-                list_2.append(n)
-            else:
-                pass
-            n = n+1
-
-        for i in range(plus_grand(list_list)):
-            print("prout")
-            pass
-
+            print(query)
 
         #cursor.close()
         #self.con.commit()
+    
+    #a completer dans le futur pour dautre verification
+    def pragma(self, **kwargs):
+        table : str = kwargs.get('table', False)
 
+        #cursor = self.con.cursor()
+        query = f"PRAGMA table_info({table})"
+        print(query)
+        #cursor.execute(query)
+        #output = cursor.fetchall
+        #return output
 
+        ##cursor.close()
+        #self.con.commit()
 
 test = DatabaseHandler()
-test.update(columns = ['zouzou','jjyotty', 'jotoo'], values = ["feur","quoicoubeh"], table = 'team', condition_value = "prout", condition = 'caca')
+test.update(columns = 'output1', values = 2, table = 'overall', condition_value = "team4", condition = 'rowid')

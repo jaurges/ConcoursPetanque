@@ -11,8 +11,11 @@ def create_condition(condition, value):
 
 def plus_grand(list):
     for i in range(4):
-        if type(list[i]) is str:
-            list[i] = 'a'
+        if type(list[i]) is str or int:
+            list[i] = 'b'
         else:
             pass
     return max(len(list[i]) for i in range(4))
+
+def type_elements_liste(liste_principale):
+    return [isinstance(element, list) for element in liste_principale]
