@@ -1,12 +1,13 @@
 from src.database_handler import DatabaseHandler
-import json
+from src.json_handler import JsonHandler
 
 class Application:
     def __init__(self):
-        self.database_handler = DatabaseHandler("database.db")
+        self.database_handler = DatabaseHandler()
+        self.json_handler = JsonHandler()
     
-    def set_competition_index(self):
-        pass
+    def set_competition_index(self, parameters:list):
+        self.json_handler.write_log(parameters)
 
     def return_team(self):
         pass
@@ -14,11 +15,13 @@ class Application:
     def return_nb_match(self):
         pass
 
-    def return_team_per_row(self):
+    def return_team_per_row(self, row):
         pass
 
-    def create_competition(self, name, date, play_mod, location):
-        pass
+    def new_competition(self, name, date, play_mod, location):
+        self.database_handler.insert(table='general', 
+                                     columns=['name', 'date', 'play_mod', 'location'],
+                                     values=[name, date, play_mod, location])
 
     def create_team(self, name, club):
         pass
@@ -28,3 +31,7 @@ class Application:
 
     def register_result(self, row, n, output1, output2):
         pass
+
+    def return_general(self):
+        output = self.database_handler.select(columns='*', table='general')
+        return output

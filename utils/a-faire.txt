@@ -4,8 +4,8 @@ réparer la création d'équipes + ajouter les équipes au classement quand elle
 finir le main avec les signaux
 des îcones dans le mainwindow
 erreur personnalisé
-error gui aussi 
-+++++ faire l'index courant de competition
+error_gui aussi (dans old_competition)
++++++ faire l'index courant de competition (normalement c'est fait)
 
 faire en sorte que les taleau prennent toutes la places dans les fenêtres
 corriger arborescence pour team_registering notamment

@@ -21,6 +21,9 @@ class MaFenetre(QWidget):
         self.table_widget.setItem(1, 1, QTableWidgetItem("Smith"))
         self.table_widget.setItem(1, 2, QTableWidgetItem("25"))
 
+        # Définir le comportement de sélection sur les lignes
+        self.table_widget.setSelectionBehavior(QTableWidget.SelectRows)
+
         # Écouter les événements de sélection
         self.table_widget.itemSelectionChanged.connect(self.selection_change)
 
@@ -32,13 +35,11 @@ class MaFenetre(QWidget):
         selected_items = self.table_widget.selectedItems()
 
         if len(selected_items) > 0:
-            # Obtenir la ligne sélectionnée
-            selected_row = selected_items[0].row()
+            # Obtenir les lignes sélectionnées (en utilisant un ensemble pour éliminer les doublons)
+            selected_rows = {item.row() for item in selected_items}
 
-            # Récupérer les valeurs dans la ligne sélectionnée
-            values = [self.table_widget.item(selected_row, col).text() for col in range(self.table_widget.columnCount())]
-
-            print("Valeurs de la ligne sélectionnée:", values)
+            # Afficher les lignes sélectionnées
+            print("Lignes sélectionnées:", selected_rows)
 
 
 if __name__ == '__main__':

@@ -134,12 +134,15 @@ class Saized_Result(QtWidgets.QWidget):
         self.combobox.setCurrentIndex(n)
 
     def team_print_in_line(self):
-        app = Application()
-        current_row = int(self.table_1.currentRow()) + 1
-        n = self.combobox.currentIndex()
-        output = app.team_print_in_line(current_row, n)
-        self.lineEdit_1.setText(str(output[0][0]))
-        self.lineEdit_2.setText(str(output[0][1]))
+        #app = Application()
+        #current_row = int(self.table_1.currentRow()) + 1
+        #n = self.combobox.currentIndex()
+        selected_items = self.table_1.selectedItems()
+        selected_row = selected_items[0].row()
+        values = [self.table.item(selected_row, col).text() for col in range(self.table.columnCount())]
+        #output = app.team_print_in_line(current_row, n)
+        self.lineEdit_1.setText(str(values[1]))
+        self.lineEdit_2.setText(str(values[2]))
 
     def register_result(self):
         app = Application()

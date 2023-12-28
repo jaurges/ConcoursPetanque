@@ -5,7 +5,7 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from src.application import Application
 
 
-class ParametersGui(QtWidgets.QWidget):
+class NewCompetition(QtWidgets.QWidget):
     opened = QtCore.Signal()
     def __init__(self):
         super().__init__()
@@ -69,7 +69,8 @@ class ParametersGui(QtWidgets.QWidget):
             erroGui.resize(400, 100)
             erroGui.exec()
         else:
-            app.clicked_btn(name, formatted_date, play_mod, location)
+            app.new_competition(name, formatted_date, play_mod, location)
+            app.set_competition_index([name, formatted_date, play_mod, location])
             self.opened.emit()
             self.close()
 
@@ -88,7 +89,7 @@ class ErrorGui(QtWidgets.QDialog):
 if __name__ == "__main__":
     app = QtWidgets.QApplication()
 
-    widget = ParametersGui()
+    widget = NewCompetition()
     widget.resize(360, 480)
     widget.show()
 

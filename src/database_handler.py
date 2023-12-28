@@ -20,21 +20,21 @@ class DatabaseHandler:
         if not columns or not table: 
             raise NameError
         elif not condition:
-            pass
+            condition = ""
         else:
             condition = create_condition(condition, condition_value)
 
         columns = concatenate(columns)
 
-        #cursor = self.con.cursor()
+        cursor = self.con.cursor()
         query = f"SELECT {columns} FROM {table} {condition}"
         print(query)
-        #cursor.execute(query)
-        #output = cursor.fetchall()
-        #cursor.close()
-        #self.con.commit()
+        cursor.execute(query)
+        output = cursor.fetchall()
+        cursor.close()
+        self.con.commit()
 
-        #return output
+        return output
 
     def insert(self, **kwargs):
         columns : list = kwargs.get('columns', False)
@@ -102,6 +102,10 @@ class DatabaseHandler:
 
         ##cursor.close()
         #self.con.commit()
+    
+    def create_table(self, **kwargs):
+        match : bool = kwargs.get('match', False)
+        overall : bool = kwargs.get('overall', False)
 
-'''test = DatabaseHandler()
-test.update(columns = 'output1', values = 2, table = 'overall', condition_value = "team4", condition = 'rowid')'''
+test = DatabaseHandler()
+test.select(columns='*', table='general')
