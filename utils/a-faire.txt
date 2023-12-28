@@ -1,5 +1,8 @@
 finir les classements
 tirages par classements
+
+-> bot_team -> overall_writting 
+
 réparer la création d'équipes + ajouter les équipes au classement quand elle sont enregistré
 finir le main avec les signaux
 des îcones dans le mainwindow

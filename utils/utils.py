@@ -19,3 +19,12 @@ def plus_grand(list):
 
 def type_elements_liste(liste_principale):
     return [isinstance(element, list) for element in liste_principale]
+
+def data_dict(data):
+    dicto={}
+    for row in data:
+        key = row[2]
+        value = row[1]
+        dicto.setdefault(key, []).append(value)
+    
+    return dicto

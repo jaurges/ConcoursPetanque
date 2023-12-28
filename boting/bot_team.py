@@ -1,7 +1,8 @@
 import random
 import sys
 sys.path.append('.')
-from src.database_handler_old import DatabaseHandler
+from src.application import Application
+from src.database_handler import DatabaseHandler
 import csv
 import pandas as pd
 
@@ -12,11 +13,11 @@ def add_team_database(n):
     x=0
     for i in range(n):
         x = x+1
-        database_handler = DatabaseHandler("databasev2.db")
+        app = Application()
         team = "équipe" + str(x)
         club = random.choice(club_name_fix)
 
-        database_handler.create_team2(team, club)
+        #app.create_team(team, club)
         print(team, club)
 
 ls1 = []
@@ -33,4 +34,16 @@ def add_team_csv(n):
     df3 = pd.DataFrame({'club3': ls3})
     pd.concat([df1,df2, df3],axis=1).to_csv('team_1.csv', index = False)
 
-add_team_database(20)
+def create_match(n):
+    app = Application()
+    database_handler = DatabaseHandler()
+    for i in range(n):
+        match_list = app.draw()
+        database_handler.create_table(match=True, name=f'match_example_{i}')
+        for row in match_list:
+            output1 = random.randint(0,13)
+            output2 = random.randint(0,13)
+            database_handler.insert(table=f'match_example_{i}', columns=['team1', 'output1','team2', 'output2'], values=[row[0], output1, row[1], output2])
+
+def overall_writting(competion):
+    pass

@@ -40,6 +40,7 @@ class DatabaseHandler:
         columns : list = kwargs.get('columns', False)
         table : str = kwargs.get('table', False)
         values : list = kwargs.get('values', False)
+        values = [f"'{value}'" if isinstance(value, str) else str(value) for value in values]
 
         if not columns or not table or not values: 
             raise NameError
@@ -47,13 +48,13 @@ class DatabaseHandler:
         columns = concatenate(columns)
         values = concatenate(values)
         
-        #cursor = self.con.cursor()
+        cursor = self.con.cursor()
         query = f"INSERT INTO {table}({columns}) VALUES({values})"
         print(query)
-        #cursor.execute(query)
+        cursor.execute(query)
 
-        ##cursor.close()
-        #self.con.commit()
+        cursor.close()
+        self.con.commit()
 
     # pour les listes suivantes elles doivent être équilibrés ou alors ce sont des string
     def update(self, **kwargs):
@@ -106,6 +107,33 @@ class DatabaseHandler:
     def create_table(self, **kwargs):
         match : bool = kwargs.get('match', False)
         overall : bool = kwargs.get('overall', False)
+        name : str = kwargs.get('name', False)
 
-test = DatabaseHandler()
-test.select(columns='*', table='general')
+        if not name:
+            raise NameError
+
+        match_schema = "CREATE TABLE " + name + "(id integer PRIMARY KEY, " \
+                                                             "team1 text," \
+                                                             "output1 integer," \
+                                                             "team2 text," \
+                                                             "output2 integer)"
+        
+        overall_schema = "CREATE TABLE overall(id integer PRIMARY KEY, " \
+                "team text," \
+                "total integer)"
+        
+        cursor = self.con.cursor()
+        if match:
+            query = match_schema
+            print(query)
+            cursor.execute(query)
+        if overall:
+            query = overall_schema
+            print(query)
+            cursor.execute(query)
+
+        cursor.close()
+        self.con.commit()
+
+'''test = DatabaseHandler()
+test.create_table(overall=True, name='match0')'''

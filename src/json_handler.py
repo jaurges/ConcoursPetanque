@@ -3,7 +3,7 @@ import sys
 import datetime
 import json
 sys.path.append('.')
-from database_handler import DatabaseHandler
+from src.database_handler import DatabaseHandler
 
 class JsonHandler:
     def __init__(self):
