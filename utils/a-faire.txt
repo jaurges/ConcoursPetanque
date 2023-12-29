@@ -9,6 +9,7 @@ des îcones dans le mainwindow
 erreur personnalisé
 error_gui aussi (dans old_competition)
 +++++ faire l'index courant de competition (normalement c'est fait)
+ajouter la génération automatique des noms de compétition dans le new_competition.py
 
 faire en sorte que les taleau prennent toutes la places dans les fenêtres
 corriger arborescence pour team_registering notamment
