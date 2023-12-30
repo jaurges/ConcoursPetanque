@@ -1,6 +1,3 @@
-import random
-
-
-for i in range(50):
-    n = random.randint(0,13)
-    print(n)
+ls = [['a','ab','c','d'],[1,2,3,4]]
+ls = [i for i in ls[0] if i.startswith('a')]
+print(ls)

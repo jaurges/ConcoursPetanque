@@ -1,7 +1,12 @@
 finir les classements
 tirages par classements
 
--> bot_team -> overall_writting 
+-> bot_team -> overall_writting (ca avance) problème : Traceback (most recent call last):
+  File "/home/antonin/Documents/Python/ConcoursPetanque/boting/bot_team.py", line 119, in <module>
+    add_to_overall()
+  File "/home/antonin/Documents/Python/ConcoursPetanque/boting/bot_team.py", line 115, in add_to_overall
+    value=[n for sl in [list(i.values()) for i in total_[i]] for n in sl], 
+KeyError: 'output4'
 
 réparer la création d'équipes + ajouter les équipes au classement quand elle sont enregistré
 finir le main avec les signaux

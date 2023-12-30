@@ -9,13 +9,13 @@ def create_condition(condition, value):
     output = f"WHERE {condition}={value}"
     return output
 
-def plus_grand(list):
-    for i in range(4):
-        if type(list[i]) is str or int:
-            list[i] = 'b'
-        else:
+def plus_grand(lst):
+    for i in range(len(lst)):
+        if isinstance(lst[i], list):
             pass
-    return max(len(list[i]) for i in range(4))
+        else:
+            lst[i] = 'b'
+    return max(len(lst[i]) for i in range(len(lst)))
 
 def type_elements_liste(liste_principale):
     return [isinstance(element, list) for element in liste_principale]

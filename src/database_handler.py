@@ -62,22 +62,26 @@ class DatabaseHandler:
         table : str = kwargs.get('table', False)
         condition : list = kwargs.get('condition', False)
         condition_value : list = kwargs.get('condition_value', False)
-        values : list = kwargs.get('values', False)
+        value : list = kwargs.get('value', False)
         
-        if not columns or not table or not condition or not condition_value or not values: 
+        if not columns or not table or not condition or not condition_value or not value: 
             raise NameError
 
-        list_1 = [columns, values, condition, condition_value]
+        list_1 = [columns, value, condition, condition_value]
         list_2 = type_elements_liste(list_1)
 
+        print(plus_grand(list_1))
+
         #cursor = self.con.cursor()
-    
+        # revoir l'utilité de la chose si récurrence faite dans application
         for i in range(plus_grand(list_1)):
-            list_list = [columns, values, condition, condition_value]
+            
+            list_list = [columns, value, condition, condition_value]
             query = []
             n = 0
             for j in list_list:
-                if list_2[n]:
+                if list_2[n]:#==list:
+                    
                     var = j[i]
                 else:
                     var = j
@@ -94,15 +98,18 @@ class DatabaseHandler:
     def pragma(self, **kwargs):
         table : str = kwargs.get('table', False)
 
-        #cursor = self.con.cursor()
+        cursor = self.con.cursor()
         query = f"PRAGMA table_info({table})"
         print(query)
-        #cursor.execute(query)
-        #output = cursor.fetchall
-        #return output
+        cursor.execute(query)
+        output = cursor.fetchall()
 
-        ##cursor.close()
-        #self.con.commit()
+        cursor.close()
+        self.con.commit()
+
+        return output
+
+        
     
     def create_table(self, **kwargs):
         match : bool = kwargs.get('match', False)
@@ -134,6 +141,21 @@ class DatabaseHandler:
 
         cursor.close()
         self.con.commit()
+    
+    def alter_table(self, **kwargs):
+        name : str = kwargs.get('name', False)
+        table : str = kwargs.get('table', False)
+        type : str = kwargs.get('type', False)
+
+        if not name or not table or not type: 
+            raise NameError
+        
+        cursor = self.con.cursor()
+        query = f"ALTER TABLE {table} ADD COLUMN {name} {type}"
+        print(query)
+        cursor.execute(query)
+        cursor.close()
+        self.con.commit()
 
 '''test = DatabaseHandler()
-test.create_table(overall=True, name='match0')'''
+test.alter_table(name='output0', table='overall', type='INTEGER')'''
