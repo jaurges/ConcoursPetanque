@@ -110,10 +110,25 @@ def add_to_overall():
                                 value=[n for sl in [list(i.values()) for i in main_dict[i]] for n in sl], 
                                 condition='team',
                                 condition_value=[n for sl in [list(i.keys()) for i in main_dict[i]] for n in sl])
+    
     database_handler.update(columns='total', 
                             table=table, 
-                            value=[n for sl in [list(i.values()) for i in total_[i]] for n in sl], 
+                            value=[total_[i] for i in total_], 
                             condition='team',
-                            condition_value=[n for sl in [list(i.keys()) for i in total_[i]] for n in sl])
+                            condition_value=[i for i in total_])
+    '''print([i for i in total_])
+    print([total_[i] for i in total_])'''
+
+
+def add_team_overall(n):
+    x=0
+    database_handler = DatabaseHandler()
+    for i in range(n):
+        x = x+1
+        team = "team" + str(x)
+        database_handler.insert(table="overall_example", 
+                                columns=['team', 'output0', 'output1', 'output2', 'output3', 'output4','total'],
+                                values=[f"{team}", str(None), str(None), str(None), str(None), str(None), str(None)])
+
 
 add_to_overall()

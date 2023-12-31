@@ -70,9 +70,9 @@ class DatabaseHandler:
         list_1 = [columns, value, condition, condition_value]
         list_2 = type_elements_liste(list_1)
 
-        print(plus_grand(list_1))
-
-        #cursor = self.con.cursor()
+        #print(plus_grand(list_1))
+        #print('\n')
+        cursor = self.con.cursor()
         # revoir l'utilité de la chose si récurrence faite dans application
         for i in range(plus_grand(list_1)):
             
@@ -87,12 +87,12 @@ class DatabaseHandler:
                     var = j
                 n = n+1
                 query.append(str(var))
-            query = f"UPDATE {table} SET {query[0]}={query[1]} WHERE {query[2]}={query[3]}"
-            #cursor.execute(query)
+            query = f"UPDATE {table} SET {query[0]}={query[1]} WHERE {query[2]}='{query[3]}'"
             print(query)
+            cursor.execute(query)
 
-        #cursor.close()
-        #self.con.commit()
+        cursor.close()
+        self.con.commit()
     
     #a completer dans le futur pour dautre verification
     def pragma(self, **kwargs):
