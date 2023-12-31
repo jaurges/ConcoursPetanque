@@ -34,3 +34,6 @@ optimisation  :
     - optimiser les connections sqlite
 
 ATTENTION AUX con.commit()
+
+saized_result_gui -> comlètement adapté aux nouvelles classes
+draw_gui -> adaptation faite, reste tirage par classement

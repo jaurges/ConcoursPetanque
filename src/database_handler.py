@@ -28,7 +28,7 @@ class DatabaseHandler:
 
         cursor = self.con.cursor()
         query = f"SELECT {columns} FROM {table} {condition}"
-        print(query)
+        #print(query)
         cursor.execute(query)
         output = cursor.fetchall()
         cursor.close()

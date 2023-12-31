@@ -14,6 +14,7 @@ class Saized_Result(QtWidgets.QWidget):
         self.table_2 = QtWidgets.QTableWidget()
 
         self.table_1.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
+        self.table_1.setSelectionBehavior(QtWidgets.QTableWidget.SelectRows)
         self.table_2.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
 
         self.lineEdit_1 = QtWidgets.QLineEdit()
@@ -30,6 +31,9 @@ class Saized_Result(QtWidgets.QWidget):
 
         self.pushbutton1 = QtWidgets.QPushButton("Annuler")
         self.pushbutton2 = QtWidgets.QPushButton("Valider")
+
+        self.pushbutton3 = QtWidgets.QPushButton("Annuler")
+        self.pushbutton4 = QtWidgets.QPushButton("Finaliser")
 
         self.combobox = QtWidgets.QComboBox()
 
@@ -51,6 +55,7 @@ class Saized_Result(QtWidgets.QWidget):
         self.layout_5 = QtWidgets.QHBoxLayout()
         self.layout_6 = QtWidgets.QHBoxLayout()
         self.layout_7 = QtWidgets.QHBoxLayout()
+        self.layout_8 = QtWidgets.QHBoxLayout()
 
         self.layout_1.addWidget(self.combobox)
         self.layout_1.addWidget(self.table_1)
@@ -73,6 +78,9 @@ class Saized_Result(QtWidgets.QWidget):
         self.layout_7.addWidget(self.pushbutton1)
         self.layout_7.addWidget(self.pushbutton2)
 
+        self.layout_8.addWidget(self.pushbutton3)
+        self.layout_8.addWidget(self.pushbutton4)
+
         self.first_side.addLayout(self.layout_2)
         self.first_side.addLayout(self.layout_5)
 
@@ -91,9 +99,12 @@ class Saized_Result(QtWidgets.QWidget):
         self.base_layout.addSpacerItem(spacer2)
         self.base_layout.addLayout(self.layout_7)
         self.base_layout.addLayout(self.layout_4)
+        self.base_layout.addLayout(self.layout_8)
+
+        self.set_combobox()
 
         self.combobox_setting()
-        self.set_combobox()
+        
         self.team_print_in_table()
         self.score_print()
 
@@ -104,45 +115,45 @@ class Saized_Result(QtWidgets.QWidget):
         self.pushbutton1.clicked.connect(self.clear_line)
         self.pushbutton2.clicked.connect(self.register_result)
         self.pushbutton2.clicked.connect(self.score_print)
+        self.pushbutton4.clicked.connect(self.finalisation)
 
         self.resizeEvent = self.adjust_columns
 
     def combobox_setting(self):
         app = Application()
-        n = app.return_match_nb()
-        for i in range(n+1):
+        n = app.get_match_n()
+        for i in range(n):
             self.combobox.addItem("match" + str(i))
 
     def team_print_in_table(self):
         app = Application()
         n = int(re.search(r'\d+', self.combobox.currentText()).group())
-        output = app.team_print(n)
+        output = app.return_match(n)
         self.table_1.setRowCount(len(output))
-        self.table_1.setColumnCount(3)
-        self.table_1.setHorizontalHeaderLabels(('match_name', 'team1', 'team2'))
+        self.table_1.setColumnCount(2)
+        self.table_1.setHorizontalHeaderLabels(('team1', 'team2'))
         row_index = 0
         for row in output:
-            self.table_1.setItem(row_index, 0, QtWidgets.QTableWidgetItem(row["match_name"]))
-            self.table_1.setItem(row_index, 1, QtWidgets.QTableWidgetItem(row["team1"]))
-            self.table_1.setItem(row_index, 2, QtWidgets.QTableWidgetItem(row["team2"]))
+            self.table_1.setItem(row_index, 0, QtWidgets.QTableWidgetItem(row["team1"]))
+            self.table_1.setItem(row_index, 1, QtWidgets.QTableWidgetItem(row["team2"]))
 
             row_index += 1
 
     def set_combobox(self):
         app = Application()
-        n = app.return_match_nb()
+        n = app.get_match_n()
         self.combobox.setCurrentIndex(n)
 
     def team_print_in_line(self):
-        #app = Application()
-        #current_row = int(self.table_1.currentRow()) + 1
-        #n = self.combobox.currentIndex()
-        selected_items = self.table_1.selectedItems()
-        selected_row = selected_items[0].row()
-        values = [self.table.item(selected_row, col).text() for col in range(self.table.columnCount())]
-        #output = app.team_print_in_line(current_row, n)
-        self.lineEdit_1.setText(str(values[1]))
-        self.lineEdit_2.setText(str(values[2]))
+        selected_item = self.table_1.currentItem()
+        if selected_item is not None:
+            selected_row = selected_item.row()
+            values = [self.table_1.item(selected_row, col).text() for col in range(self.table_1.columnCount())]
+            self.lineEdit_1.setText(str(values[0]))
+            self.lineEdit_2.setText(str(values[1]))
+        else:
+            self.lineEdit_1.clear()
+            self.lineEdit_2.clear()
 
     def register_result(self):
         app = Application()
@@ -168,28 +179,35 @@ class Saized_Result(QtWidgets.QWidget):
     def score_print(self):
         app = Application()
         n = int(re.search(r'\d+', self.combobox.currentText()).group())
-        output = app.score_print(n)
+        output = app.return_match(n)
         self.table_2.setRowCount(len(output))
-        self.table_2.setColumnCount(5)
-        self.table_2.setHorizontalHeaderLabels(('match_name', 'team1', 'output1', 'team2', 'output2'))
+        self.table_2.setColumnCount(4)
+        self.table_2.setHorizontalHeaderLabels(('team1', 'output1', 'team2', 'output2'))
         row_index = 0
         for row in output:
-            self.table_2.setItem(row_index, 0, QtWidgets.QTableWidgetItem(row["match_name"]))
-            self.table_2.setItem(row_index, 1, QtWidgets.QTableWidgetItem(row["team1"]))
-            self.table_2.setItem(row_index, 2, QtWidgets.QTableWidgetItem(str(row["output1"])))
-            self.table_2.setItem(row_index, 3, QtWidgets.QTableWidgetItem(row["team2"]))
-            self.table_2.setItem(row_index, 4, QtWidgets.QTableWidgetItem(str(row["output2"])))
+            self.table_2.setItem(row_index, 0, QtWidgets.QTableWidgetItem(row["team1"]))
+            self.table_2.setItem(row_index, 1, QtWidgets.QTableWidgetItem(str(row["output1"])))
+            self.table_2.setItem(row_index, 2, QtWidgets.QTableWidgetItem(row["team2"]))
+            self.table_2.setItem(row_index, 3, QtWidgets.QTableWidgetItem(str(row["output2"])))
 
             row_index += 1
+    
+    def finalisation(self):
+        app = Application()
+        app.set_overall()
 
     def adjust_columns(self, event):
         window_width = event.size().width()
         column_width_1 = window_width / 3
-        column_width_2 = window_width / 5
+        column_width_2 = window_width / 4
         for col in range(self.table_1.columnCount()):
             self.table_1.setColumnWidth(col, column_width_1)
         for col in range(self.table_2.columnCount()):
             self.table_2.setColumnWidth(col, column_width_2)
+    
+    def closeEvent(self, event):
+        self.finalisation()
+        event.accept()
 
 
 class ErrorGui(QtWidgets.QWidget):

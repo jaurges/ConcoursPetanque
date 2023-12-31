@@ -36,7 +36,7 @@ class Draw_gui(QtWidgets.QWidget):
 
         self.button.clicked.connect(self.draw)
         self.button_3.clicked.connect(self.clear_content)
-        self.button_2.clicked.connect(self.register_match)
+        self.button_2.clicked.connect(self.register_match_)
         self.resizeEvent = self.adjust_columns
 
     @QtCore.Slot()
@@ -44,27 +44,26 @@ class Draw_gui(QtWidgets.QWidget):
         app = Application()
         output = app.draw()
         self.table.setRowCount(len(output))
-        self.table.setHorizontalHeaderLabels(('match_name', 'team1', 'team2'))
+        self.table.setHorizontalHeaderLabels(('team1', 'team2'))
 
         row_index = 0
         for row in output:
             self.table.setItem(row_index, 0, QtWidgets.QTableWidgetItem(row[0]))
             self.table.setItem(row_index, 1, QtWidgets.QTableWidgetItem(row[1]))
-            self.table.setItem(row_index, 2, QtWidgets.QTableWidgetItem(row[2]))
 
             row_index += 1
     
     def clear_content(self): 
         self.table.clearContents()
         self.table.setRowCount(0)
-        self.table.setHorizontalHeaderLabels(('match_name', 'team1', 'team2'))
+        self.table.setHorizontalHeaderLabels('team1', 'team2')
 
-    def register_match(self):
+    def register_match_(self):
         app = Application()
         table_data = []
         for row in range(self.table.rowCount()):
             row_data = []
-            for col in range(3):
+            for col in range(2):
                 item = self.table.item(row, col)
                 if item is not None:
                     row_data.append(item.text())
@@ -77,7 +76,7 @@ class Draw_gui(QtWidgets.QWidget):
     
     def adjust_columns(self, event):
         window_width = event.size().width()
-        column_width = window_width / 3
+        column_width = window_width / 2
         for col in range(self.table.columnCount()):
             self.table.setColumnWidth(col, column_width)
 
