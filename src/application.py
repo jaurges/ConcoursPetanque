@@ -44,8 +44,8 @@ class Application:
         output = self.database_handler.select(columns='*', table='general')
         return output
 
-    def draw(self):
-        last_players = []
+    def draw_random(self):
+        '''last_players = []
         match_list = []
         dicto1 = data_dict(self.return_team())
         dicto2 = dicto1
@@ -75,6 +75,29 @@ class Application:
             
         elif len(last_players) == 0:
             pass
+
+        return match_list'''
+        team_dict = data_dict(self.return_team())
+        match_list = []
+
+        for teams in team_dict.values():
+            while len(teams) >= 2:
+                team1, team2 = numpy.random.choice(teams, size=2, replace=False)
+                teams.remove(team1)
+                teams.remove(team2)
+                match_list.append([team1, team2])
+
+        last_players = [player for team_players in team_dict.values() for player in team_players]
+
+        while len(last_players) >= 2:
+            team1, team2 = numpy.random.choice(last_players, size=2, replace=False)
+            last_players.remove(team1)
+            last_players.remove(team2)
+            match_list.append([team1, team2])
+
+        if len(last_players) == 1:
+            match_name = f"alone: {last_players[0]}"
+            match_list.append(match_name)
 
         return match_list
     
@@ -150,6 +173,11 @@ class Application:
                                          columns=['team1', 'output1','team2', 'output2'],
                                          values=[f"{i[0]}", 0, f"{i[1]}", 0])
 
+    def return_overall_col(self):
+        team = self.database_handler.select(table=f"overall_{self.json_handler.read_log(id=True)}",
+                                     columns='team')
+        team = self.database_handler.select(table=f"overall_{self.json_handler.read_log(id=True)}",
+                                     columns='team')
     
 '''test = Application()
 output = test.dict_matchs_into_total()

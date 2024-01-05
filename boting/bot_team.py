@@ -130,5 +130,54 @@ def add_team_overall(n):
                                 columns=['team', 'output0', 'output1', 'output2', 'output3', 'output4','total'],
                                 values=[f"{team}", str(None), str(None), str(None), str(None), str(None), str(None)])
 
+def draw_by_overall():
+    '''database_handler = DatabaseHandler()
+    json_hanlder = JsonHandler()
+    table_ = f"overall_{json_hanlder.read_log(id=True)}"
+    overall = database_handler.select(table=table_, columns=['team','total'])
+    
+    dict_overall = {}
+    for row in overall:
+        dict_overall[row[0]]= row[1]
+    print(dict_overall)
+    num = [n for n in dict_overall.values()]
+    num_class = []
+    for _ in range(len(num)):
+        n = max(num)
+        num_class.append(n)
+        num.remove(n)
+    print(num_class)
+    team_list = [team for team in dict_overall.keys()]
+    team_class = []
+    for value_ in num_class:
+        key_asso = next(key for key, value in dict_overall.items() if value == value_ and key in team_list)
+        team_list.remove(key_asso)
+        team_class.append(key_asso)
+    print(team_class)
+    match_list = []
+    for i in range(0, len(team_class), 2):
+        print(i)
+        match_list.append([team_class[i], team_class[i+1]])
+    print(match_list)'''
+    database_handler = DatabaseHandler()
+    json_handler = JsonHandler()
+    table_name = f"overall_{json_handler.read_log(id=True)}"
+    
+    overall = database_handler.select(table=table_name, columns=['team', 'total'])
+    
+    dict_overall = dict(overall)
+    print(dict_overall)
+    
+    # Tri par ordre décroissant des valeurs et récupération des équipes classées
+    team_class = [key for key, _ in sorted(dict_overall.items(), key=lambda x: x[1], reverse=True)]
+    print(team_class)
+    
+    # Création des paires d'équipes
+    match_list = [team_class[i:i+2] for i in range(0, len(team_class), 2)]
+    print(match_list)
 
-add_to_overall()
+def meilleur_grind():
+    pass
+
+
+draw_by_overall()

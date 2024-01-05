@@ -8,7 +8,7 @@ from src.application import Application
 class MainWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.tab = QtWidgets.QTableWidget()
+        self.table = QtWidgets.QTableWidget()
         self.button1 = QtWidgets.QPushButton("Tirage")
         self.button2 = QtWidgets.QPushButton("team register")
         self.button3 = QtWidgets.QPushButton("team_viewing")
@@ -92,8 +92,22 @@ class MainWindow(QtWidgets.QWidget):
         self.vlayout.addWidget(self.button2)
         self.vlayout.addWidget(self.button3)
         self.vlayout.addWidget(self.button4)
-        self.layout_base.addWidget(self.tab)
+        self.layout_base.addWidget(self.table)
         self.layout_base.addLayout(self.vlayout)
+
+    def team_print_in_table(self):
+        app = Application()
+        n_match = app.get_match_n()
+        output = app.return_overall()
+        self.table.setRowCount(len(output))
+        self.table.setColumnCount(n_match+2)
+        self.table.setHorizontalHeaderLabels(('team1', 'team2'))
+        row_index = 0
+        for row in output:
+            self.table.setItem(row_index, 0, QtWidgets.QTableWidgetItem(row["team1"]))
+            self.table.setItem(row_index, 1, QtWidgets.QTableWidgetItem(row["team2"]))
+
+            row_index += 1
 
 
 if __name__ == "__main__":

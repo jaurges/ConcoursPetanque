@@ -1,5 +1,6 @@
 tirages par classements
-
+gestion des joueurs et tirage des équipes en fonction des joueurs ====> refaire tous le team_registering
+avancer sur le mainwindow
 
 réparer la création d'équipes + ajouter les équipes au classement quand elle sont enregistré
 finir le main avec les signaux
@@ -32,6 +33,7 @@ optimisation  :
     - pour tous les SELECT faire des arguments pour faire en sorte que une seule fonction pour toutes
     - pareil pour les autres enregistrements
     - optimiser les connections sqlite
+=====> demander à ChatGPT des conseils il est très bon
 
 ATTENTION AUX con.commit()
 

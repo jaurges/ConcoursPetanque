@@ -42,7 +42,7 @@ class Draw_gui(QtWidgets.QWidget):
     @QtCore.Slot()
     def draw(self):
         app = Application()
-        output = app.draw()
+        output = app.draw_random()
         self.table.setRowCount(len(output))
         self.table.setHorizontalHeaderLabels(('team1', 'team2'))
 
