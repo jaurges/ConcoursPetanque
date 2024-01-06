@@ -167,16 +167,29 @@ def draw_by_overall():
     
     dict_overall = dict(overall)
     print(dict_overall)
+    grouped_by_value = {}
+    [grouped_by_value.setdefault(value, []).append(key) for key, value in dict_overall.items()]
+
+    grouped_by_value = list(grouped_by_value.values())
+
+    print(grouped_by_value)
     
     # Tri par ordre décroissant des valeurs et récupération des équipes classées
     team_class = [key for key, _ in sorted(dict_overall.items(), key=lambda x: x[1], reverse=True)]
-    print(team_class)
+    #print(team_class)
     
     # Création des paires d'équipes
     match_list = [team_class[i:i+2] for i in range(0, len(team_class), 2)]
-    print(match_list)
+    #print(match_list)
 
 def meilleur_grind():
+    # 1ere phase : qui a gagné la dernière manche, si encore égalité suivante
+    database_handler = DatabaseHandler()
+    json_handler = JsonHandler()
+    table_name = f"overall_{json_handler.read_log(id=True)}"
+    # 2eme phase : qui a gagné le plus grand écart de point dans cette manche, si encore égalité suivante
+
+    # 3eme phase : qui a gagné le plus grand écart de point sur tout ses matchs 
     pass
 
 
