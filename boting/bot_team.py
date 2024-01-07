@@ -131,34 +131,6 @@ def add_team_overall(n):
                                 values=[f"{team}", str(None), str(None), str(None), str(None), str(None), str(None)])
 
 def draw_by_overall():
-    '''database_handler = DatabaseHandler()
-    json_hanlder = JsonHandler()
-    table_ = f"overall_{json_hanlder.read_log(id=True)}"
-    overall = database_handler.select(table=table_, columns=['team','total'])
-    
-    dict_overall = {}
-    for row in overall:
-        dict_overall[row[0]]= row[1]
-    print(dict_overall)
-    num = [n for n in dict_overall.values()]
-    num_class = []
-    for _ in range(len(num)):
-        n = max(num)
-        num_class.append(n)
-        num.remove(n)
-    print(num_class)
-    team_list = [team for team in dict_overall.keys()]
-    team_class = []
-    for value_ in num_class:
-        key_asso = next(key for key, value in dict_overall.items() if value == value_ and key in team_list)
-        team_list.remove(key_asso)
-        team_class.append(key_asso)
-    print(team_class)
-    match_list = []
-    for i in range(0, len(team_class), 2):
-        print(i)
-        match_list.append([team_class[i], team_class[i+1]])
-    print(match_list)'''
     database_handler = DatabaseHandler()
     json_handler = JsonHandler()
     table_name = f"overall_{json_handler.read_log(id=True)}"
@@ -169,6 +141,7 @@ def draw_by_overall():
     #print(dict_overall)
     grouped_by_value = {}
     [grouped_by_value.setdefault(value, []).append(key) for key, value in dict_overall.items()]
+    #print(grouped_by_value)
 
     grouped_by_value_ls = []#list(grouped_by_value.values())
     for i in grouped_by_value.values():
@@ -179,21 +152,20 @@ def draw_by_overall():
             pass
 
     #print(grouped_by_value_ls)
-    meilleur_grind(grouped_by_value_ls)
+    meilleur_grind(grouped_by_value)
     
     # Tri par ordre décroissant des valeurs et récupération des équipes classées ----> en dernier
-    team_class = [key for key, _ in sorted(dict_overall.items(), key=lambda x: x[1], reverse=True)]
+    #team_class = [key for key, _ in sorted(dict_overall.items(), key=lambda x: x[1], reverse=True)]
     #print(team_class)
     
     # Création des paires d'équipes
-    match_list = [team_class[i:i+2] for i in range(0, len(team_class), 2)]
+    #match_list = [team_class[i:i+2] for i in range(0, len(team_class), 2)]
     #print(match_list)
 
-def meilleur_grind(ls):
+def meilleur_grind(dicto):
     # 1ere phase : qui a gagné la dernière manche, si encore égalité suivante
     database_handler = DatabaseHandler()
     json_handler = JsonHandler()
-    table_name_ = f"overall_{json_handler.read_log(id=True)}"
     n_match = get_number_of_match(json_handler.read_log(id=True))-2
     match_name = f"match_{json_handler.read_log(id=True)}_{n_match}"
     match_raw = database_handler.select(table=match_name, columns='*')
@@ -209,46 +181,59 @@ def meilleur_grind(ls):
             winner[1].append([i[0],i[2]])
     #print(winner)
 
-    better = []
-    worse = []
-    for i in ls:
-        print(i)
-        #print('\n')
+    inter_class = []
+    print(dicto)
+    n = 0
+    for i in dicto.items():
+        #print(i)
+        ###print('\n')
         if len(i)>=2:
             ls_1 = []
             ls_removable = []
-            for j in i:
-                print(j)
+            for j in i[1]:
+                #print(j)
                 if j in winner[0]:
                     ls_1.append(1)
-                    print("ya")
+                    #print("ya")
                 else:
                     ls_1.append(0)
             if ls_1.count(1)==1:
-                better.append(i[ls_1.index(1)])
-                ls_removable.append(i[ls_1.index(1)])
+                #better.append(i[ls_1.index(1)])
+                #i.insert(0, i.pop(i[ls_1.index(1)]))
+                ls_removable.append({ls_1.index(1):'better'})
             if ls_1.count(0)==1:
-                worse.append(i[ls_1.index(0)])
-                print('---------------------------------------')
-                print(i,ls_1.index(0))
-                print('---------------------------------------')
-                ls_removable.append(i[ls_1.index(0)])
+                #worse.append(i[ls_1.index(0)])
+                ls_removable.append({ls_1.index(0):'worse'})
+            inter_class.append([])
+            x = 0
             for k in ls_removable:
-                i.remove(k)
+                key, value = k.popitem()
+                if value=='better':
+                    #print(dicto[i[0]])
+                    #dicto[i[0]].insert(0, dicto[i[0]].pop(key))
+                    inter_class[n].append({x:value})
+                if value=='worse':
+                    #print(dicto[i[0]])
+                    inter_class[n].append({x:value})
+                    #dicto[i[0]].insert(-1, dicto[i[0]].pop(key))
+                x=x+1
+            print(inter_class)
         else:
             pass
-    print('---------------------------------------')
-    print(better)
-    print(worse)
-    print(ls)
+        n=n+1
     
-    # 2eme phase : qui a perdu le plus petit écart de point dans cette manche, si encore égalité suivante, un dictionnaire qui repertorie tous les gains ou les perte
+    print('---------------------------------------')
+    print(dicto)
+    #print(worse)
+    #print(dicto)
+    
+     # 2eme phase : qui a perdu le plus petit écart de point dans cette manche, si encore égalité suivante, un dictionnaire qui repertorie tous les gains ou les perte
 
     better2 = []
     worse2 = []
-    flatted_ls = [item for sublist in ls for item in sublist]
-    print('---------------------------------------')
-    print(flatted_ls)
+    flatted_ls = [item for sublist in dicto.items() for item in sublist]
+    #print('---------------------------------------')
+    #print(flatted_ls)
 
     gap_dict = {}
     for i in match_ls:
@@ -257,15 +242,15 @@ def meilleur_grind(ls):
         if i[2] in flatted_ls:
             gap_dict[i[2]]=i[3]-i[1]
 
-    print(gap_dict)
+    #print(gap_dict)
 
-    for n in ls:
+    for n in dicto.items():
         if len(n)>=2:
             ls_2 = [gap_dict[u] for u in n]
             combined_ls = list(zip(ls_2, n))
             ls_classed = sorted(combined_ls, key=lambda x: x[0], reverse=True)
             ls_2, class_n = zip(*ls_classed)
-            print(class_n)
+            #print(class_n)
             
         else:
             pass

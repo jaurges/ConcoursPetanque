@@ -1,4 +1,4 @@
-tirages par classements
+tirages par classements ==> c'est fini mon gros
 gestion des joueurs et tirage des équipes en fonction des joueurs ====> refaire tous le team_registering
 avancer sur le mainwindow
 
