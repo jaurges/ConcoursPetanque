@@ -166,15 +166,22 @@ def draw_by_overall():
     overall = database_handler.select(table=table_name, columns=['team', 'total'])
     
     dict_overall = dict(overall)
-    print(dict_overall)
+    #print(dict_overall)
     grouped_by_value = {}
     [grouped_by_value.setdefault(value, []).append(key) for key, value in dict_overall.items()]
 
-    grouped_by_value = list(grouped_by_value.values())
+    grouped_by_value_ls = []#list(grouped_by_value.values())
+    for i in grouped_by_value.values():
+        #print(i)
+        if len(i) >= 2:
+            grouped_by_value_ls.append(i)
+        else:
+            pass
 
-    print(grouped_by_value)
+    #print(grouped_by_value_ls)
+    meilleur_grind(grouped_by_value_ls)
     
-    # Tri par ordre décroissant des valeurs et récupération des équipes classées
+    # Tri par ordre décroissant des valeurs et récupération des équipes classées ----> en dernier
     team_class = [key for key, _ in sorted(dict_overall.items(), key=lambda x: x[1], reverse=True)]
     #print(team_class)
     
@@ -182,15 +189,90 @@ def draw_by_overall():
     match_list = [team_class[i:i+2] for i in range(0, len(team_class), 2)]
     #print(match_list)
 
-def meilleur_grind():
+def meilleur_grind(ls):
     # 1ere phase : qui a gagné la dernière manche, si encore égalité suivante
     database_handler = DatabaseHandler()
     json_handler = JsonHandler()
-    table_name = f"overall_{json_handler.read_log(id=True)}"
-    # 2eme phase : qui a gagné le plus grand écart de point dans cette manche, si encore égalité suivante
+    table_name_ = f"overall_{json_handler.read_log(id=True)}"
+    n_match = get_number_of_match(json_handler.read_log(id=True))-2
+    match_name = f"match_{json_handler.read_log(id=True)}_{n_match}"
+    match_raw = database_handler.select(table=match_name, columns='*')
+    match_ls = [[row[1], row[2], row[3], row[4]] for row in match_raw]
+    winner=[[],[]]
+
+    for i in match_ls:
+        if i[1]>i[3]:
+            winner[0].append(i[0])
+        if i[1]<i[3]:
+            winner[0].append(i[2])
+        if i[1]==i[3]:
+            winner[1].append([i[0],i[2]])
+    #print(winner)
+
+    better = []
+    worse = []
+    for i in ls:
+        print(i)
+        #print('\n')
+        if len(i)>=2:
+            ls_1 = []
+            ls_removable = []
+            for j in i:
+                print(j)
+                if j in winner[0]:
+                    ls_1.append(1)
+                    print("ya")
+                else:
+                    ls_1.append(0)
+            if ls_1.count(1)==1:
+                better.append(i[ls_1.index(1)])
+                ls_removable.append(i[ls_1.index(1)])
+            if ls_1.count(0)==1:
+                worse.append(i[ls_1.index(0)])
+                print('---------------------------------------')
+                print(i,ls_1.index(0))
+                print('---------------------------------------')
+                ls_removable.append(i[ls_1.index(0)])
+            for k in ls_removable:
+                i.remove(k)
+        else:
+            pass
+    print('---------------------------------------')
+    print(better)
+    print(worse)
+    print(ls)
+    
+    # 2eme phase : qui a perdu le plus petit écart de point dans cette manche, si encore égalité suivante, un dictionnaire qui repertorie tous les gains ou les perte
+
+    better2 = []
+    worse2 = []
+    flatted_ls = [item for sublist in ls for item in sublist]
+    print('---------------------------------------')
+    print(flatted_ls)
+
+    gap_dict = {}
+    for i in match_ls:
+        if i[0] in flatted_ls:
+            gap_dict[i[0]]=i[1]-i[3]
+        if i[2] in flatted_ls:
+            gap_dict[i[2]]=i[3]-i[1]
+
+    print(gap_dict)
+
+    for n in ls:
+        if len(n)>=2:
+            ls_2 = [gap_dict[u] for u in n]
+            combined_ls = list(zip(ls_2, n))
+            ls_classed = sorted(combined_ls, key=lambda x: x[0], reverse=True)
+            ls_2, class_n = zip(*ls_classed)
+            print(class_n)
+            
+        else:
+            pass
+
 
     # 3eme phase : qui a gagné le plus grand écart de point sur tout ses matchs 
-    pass
+
 
 
 draw_by_overall()

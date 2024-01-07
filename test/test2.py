@@ -1,8 +1,15 @@
-dict_overall = {'team1': 35, 'team2': 33, 'team3': 41, 'team4': 21, 'team5': 32, 'team6': 30, 'team7': 40, 'team8': 25, 'team9': 35, 'team10': 43, 'team11': 28, 'team12': 26, 'team13': 38, 'team14': 35, 'team15': 33, 'team16': 26, 'team17': 45, 'team18': 26, 'team19': 30, 'team20': 42}
+# Deux listes parallèles
+list1 = [5, 2, 8, 1, 7]
+list2 = ['a', 'b', 'c', 'd', 'e']
 
-grouped_by_value = {}
-[grouped_by_value.setdefault(value, []).append(key) for key, value in dict_overall.items()]
+# Utiliser zip pour regrouper les éléments correspondants
+combined_lists = list(zip(list1, list2))
 
-grouped_by_value = list(grouped_by_value.values())
+# Trier la liste combinée en fonction des éléments de la première liste (ordre décroissant)
+sorted_combined = sorted(combined_lists, key=lambda x: x[0], reverse=True)
 
-print(grouped_by_value)
+# Séparer les listes après le tri
+sorted_list1, sorted_list2 = zip(*sorted_combined)
+
+print(sorted_list1)
+print(sorted_list2)
