@@ -173,13 +173,12 @@ class Application:
                                          columns=['team1', 'output1','team2', 'output2'],
                                          values=[f"{i[0]}", 0, f"{i[1]}", 0])
 
-    def return_overall_col(self):
-        team = self.database_handler.select(table=f"overall_{self.json_handler.read_log(id=True)}",
-                                     columns='team')
-        team = self.database_handler.select(table=f"overall_{self.json_handler.read_log(id=True)}",
-                                     columns='team')
+    def return_overall(self):
+        output = self.database_handler.select(table=f"overall_{self.json_handler.read_log(id=True)}",
+                                     columns='*')
+        return output
     
-    def draw_overall(self):
+    def overall(self):
         table_name1 = f"overall_{self.json_handler.read_log(id=True)}"
         grouped_by_value = {}
         inter_class = {}
@@ -294,9 +293,15 @@ class Application:
 
         flat_list = [item[0] if isinstance(item, list) else item for item in final_overall]
         #match_list = [final_overall[i:i+2] for i in range(0, len(final_overall), 2)]
+        
+        return flat_list
+
+    def draw_overall(self):
+        flat_list = self.overall()
         match_list = [flat_list[i:i+2] for i in range(0, len(flat_list), 2)]
 
         return match_list
+
 
     
 '''test = Application()
