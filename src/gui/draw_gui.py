@@ -30,7 +30,7 @@ class Draw_gui(QtWidgets.QWidget):
         self.layout_button_2.addWidget(self.button_3)
         self.layout_button_2.addWidget(self.button_2)
         self.layout.addLayout(self.layout_button_1)
-        self.table.setColumnCount(3)
+        self.table.setColumnCount(2)
         self.layout.addWidget(self.table, 1)
         self.layout.addLayout(self.layout_button_2)
 
@@ -41,8 +41,13 @@ class Draw_gui(QtWidgets.QWidget):
 
     @QtCore.Slot()
     def draw(self):
+        index = self.combobox.currentIndex()
         app = Application()
-        output = app.draw_random()
+        if index==0:
+            output = app.draw_random()
+        if index==1:
+            output = app.draw_overall()
+        #print(output)
         self.table.setRowCount(len(output))
         self.table.setHorizontalHeaderLabels(('team1', 'team2'))
 

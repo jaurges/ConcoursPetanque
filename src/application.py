@@ -179,6 +179,126 @@ class Application:
         team = self.database_handler.select(table=f"overall_{self.json_handler.read_log(id=True)}",
                                      columns='team')
     
+    def draw_overall(self):
+        table_name1 = f"overall_{self.json_handler.read_log(id=True)}"
+        grouped_by_value = {}
+        inter_class = {}
+        grouped_by_value_ls = []
+        
+        overall = self.database_handler.select(table=table_name1, columns=['team', 'total'])
+        dict_overall = dict(overall)
+        [grouped_by_value.setdefault(value, []).append(key) for key, value in dict_overall.items()]
+
+        for i in grouped_by_value.values():
+            if len(i) >= 2:
+                grouped_by_value_ls.append(i)
+            else:
+                pass
+        for i in grouped_by_value_ls:
+            inter_class[tuple(i)]=[]
+        
+        # à mettre à -1 quand match_example_5 sera rempli
+        n_match = self.get_match_n()-2
+        match_name = f"match_{self.json_handler.read_log(id=True)}_{n_match}"
+        match_raw = self.database_handler.select(table=match_name, columns='*')
+        match_ls = [[row[1], row[2], row[3], row[4]] for row in match_raw]
+
+        winner=[[],[]]
+        for i in match_ls:
+            if i[1]>i[3]:
+                winner[0].append(i[0])
+            if i[1]<i[3]:
+                winner[0].append(i[2])
+            if i[1]==i[3]:
+                winner[1].append([i[0],i[2]])
+        
+        for i in grouped_by_value_ls:
+            stock = []
+            ls_removable = []
+            for j in i:
+                if j in winner[0]:
+                    stock.append(1)
+                else:
+                    stock.append(0)
+            if stock.count(1)==1:
+                ls_removable.append({i[stock.index(1)]:'better'})
+            if stock.count(0)==1:
+                ls_removable.append({i[stock.index(0)]:'worse'})
+
+            inter_class[tuple(i)]=[0 for _ in i]
+
+            for k in ls_removable:
+                key, value = k.popitem()
+                if value=='better':
+                    for j in range(len(i)):
+                        if i[j] == key:
+                            inter_class[tuple(i)][j]=100
+                        else:
+                            pass
+                if value=='worse':
+                    for j in range(len(i)):
+                        if i[j] == key:
+                            inter_class[tuple(i)][j]=-100
+                        else:
+                            pass
+            
+        stock = []
+        for i in inter_class.items():
+            key, value = i[0], i[1]
+            if value.count(min(value)) and value.count(max(value))>=2:
+                for j in key:
+                    if value[key.index(j)]==0:
+                        stock.append(j)
+                    else:
+                        pass
+            else: 
+                pass
+
+        gap_dict = {}
+        for i in match_ls:
+            if i[0] in stock:
+                gap_dict[i[0]]=i[1]-i[3]
+            if i[2] in stock:
+                gap_dict[i[2]]=i[3]-i[1]
+
+        items_list = [i for i in gap_dict.items()]
+        combined_ls = list(zip(stock, items_list))
+        ls_classed = sorted(combined_ls, key=lambda x: x[0], reverse=True)
+        stock, class_teams_lst = zip(*ls_classed)
+        
+        for i in class_teams_lst:
+            for j in inter_class.keys():
+                if i[0] in j:
+                    index = j.index(i[0])
+                    inter_class[j][index]=i[1]
+                else: 
+                    pass
+
+        sorted_dict = dict(sorted(grouped_by_value.items(), key=lambda item: item[0], reverse=True))
+
+        final_overall = []
+        for i in sorted_dict.items():
+            key, value = i[0], i[1]
+            if len(value)>=2:
+                for j in inter_class.keys():
+                    if j==tuple(value):
+                        for _ in range(len(j)):
+                            index_max = inter_class[j].index(max(inter_class[j]))
+                            team = j[index_max]
+                            final_overall.append(team)
+                            inter_class[j][index_max] = -1000
+                    else:
+                        pass
+            else:
+                final_overall.append(value)
+
+        flat_list = [item[0] if isinstance(item, list) else item for item in final_overall]
+        #match_list = [final_overall[i:i+2] for i in range(0, len(final_overall), 2)]
+        match_list = [flat_list[i:i+2] for i in range(0, len(flat_list), 2)]
+
+        return match_list
+
+    
 '''test = Application()
-output = test.dict_matchs_into_total()
+output = test.draw_overall()
 print(output)'''

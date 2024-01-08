@@ -1,13 +1,8 @@
-import random
 import sys
 sys.path.append('.')
-from src.application import Application
 from src.database_handler import DatabaseHandler
 from src.json_handler import JsonHandler
-import csv
-import pandas as pd
-import sqlite3
-import re
+
 
 def get_number_of_match(competition_id):
     ls = []
@@ -33,6 +28,7 @@ def main_overall():
     
     overall = database_handler.select(table=table_name1, columns=['team', 'total'])
     dict_overall = dict(overall)
+    #print(dict_overall)
     [grouped_by_value.setdefault(value, []).append(key) for key, value in dict_overall.items()]
 
     for i in grouped_by_value.values():
@@ -42,6 +38,7 @@ def main_overall():
             pass
     for i in grouped_by_value_ls:
         inter_class[tuple(i)]=[]
+    print(inter_class)
     
     n_match = get_number_of_match(json_handler.read_log(id=True))-2
     match_name = f"match_{json_handler.read_log(id=True)}_{n_match}"
@@ -86,24 +83,24 @@ def main_overall():
                     else:
                         pass
         
-    print('---------------------------------------')
-    print(inter_class)
-    print('---------------------------------------')
+    #print('---------------------------------------')
+    #print(inter_class)
+    #print('---------------------------------------')
     list2 = []
     for i in inter_class.items():
         key, value = i[0], i[1]
-        #print(key,value)
+        ##print(key,value)
         if value.count(min(value)) and value.count(max(value))>=2:
             for j in key:
-                #print(j)
+                ##print(j)
                 if value[key.index(j)]==0:
                     list2.append(j)
-                    #print(value[key.index(j)])
+                    ##print(value[key.index(j)])
                 else:
                     pass
         else: 
             pass
-    #print(list2)
+    ##print(list2)
     gap_dict = {}
     for i in match_ls:
         if i[0] in list2:
@@ -119,33 +116,33 @@ def main_overall():
     for i in class_teams_lst:
         for j in inter_class.keys():
             if i[0] in j:
-                #print(i[0], j)
+                ##print(i[0], j)
                 index = j.index(i[0])
                 inter_class[j][index]=i[1]
-                #print(index)
+                ##print(index)
             else: 
                 pass
-    print(inter_class)
-    print('---------------------------------------')
-    print(grouped_by_value)
-    print('---------------------------------------')
+    #print(inter_class)
+    #print('---------------------------------------')
+    #print(grouped_by_value)
+    #print('---------------------------------------')
     sorted_dict = dict(sorted(grouped_by_value.items(), key=lambda item: item[0], reverse=True))
 
-    #print(sorted_dict)
+    ##print(sorted_dict)
     final_overall = []
     n=0
     for i in sorted_dict.items():
-        #print(i)
+        ##print(i)
         key, value = i[0], i[1]
         if len(value)>=2:
             for j in inter_class.keys():
                 if j==tuple(value):
                     for _ in range(len(j)):
-                        #print(inter_class[j])
+                        ##print(inter_class[j])
                         index_max = inter_class[j].index(max(inter_class[j]))
-                        #print(index_max)
+                        ##print(index_max)
                         team = j[index_max]
-                        #print(j)
+                        ##print(j)
                         final_overall.append(team)
                         inter_class[j][index_max] = -1000
                 else:
@@ -153,13 +150,13 @@ def main_overall():
         else:
             final_overall.append(value)
 
-    print(inter_class)
+    #print(inter_class)
     flat_list = [item[0] if isinstance(item, list) else item for item in final_overall]
-    print(flat_list)
-    print(len(final_overall))
+    #print(flat_list)
+    #print(len(final_overall))
 
     match_list = [final_overall[i:i+2] for i in range(0, len(final_overall), 2)]
-    print(match_list)
+    #print(match_list)
 
 
 main_overall()
