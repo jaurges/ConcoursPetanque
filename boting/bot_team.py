@@ -258,18 +258,14 @@ def meilleur_grind(dicto):
 
     # 3eme phase : qui a gagné le plus grand écart de point sur tout ses matchs 
 
-def add_random_players():
-    fichier_csv = '/home/antonin/Python/ConcoursPetanque/boting/Prenoms.csv'
-    premiere_colonne = []
-    with open(fichier_csv, newline='', encoding='utf-8') as csvfile:
-        lecteur_csv = csv.reader(csvfile)
-        for ligne in lecteur_csv:
-            if ligne:  
-                premiere_colonne.append(ligne[0])
-    for valeur in premiere_colonne:
-        print(valeur)
+def add_random_players(n):
+    data = DatabaseHandler()
+    club = ['club1', 'club2']
+
+    for i in range(n):
+        data.insert(table='players', columns=club, values=[f'joueur_{club[0]}_{i}',f'joueur_{club[1]}_{i}'])
 
 
 
 
-add_random_players()
+add_random_players(40)

@@ -50,6 +50,7 @@ class DatabaseHandler:
         
         cursor = self.con.cursor()
         query = f"INSERT INTO {table}({columns}) VALUES({values})"
+        
         print(query)
         cursor.execute(query)
 

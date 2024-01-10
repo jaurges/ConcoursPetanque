@@ -301,9 +301,19 @@ class Application:
         match_list = [flat_list[i:i+2] for i in range(0, len(flat_list), 2)]
 
         return match_list
+    
+    def return_club_player(self):
+        output = self.database_handler.select(table='players', columns='*')
+        raw_columns = self.database_handler.pragma(table='players')
+        columns = [column[1] for column in raw_columns]
+        dicto={}
+        for row in output:
+            for key in columns:
+                dicto.setdefault(key, []).append(row[columns.index(key)])
+        return dicto
 
 
     
 '''test = Application()
-output = test.draw_overall()
+output = test.return_club_player()
 print(output)'''
