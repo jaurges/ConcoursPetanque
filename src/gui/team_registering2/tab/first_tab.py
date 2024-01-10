@@ -33,3 +33,4 @@ class FirstTab(QtWidgets.QDialog):
         self.comboboxes = [QtWidgets.QComboBox(self) for _ in range(self.spin_box.value())]
         for combo_box in self.comboboxes:
             #print(self.comboboxes.index(combo_box))
+            pass
