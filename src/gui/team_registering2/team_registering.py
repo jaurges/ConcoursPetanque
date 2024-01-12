@@ -25,19 +25,22 @@ class TeamRegistering(QtWidgets.QWidget):
         tab_widget.addTab(self.second_tab, "générer")
 
         self.first_tab.value.connect(self.fill)
-        self.first_tab.setting.connect(self.show_setcombo)
-        self.second_tab.column.connect(self.set_col_count)
-        self.second_tab.row.connect(self.set_row_count)
-        self.second_tab.header.connect(self.fill_header_automat)
-        self.second_tab.header_find_first.connect(self.get_column_index_by_name)
-        self.second_tab.value_automat.connect(self.fill_automat)
-        self.header_finder.connect(self.second_tab.set_team_forreal)
+        #self.first_tab.
+        #self.first_tab.setting.connect(self.show_setcombo)
+        #self.second_tab.column.connect(self.set_col_count)
+        #self.second_tab.row.connect(self.set_row_count)
+        #self.second_tab.header.connect(self.fill_header_automat)
+        #self.second_tab.header_find_first.connect(self.get_column_index_by_name)
+        #self.second_tab.value_automat.connect(self.fill_automat)
+        #self.header_finder.connect(self.second_tab.set_team_forreal)
 
         pushbutton_3 = QtWidgets.QPushButton("Annuler")
         pushbutton_4 = QtWidgets.QPushButton("Suivant")
         pushbutton_5 = QtWidgets.QPushButton("Ajouter des joueurs")
         #tool_button = QtWidgets.QToolButton()
         self.table = QtWidgets.QTableWidget()
+
+        self.table.installEventFilter(self)
 
         #tool_button.setIcon(QtGui.QIcon("images/corner-down-left.svg"))
 
@@ -57,7 +60,7 @@ class TeamRegistering(QtWidgets.QWidget):
         layout_base.addLayout(layout_button)
 
         pushbutton_3.clicked.connect(self.open_back)
-        pushbutton_5.clicked.connect(self.open_savings)
+        #pushbutton_5.clicked.connect(self.open_savings)
     
     def open_back(self):
         self.opened.emit()
@@ -84,8 +87,22 @@ class TeamRegistering(QtWidgets.QWidget):
         self.table.setRowCount(x)
         self.table.setHorizontalHeaderItem(column, QtWidgets.QTableWidgetItem(club_name))
         self.table.setItem(row, column, item)
+    
+    def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> bool:
+        if source is self.table and event.type() == QtCore.QEvent.KeyPress:
+            key_event = event
+            key = key_event.key()
+            if key == QtCore.Qt.Key_U:
+                # Vérifier si une cellule est sélectionnée
+                selected_items = self.table.selectedItems()
+                if selected_items:
+                    # Récupérer la valeur de la cellule sélectionnée
+                    selected_value = selected_items[0].text()
+                    print(f"Touche 'u' enfoncée avec la cellule sélectionnée : {selected_value}")
+
+        return super().eventFilter(source, event)
                 
-    @QtCore.Slot()
+    '''@QtCore.Slot()
     def show_setcombo(self):
         win = SettingCombo()
         win.club.connect(self.first_tab.addItemtocombo)
@@ -129,7 +146,7 @@ class TeamRegistering(QtWidgets.QWidget):
     def open_savings(self):
         widget = SaveTeams()
         #widget.resize(360, 100)
-        widget.exec()
+        widget.exec()'''
 
 
 if __name__ == "__main__":
@@ -137,7 +154,7 @@ if __name__ == "__main__":
 
     widget = TeamRegistering()
 
-    widget.resize(500, 500)
+    widget.resize(800, 500)
     widget.show()
 
     sys.exit(app.exec())

@@ -1,53 +1,41 @@
-import random
-from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QSpinBox, QWidget, QComboBox
+from PySide6.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
+from PySide6.QtCore import Qt, QEvent, QObject
 
-class MainWindow(QMainWindow):
+class MainWindow(QWidget):
     def __init__(self):
-        super().__init__()
+        super(MainWindow, self).__init__()
 
-        self.central_widget = QWidget()
-        self.setCentralWidget(self.central_widget)
+        self.tableWidget = QTableWidget(self)
+        self.tableWidget.setRowCount(5)
+        self.tableWidget.setColumnCount(5)
 
-        self.layout = QVBoxLayout(self.central_widget)
+        for i in range(5):
+            for j in range(5):
+                item = QTableWidgetItem(f'Row {i}, Col {j}')
+                self.tableWidget.setItem(i, j, item)
 
-        # Ajoutez une QSpinBox pour déterminer le nombre de QComboBox
-        self.spin_box = QSpinBox(self)
-        self.spin_box.setMinimum(1)
-        self.spin_box.setMaximum(10)
-        self.spin_box.valueChanged.connect(self.update_comboboxes)
-        self.layout.addWidget(self.spin_box)
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.tableWidget)
 
-        # Initialisation avec un QComboBox
-        self.comboboxes = [QComboBox(self) for _ in range(self.spin_box.value())]
-        self.update_comboboxes()
+        # Connecter la fonction eventFilter à l'événement clavier
+        self.tableWidget.installEventFilter(self)
 
-    def update_comboboxes(self):
-        # Mettez à jour le nombre de QComboBox en fonction de la valeur de la QSpinBox
-        new_value = self.spin_box.value()
+    def eventFilter(self, source: QObject, event: QEvent) -> bool:
+        if source is self.tableWidget and event.type() == QEvent.KeyPress:
+            key_event = event
+            key = key_event.key()
+            if key == Qt.Key_U:
+                # Vérifier si une cellule est sélectionnée
+                selected_items = self.tableWidget.selectedItems()
+                if selected_items:
+                    # Récupérer la valeur de la cellule sélectionnée
+                    selected_value = selected_items[0].text()
+                    print(f"Touche 'u' enfoncée avec la cellule sélectionnée : {selected_value}")
 
-        # Supprimez les QComboBox actuelles du layout
-        for combo_box in self.comboboxes:
-            combo_box.setParent(None)
+        return super().eventFilter(source, event)
 
-        # Créez de nouveaux QComboBox en fonction de la nouvelle valeur de la QSpinBox
-        self.comboboxes = [QComboBox(self) for _ in range(new_value)]
-
-        # Ajoutez les nouveaux QComboBox au layout et remplissez-les avec des nombres aléatoires
-        for combo_box in self.comboboxes:
-            self.layout.addWidget(combo_box)
-            self.fill_combobox_with_random_numbers(combo_box)
-
-    def fill_combobox_with_random_numbers(self, combo_box):
-        # Remplissez un QComboBox avec des nombres aléatoires
-        combo_box.clear()
-        for _ in range(5):  # Changez 5 selon le nombre d'éléments aléatoires que vous souhaitez dans chaque QComboBox
-            combo_box.addItem(str(random.randint(1, 100)))
-
-def main():
+if __name__ == "__main__":
     app = QApplication([])
     window = MainWindow()
     window.show()
-    app.exec_()
-
-if __name__ == "__main__":
-    main()
+    app.exec()
