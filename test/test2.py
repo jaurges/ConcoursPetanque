@@ -1,41 +1,34 @@
-from PySide6.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
-from PySide6.QtCore import Qt, QEvent, QObject
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
 
-class MainWindow(QWidget):
+class MaFenetre(QMainWindow):
     def __init__(self):
-        super(MainWindow, self).__init__()
+        super().__init__()
 
         self.tableWidget = QTableWidget(self)
-        self.tableWidget.setRowCount(5)
-        self.tableWidget.setColumnCount(5)
+        self.tableWidget.setRowCount(3)
+        self.tableWidget.setColumnCount(3)
 
-        for i in range(5):
-            for j in range(5):
-                item = QTableWidgetItem(f'Row {i}, Col {j}')
-                self.tableWidget.setItem(i, j, item)
+        # Remplir la table avec des données de test
+        for row in range(3):
+            for col in range(3):
+                item = QTableWidgetItem(f"Cellule {row}-{col}")
+                self.tableWidget.setItem(row, col, item)
 
-        layout = QVBoxLayout(self)
+        # Écraser une cellule spécifique
+        nouvelle_valeur = QTableWidgetItem("Nouvelle valeur")
+        self.tableWidget.setItem(1, 1, nouvelle_valeur)
+
+        # Configurer la disposition principale
+        layout = QVBoxLayout()
         layout.addWidget(self.tableWidget)
 
-        # Connecter la fonction eventFilter à l'événement clavier
-        self.tableWidget.installEventFilter(self)
-
-    def eventFilter(self, source: QObject, event: QEvent) -> bool:
-        if source is self.tableWidget and event.type() == QEvent.KeyPress:
-            key_event = event
-            key = key_event.key()
-            if key == Qt.Key_U:
-                # Vérifier si une cellule est sélectionnée
-                selected_items = self.tableWidget.selectedItems()
-                if selected_items:
-                    # Récupérer la valeur de la cellule sélectionnée
-                    selected_value = selected_items[0].text()
-                    print(f"Touche 'u' enfoncée avec la cellule sélectionnée : {selected_value}")
-
-        return super().eventFilter(source, event)
+        # Configurer le widget central
+        central_widget = QWidget()
+        central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
 
 if __name__ == "__main__":
     app = QApplication([])
-    window = MainWindow()
-    window.show()
+    fenetre = MaFenetre()
+    fenetre.show()
     app.exec()

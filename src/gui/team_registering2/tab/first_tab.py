@@ -7,8 +7,7 @@ from src.application import Application
 
 
 class FirstTab(QtWidgets.QDialog):
-    value = QtCore.Signal(list)
-    setting = QtCore.Signal()
+    value = QtCore.Signal(str)
     def __init__(self):
         super().__init__()
         self.count_click = 0
@@ -70,6 +69,8 @@ class FirstTab(QtWidgets.QDialog):
 
             row_index += 1
     
-    def print_next(self, club):
-        self.count_click = self.count_click + 1
-        print(self.count_click)
+    def print_next(self):
+        selected_items = self.table.selectedItems()
+        #print(selected_items[0].text())
+        if selected_items:
+            self.value.emit(selected_items[0].text())
