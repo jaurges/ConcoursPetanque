@@ -1,5 +1,6 @@
 from PySide6 import QtCore, QtWidgets, QtGui
 import sys
+import math
 
 from tab.first_tab import FirstTab
 from tab.second_tab import SecondTab
@@ -14,7 +15,8 @@ class TeamRegistering(QtWidgets.QWidget):
         super().__init__()
         self.setWindowTitle("Team registering")
         self.team = []
-        self.index = 0
+        self.index = [0,0]
+        self.row_index = 0
 
         self.first_tab = FirstTab()
         self.second_tab = SecondTab()
@@ -63,40 +65,63 @@ class TeamRegistering(QtWidgets.QWidget):
                 if selected_items:
                     #selected_value = selected_items[0].text()
                     #print(f"Touche 'u' enfoncée avec la cellule sélectionnée : {selected_value}")
-                    self.index = (self.table.currentRow(), self.table.currentColumn()-1)
+                    self.index = [self.table.currentRow(), self.table.currentColumn()-1]
 
         return super().eventFilter(source, event)
                 
     @QtCore.Slot(str)
     def fill(self, str):
+        print(f"{self.table.rowCount()}>{self.index[0]//2+1}")
+        #print(self.table.rowCount())
         if self.table.rowCount()>self.index[0]//2+1:
             print('prout')
         else:
-            self.table.setRowCount(self.index[0]//2+1)
+            #self.table.setRowCount(self.table.rowCount()+1)
+            self.table.setRowCount(self.row_index+1)
+        
         if self.index[0] % 2 != 0:
             if len(self.team)<self.index[0]:
                 self.team[-1].append(str)
-            else : 
-                self.team[self.index[0]][self.index[1]] = str
+            elif len(self.team)==1:
+                self.team[0].append(str)
+            else :
+                #print(self.team)
+                #print(self.index[1])
+                self.team[self.index[0]//2+1][self.index[1]] = str
             col_index = 2
+            
         else:
-            if len(self.team)<self.index[0]:
+            if len(self.team)<=self.index[0]:
                 self.team.append([str])
             else : 
-                self.team[self.index[0]][self.index[1]] = str
+                #self.team[self.index[0]][self.index[1]] = str
+                self.team[self.index[0]//2+1].append(str)
             col_index=1
-
-        self.index= self.index + 1
-        print(self.index)
+        
+        
+            
+        
+        self.index[0] = self.index[0]+1
+        if self.index[1]==1:
+            self.index[1] = 0
+        else:
+            self.index[1] = self.index[1] + 1
 
         for i in self.team:
             for j in i:
                 if str==j:
-                    row_index = self.team.index(i)
+                    team = j
+                    print(f"#####{team}#####")
+                
         
-        print(row_index, col_index)
+        #row_index = math.floor(self.index[0]/2)
+        
+        print(self.row_index, col_index)
 
-        self.table.setItem(row_index, col_index, QtWidgets.QTableWidgetItem(j))
+        self.table.setItem(self.row_index, col_index, QtWidgets.QTableWidgetItem(team))
+
+        if self.row_index==0 or col_index==2:
+            self.row_index = self.row_index +1
         #print(self.team)
 
 
