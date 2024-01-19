@@ -17,6 +17,7 @@ class TeamRegistering(QtWidgets.QWidget):
         self.team = []
         self.index = [0,0]
         self.row_index = 0
+        self.col_index = 0
 
         self.first_tab = FirstTab()
         self.second_tab = SecondTab()
@@ -35,6 +36,7 @@ class TeamRegistering(QtWidgets.QWidget):
         self.table.installEventFilter(self)
         self.table.setColumnCount(3)
 
+        self.resizeEvent = self.adjust_columns
 
         layout_base = QtWidgets.QVBoxLayout(self)
         layout_button = QtWidgets.QHBoxLayout()
@@ -51,6 +53,7 @@ class TeamRegistering(QtWidgets.QWidget):
         layout_base.addLayout(layout_button)
 
         pushbutton_3.clicked.connect(self.open_back)
+        self.table.cellClicked.connect(self.second_event )
     
     def open_back(self):
         self.opened.emit()
@@ -62,67 +65,64 @@ class TeamRegistering(QtWidgets.QWidget):
             key = key_event.key()
             if key == QtCore.Qt.Key_Delete:
                 selected_items = self.table.selectedItems()
-                if selected_items:
+                if selected_items and self.table.currentColumn()!=0:
                     #selected_value = selected_items[0].text()
                     #print(f"Touche 'u' enfoncée avec la cellule sélectionnée : {selected_value}")
                     self.index = [self.table.currentRow(), self.table.currentColumn()-1]
+                    self.col_index = self.table.currentColumn()-1
+                    self.row_index = self.table.currentRow()
+                    #print('##### CHANGE #####')
 
         return super().eventFilter(source, event)
+
+    def second_event(self):
+        selected_items = self.table.selectedItems()
+        if selected_items and self.table.currentColumn()!=0:
+            #selected_value = selected_items[0].text()
+            ##print(f"Touche 'u' enfoncée avec la cellule sélectionnée : {selected_value}")
+            self.index = [self.table.currentRow(), self.table.currentColumn()-1]
+            self.col_index = self.table.currentColumn()-1
+            self.row_index = self.table.currentRow()
+            #print('##### CHANGE #####')
                 
     @QtCore.Slot(str)
     def fill(self, str):
-        print(f"{self.table.rowCount()}>{self.index[0]//2+1}")
-        #print(self.table.rowCount())
-        if self.table.rowCount()>self.index[0]//2+1:
-            print('prout')
-        else:
-            #self.table.setRowCount(self.table.rowCount()+1)
+        #init
+        self.team.append([])
+        if self.row_index+1>self.table.rowCount():
             self.table.setRowCount(self.row_index+1)
-        
-        if self.index[0] % 2 != 0:
-            if len(self.team)<self.index[0]:
-                self.team[-1].append(str)
-            elif len(self.team)==1:
-                self.team[0].append(str)
-            else :
-                #print(self.team)
-                #print(self.index[1])
-                self.team[self.index[0]//2+1][self.index[1]] = str
-            col_index = 2
-            
+        #print(self.row_index, self.col_index)
+        #verif
+        if self.team[self.row_index]==[] or len(self.team[self.row_index])==1:
+            self.team[self.row_index].append(str)
+            #print('1')
         else:
-            if len(self.team)<=self.index[0]:
-                self.team.append([str])
-            else : 
-                #self.team[self.index[0]][self.index[1]] = str
-                self.team[self.index[0]//2+1].append(str)
-            col_index=1
-        
-        
-            
-        
-        self.index[0] = self.index[0]+1
-        if self.index[1]==1:
-            self.index[1] = 0
+            self.team[self.row_index][self.col_index]=str
+            #print('2')
+
+        #set in table
+        self.table.setItem(self.row_index, self.col_index+1, QtWidgets.QTableWidgetItem(str))
+        self.table.setCurrentCell(self.row_index, self.col_index+1)
+
+        #end
+        if self.col_index==1:
+            #print('4')
+            self.table.setItem(self.row_index, 0, QtWidgets.QTableWidgetItem(f"{self.team[self.row_index][self.col_index-1]}_{self.team[self.row_index][self.col_index]}"))
+            self.row_index= self.row_index+1
+        if self.col_index==0:
+            #print("3")
+            self.col_index=1
         else:
-            self.index[1] = self.index[1] + 1
-
-        for i in self.team:
-            for j in i:
-                if str==j:
-                    team = j
-                    print(f"#####{team}#####")
-                
+            self.col_index=0
         
-        #row_index = math.floor(self.index[0]/2)
+        #print('-----------------------------')
+    
+    def adjust_columns(self, event):
+        window_width = self.table.size().width()
+        column_width = window_width / 3
+        for col in range(self.table.columnCount()):
+            self.table.setColumnWidth(col, column_width)
         
-        print(self.row_index, col_index)
-
-        self.table.setItem(self.row_index, col_index, QtWidgets.QTableWidgetItem(team))
-
-        if self.row_index==0 or col_index==2:
-            self.row_index = self.row_index +1
-        #print(self.team)
 
 
 if __name__ == "__main__":

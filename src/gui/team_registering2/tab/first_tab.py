@@ -17,7 +17,7 @@ class FirstTab(QtWidgets.QDialog):
         self.comboboxes = [QtWidgets.QComboBox(self) for _ in range(self.spin_box.value())]
 
         self.table.horizontalHeader().setVisible(False)
-        self.table.setColumnCount(5)
+        self.table.setColumnCount(1)
         self.table.setRowCount(1)
         self.table.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         self.spin_box.setValue(1)
@@ -43,6 +43,7 @@ class FirstTab(QtWidgets.QDialog):
             for i in list(self.output):
                 combo_box.addItem(i)
             combo_box.currentIndexChanged.connect(self.index_changed)
+            self.table.setColumnCount(self.comboboxes.index(combo_box)+1)
 
             item = QtWidgets.QTableWidgetItem()
             self.table.setItem(0, self.comboboxes.index(combo_box), item)
@@ -60,7 +61,6 @@ class FirstTab(QtWidgets.QDialog):
     
     def index_changed(self, index):
         sender = self.sender()
-        #print(selected_text)
         self.table.setRowCount(len(self.output[sender.currentText()]))
         row_index = 0
         for player in self.output[sender.currentText()]:

@@ -1,7 +1,11 @@
-connecter firsttab avec le tableau principale et envoyer des listes
-gestion des prénoms et des noms dans la création des noms des équipes
-gestion des joueurs et tirage des équipes en fonction des joueurs ====> refaire tous le team_registering
 
+gestion des joueurs et tirage des équipes en fonction des joueurs ====> refaire tous le team_registering
+    finir la partie aléatoire
+prévenvir que quand on clique dans une colonne déjà rempli dans la première colonne, si on n'avait pas envie de cliquer deux fois sur le joueur de la seconde colonne, bah pas le choix 
+
+clear tous les commentaires inutiles
+rajouter les noms des équipes avec noms de famille
+ajout suppression de ligne 
 réparer la création d'équipes + ajouter les équipes au classement quand elle sont enregistré
 finir le main avec les signaux
 des îcones dans le mainwindow

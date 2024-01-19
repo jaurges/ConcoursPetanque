@@ -1,34 +1,48 @@
-from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
+from PySide6 import QtCore
+import sys 
 
-class MaFenetre(QMainWindow):
+class TableClickDetector(QWidget):
     def __init__(self):
-        super().__init__()
+        super(TableClickDetector, self).__init__()
 
-        self.tableWidget = QTableWidget(self)
-        self.tableWidget.setRowCount(3)
-        self.tableWidget.setColumnCount(3)
+        # Créer un tableau avec quelques données
+        self.table = QTableWidget(3, 3, self)
+        for i in range(3):
+            for j in range(3):
+                item = QTableWidgetItem(f"Cellule {i}-{j}")
+                self.table.setItem(i, j, item)
 
-        # Remplir la table avec des données de test
-        for row in range(3):
-            for col in range(3):
-                item = QTableWidgetItem(f"Cellule {row}-{col}")
-                self.tableWidget.setItem(row, col, item)
+        # Installer l'eventFilter sur le tableau
+        self.table.installEventFilter(self)
 
-        # Écraser une cellule spécifique
-        nouvelle_valeur = QTableWidgetItem("Nouvelle valeur")
-        self.tableWidget.setItem(1, 1, nouvelle_valeur)
+        # Créer un layout vertical
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.table)
 
-        # Configurer la disposition principale
-        layout = QVBoxLayout()
-        layout.addWidget(self.tableWidget)
+    def eventFilter(self, obj, event):
+        if obj == self.table and event.type() == QtCore.QEvent.MouseButtonPress:
+            # Récupérer la position du clic
+            pos = event.pos()
 
-        # Configurer le widget central
-        central_widget = QWidget()
-        central_widget.setLayout(layout)
-        self.setCentralWidget(central_widget)
+            # Récupérer la cellule correspondante
+            item = self.table.itemAt(pos)
+
+            if item:
+                # Récupérer les indices de ligne et de colonne de la cellule
+                row = item.row()
+                col = item.column()
+
+                print(f"Clic sur la cellule ({row}, {col})")
+
+        # Appeler le gestionnaire d'événements parent après avoir traité l'événement
+        return super().eventFilter(obj, event)
+
+def main():
+    app = QApplication([])
+    window = TableClickDetector()
+    window.show()
+    sys.exit(app.exec_())
 
 if __name__ == "__main__":
-    app = QApplication([])
-    fenetre = MaFenetre()
-    fenetre.show()
-    app.exec()
+    main()
