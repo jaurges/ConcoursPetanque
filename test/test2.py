@@ -1,48 +1,21 @@
-from PySide6.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
-from PySide6 import QtCore
-import sys 
+def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> bool:
+        if source is self.table and event.type() == QtCore.QEvent.KeyPress:
+            key_event = event
+            key = key_event.key()
+            if key == QtCore.Qt.Key_Delete:
+                selected_items = self.table.selectedItems()
+                if selected_items and self.table.currentColumn()!=0:
+                    #selected_value = selected_items[0].text()
+                    #print(f"Touche 'u' enfoncée avec la cellule sélectionnée : {selected_value}")
+                    self.index = [self.table.currentRow(), self.table.currentColumn()-1]
+                    self.col_index = self.table.currentColumn()
+                    self.row_index = self.table.currentRow()
+                    '''if len(selected_items)==3:
+                        self.table.setItem(self.row_index, 0, QtWidgets.QTableWidgetItem(""))'''
+                    for item in selected_items:
+                        for row in self.team:
+                            for i in row:
+                                if i == item.text():
+                                    self.table.setItem(self.row_index, row.index(i)+1, QtWidgets.QTableWidgetItem("caca"))
 
-class TableClickDetector(QWidget):
-    def __init__(self):
-        super(TableClickDetector, self).__init__()
-
-        # Créer un tableau avec quelques données
-        self.table = QTableWidget(3, 3, self)
-        for i in range(3):
-            for j in range(3):
-                item = QTableWidgetItem(f"Cellule {i}-{j}")
-                self.table.setItem(i, j, item)
-
-        # Installer l'eventFilter sur le tableau
-        self.table.installEventFilter(self)
-
-        # Créer un layout vertical
-        layout = QVBoxLayout(self)
-        layout.addWidget(self.table)
-
-    def eventFilter(self, obj, event):
-        if obj == self.table and event.type() == QtCore.QEvent.MouseButtonPress:
-            # Récupérer la position du clic
-            pos = event.pos()
-
-            # Récupérer la cellule correspondante
-            item = self.table.itemAt(pos)
-
-            if item:
-                # Récupérer les indices de ligne et de colonne de la cellule
-                row = item.row()
-                col = item.column()
-
-                print(f"Clic sur la cellule ({row}, {col})")
-
-        # Appeler le gestionnaire d'événements parent après avoir traité l'événement
-        return super().eventFilter(obj, event)
-
-def main():
-    app = QApplication([])
-    window = TableClickDetector()
-    window.show()
-    sys.exit(app.exec_())
-
-if __name__ == "__main__":
-    main()
+        return super().eventFilter(source, event)
