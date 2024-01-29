@@ -74,7 +74,10 @@ class TeamRegistering(QtWidgets.QWidget):
                     '''if len(selected_items)==3:
                         self.table.setItem(self.row_index, 0, QtWidgets.QTableWidgetItem(""))'''
                     for item in selected_items:
-                        item_text = item.text()
+                        try : 
+                            item_text = item.text()
+                        except RuntimeError:
+                            pass
                         for row in self.team:
                             for i in row:
                                 if i == item_text:
@@ -108,7 +111,10 @@ class TeamRegistering(QtWidgets.QWidget):
             self.team[self.row_index].append(str)
             #print('1')
         else:
-            self.team[self.row_index][self.col_index]=str
+            try :
+                self.team[self.row_index][self.col_index]=str
+            except IndexError:
+                print('selectionner une seule case')
             #print('2')
 
         #set in table

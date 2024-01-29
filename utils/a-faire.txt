@@ -1,6 +1,7 @@
-
+trouver un meilleur moyen de sélectionner les joueurs 
 gestion des joueurs et tirage des équipes en fonction des joueurs ====> refaire tous le team_registering
-    finir la partie aléatoire
+    finir la partie aléatoire ====> optimiser lebloc avec les tickboxs
+        faire le dictionnaire avec le nombre de rangée par colonne 
 prévenvir que quand on clique dans une colonne déjà rempli dans la première colonne, si on n'avait pas envie de cliquer deux fois sur le joueur de la seconde colonne, bah pas le choix 
 
 clear tous les commentaires inutiles
