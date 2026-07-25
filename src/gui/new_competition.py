@@ -6,7 +6,8 @@ from src.application import Application
 
 
 class NewCompetition(QtWidgets.QWidget):
-    opened = QtCore.Signal()
+    next_tea_reg = QtCore.Signal()
+    prev_tea_reg = QtCore.Signal()
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Parameters")
@@ -49,7 +50,7 @@ class NewCompetition(QtWidgets.QWidget):
         self.pushbutton_2.clicked.connect(self.saving)
 
     def open_previous(self):
-        self.parent_widget.show()
+        self.prev_tea_reg.emit()
         self.close()
 
     @QtCore.Slot()
@@ -68,11 +69,11 @@ class NewCompetition(QtWidgets.QWidget):
             erroGui = ErrorGui()
             erroGui.resize(400, 100)
             erroGui.exec()
-        else:
-            app.new_competition(name, formatted_date, play_mod, location)
-            app.set_competition_index([name, formatted_date, play_mod, location])
-            self.opened.emit()
-            self.close()
+        
+        app.new_competition(name, formatted_date, play_mod, location)
+        app.set_competition_index([name, formatted_date, play_mod, location])
+        self.next_tea_reg.emit()
+        self.close()
 
 
 class ErrorGui(QtWidgets.QDialog):

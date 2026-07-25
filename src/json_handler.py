@@ -10,7 +10,7 @@ class JsonHandler:
         self.path = f"{os.path.abspath(os.path.join(os.path.abspath(__file__), '..', '..'))}/data/log.json"
         self.database_handler = DatabaseHandler()
     
-    def write_log(self):#, parameters : list
+    def write_log(self, parameters):#, parameters : list ###à compléter 
         id = 2 #self.database_handler.select(columns='id', table='general', condition='name', condition_value=parameters[0])
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")

@@ -2,15 +2,15 @@ from PySide6 import QtCore, QtWidgets, QtGui
 import sys
 import math
 
-from tab.first_tab import FirstTab
-from tab.second_tab import SecondTab
-from tab.third_tab import ThirdTab
-from dialog.save_teams import SaveTeams
-from dialog.settings_combo import SettingCombo
+from .tab.first_tab import FirstTab
+from .tab.second_tab import SecondTab
+from .tab.third_tab import ThirdTab
+from .dialog.save_teams import SaveTeams
+from .dialog.settings_combo import SettingCombo
 
 class TeamRegistering(QtWidgets.QWidget):
     header_finder = QtCore.Signal(int)
-    opened = QtCore.Signal()
+    next_main = QtCore.Signal()
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Team registering")
@@ -56,7 +56,7 @@ class TeamRegistering(QtWidgets.QWidget):
         self.table.cellClicked.connect(self.second_event )
     
     def open_back(self):
-        self.opened.emit()
+        self.next_main.emit()
         self.close()
     
     def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> bool:

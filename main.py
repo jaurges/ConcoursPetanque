@@ -1,28 +1,28 @@
 from PySide6 import QtWidgets
 from src.gui.welcome_gui import WelcomeGui
-from src.gui.new_competition import ParametersGui
-from src.gui.team_gui import Team_gui
-#from src.gui.team_registering.team_registering import TeamRegistering
+from src.gui.new_competition import NewCompetition
+#from src.gui.team_gui import Team_gui
+from src.gui.team_registering2.team_registering import TeamRegistering
+from src.gui.main_window import MainWindow
 
 app = QtWidgets.QApplication([])
 
 welcome_widget = WelcomeGui()
-parameters_widget = ParametersGui()
-team_widget = Team_gui()
-#team_registering_widget = TeamRegistering()
+parameters_widget = NewCompetition()
+team_registering_widget = TeamRegistering()
+main_window = MainWindow()
 
+# taille des widgets
 welcome_widget.resize(360, 480)
 parameters_widget.resize(360, 480)
-team_widget.resize(480, 480)
-#team_registering_widget.resize(480, 480)
+team_registering_widget.resize(480, 480)
 
-welcome_widget.opened.connect(parameters_widget.show)
-parameters_widget.opened.connect(team_widget.show)
-#team_widget.opened.connect(#team_registering_widget.show)
-#team_registering_widget.opened.connect(team_widget.show)
+# connections des signaux
+welcome_widget.next_par.connect(parameters_widget.show)
+parameters_widget.next_tea_reg.connect(team_registering_widget.show)
+parameters_widget.prev_tea_reg.connect(welcome_widget.show)
+team_registering_widget.next_main.connect(main_window.show)
 
-parameters_widget.parent_widget = welcome_widget
-team_widget.parent_widget = parameters_widget
 
 welcome_widget.show()
 app.exec()

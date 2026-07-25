@@ -3,131 +3,91 @@ import random
 from PySide6 import QtCore, QtWidgets, QtGui
 sys.path.append(".")
 from src.application import Application
+from PySide6.QtWidgets import (
+    QApplication, QMainWindow, QWidget, QHBoxLayout, 
+    QVBoxLayout, QTableWidget, QPushButton
+)
+from PySide6.QtGui import QAction
 
-
-class MainWindow(QtWidgets.QWidget):
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.table = QtWidgets.QTableWidget()
-        self.button1 = QtWidgets.QPushButton("Tirage")
-        self.button2 = QtWidgets.QPushButton("team register")
-        self.button3 = QtWidgets.QPushButton("team_viewing")
-        self.button4 = QtWidgets.QPushButton("Paramètres")
+        
+        self.setWindowTitle("Gestion de Tournoi - Fenêtre Principale")
+        self.resize(900, 600) # Dimensions par défaut pour bien voir les tableaux
+        
+        self.create_menu_bar()
+        
+        self.setup_ui()
+        self.team_print_in_left_table()
 
-        self.button1.setStyleSheet(
-                    '''
-            QPushButton {
-                border: 2px solid #e8e8e8; /* Couleur de la bordure */
-                border-radius: 10px; /* Rayon des coins arrondis */
-                padding: 10px; /* Espace interne */
-                font-size: 12px; /* Taille de la police */
-            }
+    def create_menu_bar(self):
+        """Crée la barre de menu classique type 'Word'"""
+        menu_bar = self.menuBar()
 
-            QPushButton:hover {
-                background-color: #f9f9f9; /* Couleur de fond au survol */
-            }
-            '''
-            )
-        self.button2.setStyleSheet(
-                    '''
-            QPushButton {
-                border: 2px solid #e8e8e8; /* Couleur de la bordure */
-                border-radius: 10px; /* Rayon des coins arrondis */
-                padding: 10px; /* Espace interne */
-                font-size: 12px; /* Taille de la police */
-            }
+        settings_menu = menu_bar.addMenu("Menu")
 
-            QPushButton:hover {
-                background-color: #f9f9f9; /* Couleur de fond au survol */
-            }
-            '''
-            )
-        self.button3.setStyleSheet(
-                    '''
-            QPushButton {
-                border: 2px solid #e8e8e8; /* Couleur de la bordure */
-                border-radius: 10px; /* Rayon des coins arrondis */
-                padding: 10px; /* Espace interne */
-                font-size: 12px; /* Taille de la police */
-            }
+        config_action = QAction("Modifier les équipes", self)
+        config_par = QAction("Modifier les paramètres", self)
+        settings_menu.addActions([config_action, config_par])
 
-            QPushButton:hover {
-                background-color: #f9f9f9; /* Couleur de fond au survol */
-            }
-            '''
-            )
-        self.button4.setStyleSheet(
-                   '''
-            QPushButton {
-                border: 2px solid #e8e8e8; /* Couleur de la bordure */
-                border-radius: 10px; /* Rayon des coins arrondis */
-                padding: 10px; /* Espace interne */
-                font-size: 12px; /* Taille de la police */
-            }
+    def setup_ui(self):
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        
+        main_layout = QHBoxLayout(central_widget)
 
-            QPushButton:hover {
-                background-color: #f9f9f9; /* Couleur de fond au survol */
-            }
-            '''
-            )
-        self.button1.setFixedSize(100, 100)
-        self.button2.setFixedSize(100, 100)
-        self.button3.setFixedSize(100, 100)
-        self.button4.setFixedSize(100, 100)
+        self.left_table = QTableWidget(15, 3) 
+        
+        main_layout.addWidget(self.left_table)
 
-        self.layout_grid = QtWidgets.QGridLayout()
-        self.vlayout = QtWidgets.QVBoxLayout()
-        self.layout_base = QtWidgets.QHBoxLayout(self)
+        right_layout = QVBoxLayout()
 
-        #self.layout_grid.setColumnStretch(0, 1)
-        #self.layout_grid.setColumnStretch(1, 1)
+        self.right_table = QTableWidget(10, 2)
+        self.right_table.setHorizontalHeaderLabels(["Classement", "Points"])
+        right_layout.addWidget(self.right_table)
 
-        #self.layout_grid.columnCount(2)
-        #self.layout_grid.rowCount(2)
-        '''self.layout_grid.addWidget(self.button1, 0, 0)
-        self.layout_grid.addWidget(self.button2, 0, 1)
-        self.layout_grid.addWidget(self.button3, 1, 0)
-        self.layout_grid.addWidget(self.button4, 1, 1)'''
-        self.vlayout.addWidget(self.button1)
-        self.vlayout.addWidget(self.button2)
-        self.vlayout.addWidget(self.button3)
-        self.vlayout.addWidget(self.button4)
-        self.layout_base.addWidget(self.table)
-        self.layout_base.addLayout(self.vlayout)
+        # 2. Le Bouton "Match suivant"
+        self.next_match_btn = QPushButton("Match suivant")
+        self.next_match_btn.setMinimumHeight(40) # Rend le bouton un peu plus épais, comme sur le dessin
+        
+        right_layout.addWidget(self.next_match_btn)
 
-        self.team_print_in_table()
+        # On ajoute tout ce bloc de droite dans la partie droite du layout principal
+        main_layout.addLayout(right_layout)
 
-    def team_print_in_table(self):
-        app = Application()
-        n_match = app.get_match_n()
-        output = app.return_overall()
-        overall = app.overall()
-        self.table.setRowCount(len(output))
-        self.table.setColumnCount(n_match+2)
-        headers = ['team']
-        headers.extend([f"match{i}" for i in range(n_match)])
-        headers.append('total')
-        headers = tuple(headers)
-        self.table.setHorizontalHeaderLabels(headers)
-        row_index = 0
-        for team in overall:
-            for row in output:
-                if row[0]==team:
-                    self.table.setItem(row_index, 0, QtWidgets.QTableWidgetItem(row["team"]))
-                    self.table.setItem(row_index, n_match+1, QtWidgets.QTableWidgetItem(str(row["total"])))
-                    for i in range(n_match):
-                        self.table.setItem(row_index, i+1, QtWidgets.QTableWidgetItem(str(row[f"output{i}"])))
-                else:
-                    pass
+        # Optionnel : On définit la répartition de l'espace (ici 50% gauche, 50% droite)
+        main_layout.setStretch(0, 1) # Colonne gauche
+        main_layout.setStretch(1, 1) # Colonne droite
 
-            row_index += 1
+    def team_print_in_left_table(self):
+            app = Application()
+            n_match = app.get_match_n()
+            output = app.return_overall()
+            overall = app.overall()
+            self.left_table.setRowCount(len(output))
+            self.left_table.setColumnCount(n_match+2)
+            headers = ['team']
+            headers.extend([f"match{i}" for i in range(n_match)])
+            headers.append('total')
+            headers = tuple(headers)
+            self.left_table.setHorizontalHeaderLabels(headers)
+            row_index = 0
+            for team in overall:
+                for row in output:
+                    if row[0]==team:
+                        self.left_table.setItem(row_index, 0, QtWidgets.QTableWidgetItem(row["team"]))
+                        self.left_table.setItem(row_index, n_match+1, QtWidgets.QTableWidgetItem(str(row["total"])))
+                        for i in range(n_match):
+                            self.left_table.setItem(row_index, i+1, QtWidgets.QTableWidgetItem(str(row[f"output{i}"])))
+                    else:
+                        pass
+    
+                row_index += 1
 
 
 if __name__ == "__main__":
-    app = QtWidgets.QApplication([])
-
-    widget = MainWindow()
-    widget.resize(1000, 600)
-    widget.show()
-
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
     sys.exit(app.exec())

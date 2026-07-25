@@ -2,9 +2,8 @@ import sys
 
 from PySide6 import QtCore, QtWidgets, QtGui
 
-
 class WelcomeGui(QtWidgets.QWidget):
-    opened = QtCore.Signal()
+    next_par = QtCore.Signal()
     def __init__(self):
         super().__init__()
 
@@ -48,7 +47,7 @@ class WelcomeGui(QtWidgets.QWidget):
         self.button.clicked.connect(self.open_next)
 
     def open_next(self):
-        self.opened.emit()
+        self.next_par.emit()
         self.close()
 
 
