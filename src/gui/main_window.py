@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import QAction
 
 class MainWindow(QMainWindow):
+    team = QtCore.Signal()
     def __init__(self):
         super().__init__()
         
@@ -27,9 +28,11 @@ class MainWindow(QMainWindow):
 
         settings_menu = menu_bar.addMenu("Menu")
 
-        config_action = QAction("Modifier les équipes", self)
+        config_team = QAction("Modifier les équipes", self)
         config_par = QAction("Modifier les paramètres", self)
-        settings_menu.addActions([config_action, config_par])
+        settings_menu.addActions([config_team, config_par])
+
+        config_team.triggered.connect(self.modif_team)
 
     def setup_ui(self):
         central_widget = QWidget()
@@ -85,6 +88,8 @@ class MainWindow(QMainWindow):
     
                 row_index += 1
 
+    def modif_team(self):
+        self.team.emit()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

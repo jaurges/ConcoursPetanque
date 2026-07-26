@@ -71,7 +71,7 @@ class NewCompetition(QtWidgets.QWidget):
             erroGui.exec()
         
         app.new_competition(name, formatted_date, play_mod, location)
-        app.set_competition_index([name, formatted_date, play_mod, location])
+        #app.set_competition_index([name, formatted_date, play_mod, location])
         self.next_tea_reg.emit()
         self.close()
 

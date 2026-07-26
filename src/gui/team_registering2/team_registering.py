@@ -11,7 +11,8 @@ from .dialog.settings_combo import SettingCombo
 class TeamRegistering(QtWidgets.QWidget):
     header_finder = QtCore.Signal(int)
     next_main = QtCore.Signal()
-    def __init__(self):
+    previous_param = QtCore.Signal()
+    def __init__(self, button : bool = True):
         super().__init__()
         self.setWindowTitle("Team registering")
         self.team = []
@@ -28,8 +29,6 @@ class TeamRegistering(QtWidgets.QWidget):
 
         self.first_tab.value.connect(self.fill)
 
-        pushbutton_3 = QtWidgets.QPushButton("Annuler")
-        pushbutton_4 = QtWidgets.QPushButton("Suivant")
         pushbutton_5 = QtWidgets.QPushButton("Ajouter des joueurs")
         self.table = QtWidgets.QTableWidget()
 
@@ -39,24 +38,42 @@ class TeamRegistering(QtWidgets.QWidget):
         self.resizeEvent = self.adjust_columns
 
         layout_base = QtWidgets.QVBoxLayout(self)
-        layout_button = QtWidgets.QHBoxLayout()
+        
         layout_middle = QtWidgets.QHBoxLayout()
         layout_table = QtWidgets.QVBoxLayout()
-
-        layout_button.addWidget(pushbutton_3)
-        layout_button.addWidget(pushbutton_4)
         layout_table.addWidget(pushbutton_5)
         layout_table.addWidget(self.table)
         layout_middle.addWidget(tab_widget)
         layout_middle.addLayout(layout_table)
         layout_base.addLayout(layout_middle)
-        layout_base.addLayout(layout_button)
-
-        pushbutton_3.clicked.connect(self.open_back)
+        
         self.table.cellClicked.connect(self.second_event )
+
+        layout_button = QtWidgets.QHBoxLayout()
+        pushbutton_3 = QtWidgets.QPushButton("Annuler")
+        layout_base.addLayout(layout_button)
+        layout_button.addWidget(pushbutton_3)
+        if button : 
+            pushbutton_4 = QtWidgets.QPushButton("Suivant")
+            layout_button.addWidget(pushbutton_4)
+            pushbutton_3.clicked.connect(self.open_back)
+            pushbutton_4.clicked.connect(self.open_next)
+        else : 
+            pushbutton_6 = QtWidgets.QPushButton("Valider")
+            layout_button.addWidget(pushbutton_6)
+            pushbutton_3.clicked.connect(self.close)
+            pushbutton_6.clicked.connect(self.save)
     
-    def open_back(self):
+    def open_next(self):
         self.next_main.emit()
+        self.close()
+
+    def open_back(self):
+        self.previous_param.emit()
+        self.close()
+
+    def save(self):
+        # enregistre les données et met à jour si besoin
         self.close()
     
     def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> bool:

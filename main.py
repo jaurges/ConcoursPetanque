@@ -9,19 +9,21 @@ app = QtWidgets.QApplication([])
 
 welcome_widget = WelcomeGui()
 parameters_widget = NewCompetition()
-team_registering_widget = TeamRegistering()
+team_registering_widget1 = TeamRegistering()
+team_registering_widget2 = TeamRegistering(button=False)
 main_window = MainWindow()
 
 # taille des widgets
 welcome_widget.resize(360, 480)
 parameters_widget.resize(360, 480)
-team_registering_widget.resize(480, 480)
+team_registering_widget1.resize(480, 480)
 
 # connections des signaux
 welcome_widget.next_par.connect(parameters_widget.show)
-parameters_widget.next_tea_reg.connect(team_registering_widget.show)
+parameters_widget.next_tea_reg.connect(team_registering_widget1.show)
 parameters_widget.prev_tea_reg.connect(welcome_widget.show)
-team_registering_widget.next_main.connect(main_window.show)
+team_registering_widget1.next_main.connect(main_window.show)
+main_window.team.connect(team_registering_widget2.show)
 
 
 welcome_widget.show()

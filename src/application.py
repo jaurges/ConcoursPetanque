@@ -9,12 +9,14 @@ class Application:
     def __init__(self):
         self.database_handler = DatabaseHandler()
         self.json_handler = JsonHandler()
+        self.ID=self.json_handler.read_log(id=True)
     
     def set_competition_index(self, parameters:list):
         self.json_handler.write_log(parameters)
+        self.ID = self.json_handler.read_log(id=True)
     
     def return_match(self,n):
-        output = self.database_handler.select(table=f"match_{self.json_handler.read_log(id=True)}_{n}",
+        output = self.database_handler.select(table=f"match_{self.ID}_{n}",
                                               columns='*')
         return output
 
@@ -33,7 +35,7 @@ class Application:
                                      values=[name, club])
 
     def register_result(self, row, n, output1, output2):
-        table_name = f'match_{self.json_handler.read_log(id=True)}_{n}'
+        table_name = f'match_{self.ID}_{n}'
         self.database_handler.update(table=table_name,
                                      columns=['output1', 'output2'],
                                      value=[output1, output2],
@@ -102,7 +104,7 @@ class Application:
         return match_list
     
     def set_overall(self):
-        table_name = f'overall_{self.json_handler.read_log(id=True)}'
+        table_name = f'overall_{self.ID}'
         dict_tot = self.dict_matchs_into_total()
         dict_main = self.matchs_into_dict()
         raw_columns = self.database_handler.pragma(table=table_name)
@@ -131,14 +133,14 @@ class Application:
         for row in tables_names:
             ls.append(row[0])
         for i in ls:
-            if i.startswith(f"match_{self.json_handler.read_log(id=True)}"):
+            if i.startswith(f"match_{self.ID}"):
                 n = n+1
             else:
                 pass
         return n
     
     def matchs_into_dict(self):
-        id = self.json_handler.read_log(id=True)
+        id = self.ID
         dicto = {}
         n = self.get_match_n()
         for i in range(n):
@@ -165,7 +167,7 @@ class Application:
     
     def register_match(self, list):
         n = self.get_match_n()
-        name_ = f'match_{self.json_handler.read_log(id=True)}_{n}'
+        name_ = f'match_{self.ID}_{n}'
         self.database_handler.create_table(match=True, 
                                            name=name_)
         for i in list:
@@ -174,12 +176,12 @@ class Application:
                                          values=[f"{i[0]}", 0, f"{i[1]}", 0])
 
     def return_overall(self):
-        output = self.database_handler.select(table=f"overall_{self.json_handler.read_log(id=True)}",
-                                     columns='*')
+        #output = self.database_handler.select(table=f"overall_{self.ID}",columns='*')
+        output = self.database_handler.select(table=f"overall_example",columns='*')
         return output
     
     def overall(self):
-        table_name1 = f"overall_{self.json_handler.read_log(id=True)}"
+        table_name1 = f"overall_{self.ID}"
         grouped_by_value = {}
         inter_class = {}
         grouped_by_value_ls = []
@@ -198,7 +200,7 @@ class Application:
         
         # à mettre à -1 quand match_example_5 sera rempli
         n_match = self.get_match_n()-2
-        match_name = f"match_{self.json_handler.read_log(id=True)}_{n_match}"
+        match_name = f"match_{self.ID}_{n_match}"
         match_raw = self.database_handler.select(table=match_name, columns='*')
         match_ls = [[row[1], row[2], row[3], row[4]] for row in match_raw]
 
