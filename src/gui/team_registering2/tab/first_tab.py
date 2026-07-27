@@ -6,7 +6,7 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from src.application import Application
 
 
-class FirstTab(QtWidgets.QDialog):
+class FirstTab(QtWidgets.QWidget):
     value = QtCore.Signal(str)
     def __init__(self):
         super().__init__()
@@ -17,6 +17,9 @@ class FirstTab(QtWidgets.QDialog):
         self.comboboxes = [QtWidgets.QComboBox(self) for _ in range(self.spin_box.value())]
 
         self.table.horizontalHeader().setVisible(False)
+        # Ajuste automatiquement la largeur des colonnes pour éviter que
+        # les widgets (ex. QComboBox) débordent et se superposent.
+        self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.table.setColumnCount(1)
         self.table.setRowCount(1)
         self.table.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
@@ -52,7 +55,7 @@ class FirstTab(QtWidgets.QDialog):
 
             self.table.setRowCount(len(self.output[combo_box.currentText()]))
             #self.table.setColumnCount(self.comboboxes.index(combo_box)+1)
-            row_index = 0
+            row_index = 1
             for player in self.output[combo_box.currentText()]:
                 #print(player)
                 self.table.setItem(row_index, self.comboboxes.index(combo_box), QtWidgets.QTableWidgetItem(player))
@@ -62,7 +65,7 @@ class FirstTab(QtWidgets.QDialog):
     def index_changed(self, index):
         sender = self.sender()
         self.table.setRowCount(len(self.output[sender.currentText()]))
-        row_index = 0
+        row_index = 1
         for player in self.output[sender.currentText()]:
             #print(player)
             self.table.setItem(row_index, self.comboboxes.index(sender), QtWidgets.QTableWidgetItem(player))

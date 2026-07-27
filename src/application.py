@@ -30,6 +30,7 @@ class Application:
                                      values=[name, date, play_mod, location])
 
     def create_team(self, name, club):
+        '''utile que pour le boting'''
         self.database_handler.insert(table='team', 
                                      columns=['name', 'club'],
                                      values=[name, club])
@@ -129,7 +130,7 @@ class Application:
     def get_match_n(self):
         ls = []
         n = 0
-        tables_names = self.database_handler.select(columns='name', table='sqlite_master', condition='type', condition_value="'table'")
+        tables_names = self.database_handler.select(columns='name', table='sqlite_master', condition='type', condition_value='table')
         for row in tables_names:
             ls.append(row[0])
         for i in ls:
@@ -170,6 +171,7 @@ class Application:
         name_ = f'match_{self.ID}_{n}'
         self.database_handler.create_table(match=True, 
                                            name=name_)
+        
         for i in list:
             self.database_handler.insert(table=name_,
                                          columns=['team1', 'output1','team2', 'output2'],
@@ -313,6 +315,13 @@ class Application:
             for key in columns:
                 dicto.setdefault(key, []).append(row[columns.index(key)])
         return dicto
+
+    def save_team(self, teams : list):
+        # création de la table si elle n'existe pas 
+        t_name=f"team_{self.ID}"
+        if not self.database_handler.table_exists(t_name):
+            self.database_handler.create_table(team = True, name=t_name)
+            self.database_handler.insert(table = t_name, columns=["team_name","player1","player2"],values=teams)
 
 
     

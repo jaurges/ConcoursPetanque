@@ -40,19 +40,28 @@ class DatabaseHandler:
         columns : list = kwargs.get('columns', False)
         table : str = kwargs.get('table', False)
         values : list = kwargs.get('values', False)
-        values = [f"'{value}'" if isinstance(value, str) else str(value) for value in values]
+        many_exec : bool = kwargs.get('many_exec', False)
 
         if not columns or not table or not values: 
             raise NameError
         
         columns = concatenate(columns)
-        values = concatenate(values)
-        
+
         cursor = self.con.cursor()
-        query = f"INSERT INTO {table}({columns}) VALUES({values})"
-        
-        print(query)
-        cursor.execute(query)
+
+        if not many_exec:
+            values = [f"'{value}'" if isinstance(value, str) else str(value) for value in values]
+            values = concatenate(values)
+            query = f"INSERT INTO {table}({columns}) VALUES({values})"
+            
+            print(query)
+            cursor.execute(query)
+        else : 
+            # value est une liste de TUPLE
+            interro=("?" for _ in range(len(values[0])))
+            query=f"INSERT INTO {table}({columns}) VALUES({interro})"
+            cursor.executemany(query, values)
+
 
         cursor.close()
         self.con.commit()
@@ -111,10 +120,10 @@ class DatabaseHandler:
         return output
 
         
-    
     def create_table(self, **kwargs):
         match : bool = kwargs.get('match', False)
         overall : bool = kwargs.get('overall', False)
+        team : bool = kwargs.get('team', False)
         name : str = kwargs.get('name', False)
 
         if not name:
@@ -126,18 +135,27 @@ class DatabaseHandler:
                                                              "team2 text," \
                                                              "output2 integer)"
         
-        overall_schema = "CREATE TABLE overall(id integer PRIMARY KEY, " \
+        overall_schema = "CREATE TABLE " + name + "(id integer PRIMARY KEY, " \
                 "team text," \
                 "total integer)"
+
+        team_schema = "CREATE TABLE " + name + "(id integer PRIMARY KEY, " \
+                        "team_name text," \
+                        "player1 text," \
+                        "player2 text)"
         
         cursor = self.con.cursor()
         if match:
             query = match_schema
-            print(query)
+            #print(query)
             cursor.execute(query)
         if overall:
             query = overall_schema
-            print(query)
+            #print(query)
+            cursor.execute(query)
+        if team:
+            query = team_schema
+            #print(query)
             cursor.execute(query)
 
         cursor.close()
@@ -157,6 +175,14 @@ class DatabaseHandler:
         cursor.execute(query)
         cursor.close()
         self.con.commit()
+
+    def table_exists(self, table: str) -> bool:
+        cursor = self.con.cursor()
+        query = "SELECT name FROM sqlite_master WHERE type='table' AND name = ?",(table,)
+        cursor.execute(query)
+        exists = cursor.fetchone() is not None
+        cursor.close()
+        return exists
 
 '''test = DatabaseHandler()
 test.alter_table(name='output0', table='overall', type='INTEGER')'''

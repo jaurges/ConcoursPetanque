@@ -1,12 +1,12 @@
 from PySide6 import QtCore, QtWidgets, QtGui
 import sys
 import math
-
-from .tab.first_tab import FirstTab
-from .tab.second_tab import SecondTab
-from .tab.third_tab import ThirdTab
-from .dialog.save_teams import SaveTeams
-from .dialog.settings_combo import SettingCombo
+sys.path.append(".")
+from tab.first_tab import FirstTab
+from tab.second_tab import SecondTab
+from tab.third_tab import ThirdTab
+from dialog.save_teams import SaveTeams
+from dialog.settings_combo import SettingCombo
 
 class TeamRegistering(QtWidgets.QWidget):
     header_finder = QtCore.Signal(int)
@@ -26,6 +26,7 @@ class TeamRegistering(QtWidgets.QWidget):
         tab_widget = QtWidgets.QTabWidget()
         tab_widget.addTab(self.first_tab, "manuel")
         tab_widget.addTab(self.second_tab, "générer")
+        tab_widget.addTab(self.third_tab, "importer")
 
         self.first_tab.value.connect(self.fill)
 
@@ -34,8 +35,8 @@ class TeamRegistering(QtWidgets.QWidget):
 
         self.table.installEventFilter(self)
         self.table.setColumnCount(3)
-
-        self.resizeEvent = self.adjust_columns
+        self.table.setHorizontalHeaderLabels(("Nom de l'équipe","Joueur 1", "Joueur 2"))
+        self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch) # bonne taille des colonnes
 
         layout_base = QtWidgets.QVBoxLayout(self)
         
@@ -62,9 +63,10 @@ class TeamRegistering(QtWidgets.QWidget):
             pushbutton_6 = QtWidgets.QPushButton("Valider")
             layout_button.addWidget(pushbutton_6)
             pushbutton_3.clicked.connect(self.close)
-            pushbutton_6.clicked.connect(self.save)
+            pushbutton_6.clicked.connect(self.save_close)
     
     def open_next(self):
+        # enregistre le tableau
         self.next_main.emit()
         self.close()
 
@@ -72,11 +74,21 @@ class TeamRegistering(QtWidgets.QWidget):
         self.previous_param.emit()
         self.close()
 
-    def save(self):
+    def save_close(self):
         # enregistre les données et met à jour si besoin
         self.close()
+
+    def save(self):
+        #fonctionne pour les deux versions
+        output = []
+        for row in range(self.table.rowCount()):
+            for col in range(3):
+                item = self.table.item(row,col)
+                output.append(item.text())
+
     
     def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> bool:
+        '''sert à effacer une cellule mais attention ne modifie pas les données'''
         if source is self.table and event.type() == QtCore.QEvent.KeyPress:
             key_event = event
             key = key_event.key()
@@ -151,11 +163,6 @@ class TeamRegistering(QtWidgets.QWidget):
         
         #print('-----------------------------')
     
-    def adjust_columns(self, event):
-        window_width = self.table.size().width()
-        column_width = window_width / 3
-        for col in range(self.table.columnCount()):
-            self.table.setColumnWidth(col, column_width)
         
 
 
