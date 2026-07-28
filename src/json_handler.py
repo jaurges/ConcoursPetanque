@@ -14,13 +14,14 @@ class JsonHandler:
         id = 2 #self.database_handler.select(columns='id', table='general', condition='name', condition_value=parameters[0])
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
-        dicto = {'id':id, 'time':current_time}
+        dicto = {'id':id, 'time':current_time,"match_rank":0}
         with open(self.path, 'w') as fichier_json:
             json.dump(dicto, fichier_json)
 
     def read_log(self, **kwargs):
         id : bool = kwargs.get('id', False)
         time : bool = kwargs.get('time', False)
+        match_rank : bool = kwargs.get('match_rank', False)
 
         with open(self.path, 'r') as fichier_json:
             dicto = json.load(fichier_json)
@@ -29,6 +30,8 @@ class JsonHandler:
             return dicto['id']
         if time:
             return dicto['time']
+        if match_rank:
+            return dicto['match_rank']
 
 '''test = JsonHandler()
 p = test.read_log(id=True)

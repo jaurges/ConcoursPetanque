@@ -37,31 +37,34 @@ class DatabaseHandler:
         return output
 
     def insert(self, **kwargs):
-        columns : list = kwargs.get('columns', False)
-        table : str = kwargs.get('table', False)
-        values : list = kwargs.get('values', False)
-        many_exec : bool = kwargs.get('many_exec', False)
+        columns = kwargs.get('columns')
+        table = kwargs.get('table')
+        values = kwargs.get('values') # liste de tuple
+        many_exec = kwargs.get('many_exec', False)
 
+        # 1. Vérification des arguments obligatoires
         if not columns or not table or not values: 
-            raise NameError
+            raise ValueError("Les paramètres 'table', 'columns' et 'values' sont requis.")
         
-        columns = concatenate(columns)
+        # 2. Formatage des colonnes (ex: "nom_equipe, joueur_1")
+        columns_str = ", ".join(columns)
+
+        # 3. Calcul du nombre de "?" nécessaires
+        # Si many_exec, on regarde la taille de la première sous-liste, sinon la liste entière
+        nb_valeurs = len(values[0]) if many_exec else len(values)
+        interro = ", ".join(["?"] * nb_valeurs)
+        
+        # 4. Création de la requête générique
+        query = f"INSERT INTO {table} ({columns_str}) VALUES ({interro})"
+        print(query)
 
         cursor = self.con.cursor()
 
-        if not many_exec:
-            values = [f"'{value}'" if isinstance(value, str) else str(value) for value in values]
-            values = concatenate(values)
-            query = f"INSERT INTO {table}({columns}) VALUES({values})"
-            
-            print(query)
-            cursor.execute(query)
-        else : 
-            # value est une liste de TUPLE
-            interro=("?" for _ in range(len(values[0])))
-            query=f"INSERT INTO {table}({columns}) VALUES({interro})"
+        # 5. Exécution sécurisée (SQLite place lui-même les valeurs à la place des '?')
+        if many_exec:
             cursor.executemany(query, values)
-
+        else:
+            cursor.execute(query, values)
 
         cursor.close()
         self.con.commit()
@@ -147,7 +150,7 @@ class DatabaseHandler:
         cursor = self.con.cursor()
         if match:
             query = match_schema
-            #print(query)
+            print(query)
             cursor.execute(query)
         if overall:
             query = overall_schema
@@ -155,7 +158,7 @@ class DatabaseHandler:
             cursor.execute(query)
         if team:
             query = team_schema
-            #print(query)
+            print(query)
             cursor.execute(query)
 
         cursor.close()
@@ -183,6 +186,50 @@ class DatabaseHandler:
         exists = cursor.fetchone() is not None
         cursor.close()
         return exists
+
+    def overwrite_team_data(self, table_name: str, values: list):
+        """
+        Crée la table d'équipe si elle n'existe pas, la vide si elle existe, 
+        puis insère les nouvelles données.
+        """
+        # 1. Requêtes SQL
+        # Note : On ne peut pas paramétrer (?) le nom d'une table, le f-string est obligatoire ici.
+        create_query = f"""
+            CREATE TABLE IF NOT EXISTS {table_name} (
+                id INTEGER PRIMARY KEY, 
+                team_name TEXT, 
+                player1 TEXT, 
+                player2 TEXT
+            )
+        """
+        delete_query = f"DELETE FROM {table_name}"
+        insert_query = f"INSERT INTO {table_name} (team_name, player1, player2) VALUES (?, ?, ?)"
+
+        cursor = self.con.cursor()
+        
+        try:
+            # 1. On s'assure que la table existe
+            cursor.execute(create_query)
+            
+            # 2. On efface TOUTES les lignes existantes (le cas échéant)
+            cursor.execute(delete_query)
+            
+            # 3. On insère la nouvelle liste de données (values doit être une liste de listes/tuples)
+            cursor.executemany(insert_query, values)
+            
+            # 4. On valide toutes ces opérations en bloc !
+            self.con.commit()
+            print(f"Table {table_name} mise à jour avec succès ({len(values)} lignes insérées).")
+            
+        except sqlite3.Error as e:
+            # TRÈS IMPORTANT : S'il y a une erreur pendant l'insertion, 
+            # on annule TOUT (y compris l'effacement des données). 
+            # Ainsi, on ne perd pas l'ancienne sauvegarde si la nouvelle plante.
+            self.con.rollback()
+            print(f"Une erreur est survenue, annulation des modifications : {e}")
+            
+        finally:
+            cursor.close()
 
 '''test = DatabaseHandler()
 test.alter_table(name='output0', table='overall', type='INTEGER')'''

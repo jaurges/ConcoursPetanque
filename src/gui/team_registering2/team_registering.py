@@ -8,6 +8,8 @@ from tab.third_tab import ThirdTab
 from dialog.save_teams import SaveTeams
 from dialog.settings_combo import SettingCombo
 
+from src.application import Application
+
 class TeamRegistering(QtWidgets.QWidget):
     header_finder = QtCore.Signal(int)
     next_main = QtCore.Signal()
@@ -15,6 +17,7 @@ class TeamRegistering(QtWidgets.QWidget):
     def __init__(self, button : bool = True):
         super().__init__()
         self.setWindowTitle("Team registering")
+        self.app = Application()
         self.team = []
         self.index = [0,0]
         self.row_index = 0
@@ -55,6 +58,7 @@ class TeamRegistering(QtWidgets.QWidget):
         layout_base.addLayout(layout_button)
         layout_button.addWidget(pushbutton_3)
         if button : 
+            # 1er appel
             pushbutton_4 = QtWidgets.QPushButton("Suivant")
             layout_button.addWidget(pushbutton_4)
             pushbutton_3.clicked.connect(self.open_back)
@@ -66,7 +70,7 @@ class TeamRegistering(QtWidgets.QWidget):
             pushbutton_6.clicked.connect(self.save_close)
     
     def open_next(self):
-        # enregistre le tableau
+        self.save()
         self.next_main.emit()
         self.close()
 
@@ -75,16 +79,19 @@ class TeamRegistering(QtWidgets.QWidget):
         self.close()
 
     def save_close(self):
-        # enregistre les données et met à jour si besoin
+        self.save()
         self.close()
 
     def save(self):
         #fonctionne pour les deux versions
         output = []
         for row in range(self.table.rowCount()):
+            L=[]
             for col in range(3):
                 item = self.table.item(row,col)
-                output.append(item.text())
+                L.append(item.text())
+            output.append(tuple(L))
+        self.app.save_team(output)
 
     
     def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> bool:

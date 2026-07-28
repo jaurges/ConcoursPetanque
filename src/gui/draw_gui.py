@@ -74,9 +74,9 @@ class Draw_gui(QtWidgets.QWidget):
                     row_data.append(item.text())
                 else:
                     row_data.append(None)
-
-            table_data.append(row_data)
-        print(table_data)
+        
+            table_data.append(tuple(row_data)) # pour le bon format
+        #print(table_data)
         app.register_match(table_data)
     
     def adjust_columns(self, event):

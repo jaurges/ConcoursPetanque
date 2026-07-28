@@ -21,6 +21,7 @@ class MainWindow(QMainWindow):
         
         self.setup_ui()
         self.team_print_in_left_table()
+        self.team_print_in_right_table()
 
     def create_menu_bar(self):
         """Crée la barre de menu classique type 'Word'"""
@@ -40,14 +41,14 @@ class MainWindow(QMainWindow):
         
         main_layout = QHBoxLayout(central_widget)
 
-        self.left_table = QTableWidget(15, 3) 
+        self.left_table = QTableWidget() 
         
         main_layout.addWidget(self.left_table)
 
         right_layout = QVBoxLayout()
 
-        self.right_table = QTableWidget(10, 2)
-        self.right_table.setHorizontalHeaderLabels(["Classement", "Points"])
+        self.right_table = QTableWidget()
+        self.right_table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         right_layout.addWidget(self.right_table)
 
         # 2. Le Bouton "Match suivant"
@@ -65,8 +66,10 @@ class MainWindow(QMainWindow):
 
     def team_print_in_left_table(self):
             app = Application()
-            n_match = app.get_match_n()
+            n_match = app.match_r
             output = app.return_overall()
+            print("----------------")
+            print(output)
             overall = app.overall()
             self.left_table.setRowCount(len(output))
             self.left_table.setColumnCount(n_match+2)
@@ -81,12 +84,28 @@ class MainWindow(QMainWindow):
                     if row[0]==team:
                         self.left_table.setItem(row_index, 0, QtWidgets.QTableWidgetItem(row["team"]))
                         self.left_table.setItem(row_index, n_match+1, QtWidgets.QTableWidgetItem(str(row["total"])))
-                        for i in range(n_match):
+                        for i in range(n_match-1):
+                            print(i)
                             self.left_table.setItem(row_index, i+1, QtWidgets.QTableWidgetItem(str(row[f"output{i}"])))
                     else:
                         pass
     
                 row_index += 1
+
+    def team_print_in_right_table(self):
+        app = Application()
+        output = app.return_team()
+        self.right_table.setRowCount(len(output))
+        self.right_table.setColumnCount(3)
+        headers = ["Nom de l'équipe","Joueur n°1","Joueur n°2"]
+        headers = tuple(headers)
+        self.right_table.setHorizontalHeaderLabels(headers)
+        row_index = 0
+        for row in output:
+            self.right_table.setItem(row_index, 0, QtWidgets.QTableWidgetItem(row["team_name"]))
+            self.right_table.setItem(row_index, 1, QtWidgets.QTableWidgetItem(str(row["player1"])))
+            self.right_table.setItem(row_index, 2, QtWidgets.QTableWidgetItem(str(row["player2"])))
+            row_index += 1
 
     def modif_team(self):
         self.team.emit()

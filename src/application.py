@@ -10,6 +10,7 @@ class Application:
         self.database_handler = DatabaseHandler()
         self.json_handler = JsonHandler()
         self.ID=self.json_handler.read_log(id=True)
+        self.match_r = self.json_handler.read_log(match_rank=True) #attention aux changements
     
     def set_competition_index(self, parameters:list):
         self.json_handler.write_log(parameters)
@@ -21,7 +22,8 @@ class Application:
         return output
 
     def return_team(self):
-        output = self.database_handler.select(columns='*', table='team')
+        table_ = f"team_{self.ID}"
+        output = self.database_handler.select(columns='*', table=table_)
         return output
 
     def new_competition(self, name, date, play_mod, location):
@@ -127,23 +129,11 @@ class Application:
                                 condition='team',
                                 condition_value=[i for i in dict_tot])
 
-    def get_match_n(self):
-        ls = []
-        n = 0
-        tables_names = self.database_handler.select(columns='name', table='sqlite_master', condition='type', condition_value='table')
-        for row in tables_names:
-            ls.append(row[0])
-        for i in ls:
-            if i.startswith(f"match_{self.ID}"):
-                n = n+1
-            else:
-                pass
-        return n
     
     def matchs_into_dict(self):
         id = self.ID
         dicto = {}
-        n = self.get_match_n()
+        n = int(self.match_r)
         for i in range(n):
             output = self.database_handler.select(columns='*', table=f"match_{id}_{i}")
             for row in output:
@@ -166,16 +156,16 @@ class Application:
                     dicto[key] = j[key]
         return dicto
     
-    def register_match(self, list):
-        n = self.get_match_n()
+    def register_match(self, data):
+        n = int(self.match_r)
         name_ = f'match_{self.ID}_{n}'
         self.database_handler.create_table(match=True, 
                                            name=name_)
         
-        for i in list:
-            self.database_handler.insert(table=name_,
-                                         columns=['team1', 'output1','team2', 'output2'],
-                                         values=[f"{i[0]}", 0, f"{i[1]}", 0])
+        self.database_handler.insert(table=name_,
+                                    columns=['team1', 'output1','team2', 'output2'],
+                                    values=data,
+                                    many_exec=True)
 
     def return_overall(self):
         #output = self.database_handler.select(table=f"overall_{self.ID}",columns='*')
@@ -200,9 +190,12 @@ class Application:
         for i in grouped_by_value_ls:
             inter_class[tuple(i)]=[]
         
-        # à mettre à -1 quand match_example_5 sera rempli
-        n_match = self.get_match_n()-2
+        # à mettre à -1 quand match_example_5 sera rempli*
+        x=int(self.match_r)
+        print(x)
+        n_match : int = x-2
         match_name = f"match_{self.ID}_{n_match}"
+        print(match_name)
         match_raw = self.database_handler.select(table=match_name, columns='*')
         match_ls = [[row[1], row[2], row[3], row[4]] for row in match_raw]
 
@@ -319,9 +312,7 @@ class Application:
     def save_team(self, teams : list):
         # création de la table si elle n'existe pas 
         t_name=f"team_{self.ID}"
-        if not self.database_handler.table_exists(t_name):
-            self.database_handler.create_table(team = True, name=t_name)
-            self.database_handler.insert(table = t_name, columns=["team_name","player1","player2"],values=teams)
+        self.database_handler.overwrite_team_data(t_name,teams)
 
 
     
